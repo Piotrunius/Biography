@@ -2155,6 +2155,89 @@ const Terminal = {
       },
     },
 
+    privacy: {
+      description: "Manage global Privacy Mode",
+      usage: "privacy [on|off] [password] (or type privacy to open GUI)",
+      icon: "fa-lock",
+      fn: async function (args) {
+        if (!args[0]) {
+          showPrivacyModal();
+          return [
+            { text: "Opening Privacy Mode control panel...", class: "info" },
+          ];
+        }
+
+        const action = args[0].toLowerCase();
+        if (action !== "on" && action !== "off" && action !== "toggle") {
+          return [
+            {
+              text: "Invalid argument. Use 'on', 'off' or leave empty for GUI.",
+              class: "error",
+            },
+          ];
+        }
+
+        if (action === "toggle") {
+          showPrivacyModal();
+          return [
+            { text: "Opening Privacy Mode control panel...", class: "info" },
+          ];
+        }
+
+        const enable = action === "on";
+        const password = args[1];
+        if (!password) {
+          return [
+            {
+              text: "Password is required to change Privacy Mode from CLI. Usage: privacy [on|off] [password]",
+              class: "error",
+            },
+          ];
+        }
+
+        try {
+          const res = await fetch(
+            "https://admin-control.piotrunius.workers.dev/",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                password,
+                action: enable ? "enable" : "disable",
+              }),
+            },
+          );
+          const data = await res.json();
+          if (data.success) {
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            return [
+              {
+                text: `Privacy Mode successfully set to ${action.toUpperCase()}!`,
+                class: "success",
+              },
+              {
+                text: "Reloading page in 1 second to apply changes...",
+                class: "info",
+              },
+            ];
+          } else {
+            return [
+              {
+                text: `Failed: ${data.error || "Unknown error"}`,
+                class: "error",
+              },
+            ];
+          }
+        } catch (err) {
+          return [{ text: `Error: ${err.message}`, class: "error" }];
+        }
+      },
+    },
+
     history: {
       description: "Show command history",
       usage: "history [clear]",
@@ -6431,9 +6514,173 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// --- PRIVACY CONTROL ---
+function showPrivacyModal() {
+  let overlay = document.getElementById("privacy-modal");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "privacy-modal";
+    overlay.className = "privacy-modal-overlay";
+    overlay.innerHTML = `
+      <div class="privacy-modal-content">
+        <div class="privacy-modal-header">
+          <i class="fas fa-shield-alt"></i>
+          <h3>🔐 Privacy Control</h3>
+          <p>Toggle visibility of live statuses on the site</p>
+        </div>
+        <div class="privacy-modal-body">
+          <div class="privacy-status-text" id="privacy-modal-status">
+            Checking status...
+          </div>
+          <div class="privacy-input-group">
+            <label for="privacy-password">Admin Password</label>
+            <input type="password" id="privacy-password" class="privacy-input" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <div class="privacy-message" id="privacy-modal-message"></div>
+        </div>
+        <div class="privacy-modal-actions">
+          <button class="privacy-btn privacy-btn-primary" id="privacy-btn-enable">
+            <i class="fas fa-eye-slash"></i> Hide Data
+          </button>
+          <button class="privacy-btn privacy-btn-danger" id="privacy-btn-disable">
+            <i class="fas fa-eye"></i> Show Data
+          </button>
+          <button class="privacy-btn privacy-btn-secondary" id="privacy-btn-close">
+            Cancel
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    document
+      .getElementById("privacy-btn-close")
+      .addEventListener("click", () => {
+        overlay.classList.remove("active");
+      });
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove("active");
+      }
+    });
+
+    document
+      .getElementById("privacy-password")
+      .addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          document.getElementById("privacy-btn-enable").click();
+        }
+      });
+
+    const handleToggle = async (enable) => {
+      const passwordEl = document.getElementById("privacy-password");
+      const messageEl = document.getElementById("privacy-modal-message");
+      const password = passwordEl.value;
+
+      if (!password) {
+        messageEl.textContent = "Please enter the password.";
+        messageEl.className = "privacy-message error";
+        return;
+      }
+
+      messageEl.textContent = "Updating Privacy Mode...";
+      messageEl.className = "privacy-message loading";
+
+      const buttons = overlay.querySelectorAll(".privacy-btn");
+      buttons.forEach((b) => (b.disabled = true));
+
+      try {
+        const res = await fetch(
+          "https://admin-control.piotrunius.workers.dev/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              password,
+              action: enable ? "enable" : "disable",
+            }),
+          },
+        );
+        const data = await res.json();
+        if (data.success) {
+          messageEl.textContent = `Privacy Mode ${enable ? "Enabled" : "Disabled"} successfully!`;
+          messageEl.className = "privacy-message success";
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          messageEl.textContent = data.error || "Incorrect password.";
+          messageEl.className = "privacy-message error";
+          buttons.forEach((b) => (b.disabled = false));
+        }
+      } catch (err) {
+        messageEl.textContent = `Error: ${err.message}`;
+        messageEl.className = "privacy-message error";
+        buttons.forEach((b) => (b.disabled = false));
+      }
+    };
+
+    document
+      .getElementById("privacy-btn-enable")
+      .addEventListener("click", () => handleToggle(true));
+    document
+      .getElementById("privacy-btn-disable")
+      .addEventListener("click", () => handleToggle(false));
+  }
+
+  document.getElementById("privacy-password").value = "";
+  const messageEl = document.getElementById("privacy-modal-message");
+  messageEl.textContent = "";
+  messageEl.className = "privacy-message";
+  const buttons = overlay.querySelectorAll(".privacy-btn");
+  buttons.forEach((b) => (b.disabled = false));
+
+  overlay.classList.add("active");
+  document.getElementById("privacy-password").focus();
+
+  const statusEl = document.getElementById("privacy-modal-status");
+  statusEl.textContent = "Checking current status...";
+  statusEl.className = "privacy-status-text";
+
+  fetch("https://github-api.piotrunius.workers.dev/")
+    .then((res) => res.json())
+    .then((data) => {
+      const active = data.privacyMode === true;
+      statusEl.textContent = `Current Status: ${active ? "ACTIVE (Live Data Hidden)" : "INACTIVE (Live Data Visible)"}`;
+      statusEl.className = `privacy-status-text ${active ? "active" : "inactive"}`;
+    })
+    .catch(() => {
+      statusEl.textContent = "Unable to fetch current status.";
+      statusEl.className = "privacy-status-text";
+    });
+}
+
+function initPrivacyControl() {
+  // Key Combo: Ctrl + Alt + P
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "p") {
+      e.preventDefault();
+      showPrivacyModal();
+    }
+  });
+
+  // Footer Lock Click
+  const trigger = document.getElementById("privacy-lock-trigger");
+  if (trigger) {
+    trigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      showPrivacyModal();
+    });
+  }
+}
+
 // Initialize all new features
 document.addEventListener("DOMContentLoaded", () => {
   ToastManager.init();
   initThemeDetection();
   initFAQ();
+  initPrivacyControl();
 });
