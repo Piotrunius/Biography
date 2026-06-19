@@ -480,7 +480,7 @@ async function refreshGitHubStats() {
   // Check for Privacy Mode
   if (stats.privacyMode) {
     const privacyMessage =
-      '<div class="activity-item privacy-placeholder"><i class="fas fa-lock"></i> <span>Privacy Mode Active</span></div>';
+      '<div class="activity-item privacy-placeholder"><i class="fas fa-user-secret"></i> <span>Classified</span></div>';
     if (activityStarsEl) activityStarsEl.innerHTML = privacyMessage;
     if (activityCommitsEl) activityCommitsEl.innerHTML = privacyMessage;
     if (projectsEl) projectsEl.textContent = "?";
@@ -658,14 +658,9 @@ async function refreshSteamStatus() {
 
     // Add lock icon to avatar wrapper
     if (avatarWrapper) {
+      avatarWrapper.className = "steam-avatar-wrapper offline";
       const lockIcon = document.createElement("i");
-      lockIcon.className = "fas fa-lock";
-      lockIcon.style.fontSize = "2rem";
-      lockIcon.style.color = "var(--primary)";
-      lockIcon.style.position = "absolute";
-      lockIcon.style.top = "50%";
-      lockIcon.style.left = "50%";
-      lockIcon.style.transform = "translate(-50%, -50%)";
+      lockIcon.className = "fas fa-user-secret avatar-lock-icon";
       avatarWrapper.style.position = "relative";
       avatarWrapper.innerHTML = "";
       avatarWrapper.appendChild(lockIcon);
@@ -817,13 +812,7 @@ async function refreshDiscordStatus() {
 
           // Add lock icon
           const lockIcon = document.createElement("i");
-          lockIcon.className = "fas fa-lock";
-          lockIcon.style.fontSize = "2rem";
-          lockIcon.style.color = "var(--primary)";
-          lockIcon.style.position = "absolute";
-          lockIcon.style.top = "50%";
-          lockIcon.style.left = "50%";
-          lockIcon.style.transform = "translate(-50%, -50%)";
+          lockIcon.className = "fas fa-user-secret avatar-lock-icon";
           discordAvatarWrapper.style.position = "relative";
           discordAvatarWrapper.appendChild(lockIcon);
         }
@@ -929,13 +918,7 @@ async function refreshRobloxStatus() {
     if (avatarWrapper) {
       avatarWrapper.className = "roblox-avatar-wrapper offline";
       const lockIcon = document.createElement("i");
-      lockIcon.className = "fas fa-lock";
-      lockIcon.style.fontSize = "2rem";
-      lockIcon.style.color = "var(--primary)";
-      lockIcon.style.position = "absolute";
-      lockIcon.style.top = "50%";
-      lockIcon.style.left = "50%";
-      lockIcon.style.transform = "translate(-50%, -50%)";
+      lockIcon.className = "fas fa-user-secret avatar-lock-icon";
       avatarWrapper.style.position = "relative";
       avatarWrapper.innerHTML = "";
       avatarWrapper.appendChild(lockIcon);
@@ -1503,9 +1486,12 @@ function renderSpotifyEmpty(container) {
 function renderSpotifyPrivacyMode(container) {
   if (container.classList.contains("privacy")) return;
   container.innerHTML = `
-        <div class="spotify-placeholder">
-            <i class="fas fa-lock"></i>
-            <span>Privacy Mode Active</span>
+        <div class="privacy-widget-placeholder privacy-widget-placeholder-small" style="height: 100%; border: none; background: transparent; padding: 1rem;">
+            <div class="privacy-widget-icon-wrapper">
+                <i class="fas fa-user-secret"></i>
+            </div>
+            <h4>Radio Silence</h4>
+            <p>Live feed is currently hidden.</p>
         </div>
     `;
   container.className = "spotify-content privacy";
@@ -1632,9 +1618,12 @@ async function loadProjects() {
     // Check for Privacy Mode - check before using as array
     if (allRepos.privacyMode || allRepos.privacyMode === true) {
       container.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-secondary);">
-                    <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.7;"></i>
-                    <p>Privacy Mode Active</p>
+                <div class="privacy-widget-placeholder">
+                    <div class="privacy-widget-icon-wrapper">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h4>Classified Intel</h4>
+                    <p>Projects are currently hidden under privacy mode.</p>
                 </div>
             `;
       return;
