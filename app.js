@@ -24,45 +24,6 @@ const githubCache = {
 
 const GITHUB_CACHE_MS = 60_000;
 
-// Toast notification system
-const ToastManager = {
-  container: null,
-  init() {
-    this.container = document.getElementById("toast-container");
-  },
-  show(message, type = "info", duration = 5000) {
-    if (!this.container) return;
-
-    const toast = document.createElement("div");
-    toast.className = `toast ${type}`;
-
-    const icons = {
-      success: "fa-check-circle",
-      error: "fa-exclamation-circle",
-      info: "fa-info-circle",
-    };
-
-    toast.innerHTML = `
-            <i class="fas ${icons[type] || icons.info} toast-icon"></i>
-            <div class="toast-message">${message}</div>
-        `;
-
-    this.container.appendChild(toast);
-
-    setTimeout(() => {
-      toast.remove();
-    }, duration);
-  },
-  success(message) {
-    this.show(message, "success");
-  },
-  error(message) {
-    this.show(message, "error");
-  },
-  info(message) {
-    this.show(message, "info");
-  },
-};
 
 // Auto detect dark mode preference
 function initThemeDetection() {
@@ -115,7 +76,7 @@ async function fetchApiJson(url, fallback, label) {
     return await resp.json();
   } catch (e) {
     console.warn(`${label} error:`, e.message);
-    ToastManager.error(`Failed to load ${label.toLowerCase()}`);
+
     return fallback;
   }
 }
@@ -1842,7 +1803,7 @@ function updateCopyrightYear() {
   const copyrightEl = document.getElementById("copyright-year");
   if (!copyrightEl) return;
   const currentYear = new Date().getFullYear();
-  copyrightEl.textContent = `© ${currentYear} Piotrunius - All Rights Reserved`;
+  copyrightEl.textContent = `\u00a9 ${currentYear} Piotrunius - All Rights Reserved`;
 }
 
 // --- GITHUB ACTIVITY TIMELINE ---
@@ -2152,89 +2113,6 @@ const Terminal = {
       fn: function () {
         document.getElementById("terminal-output").innerHTML = "";
         return [];
-      },
-    },
-
-    privacy: {
-      description: "Manage global Privacy Mode",
-      usage: "privacy [on|off] [password] (or type privacy to open GUI)",
-      icon: "fa-lock",
-      fn: async function (args) {
-        if (!args[0]) {
-          showPrivacyModal();
-          return [
-            { text: "Opening Privacy Mode control panel...", class: "info" },
-          ];
-        }
-
-        const action = args[0].toLowerCase();
-        if (action !== "on" && action !== "off" && action !== "toggle") {
-          return [
-            {
-              text: "Invalid argument. Use 'on', 'off' or leave empty for GUI.",
-              class: "error",
-            },
-          ];
-        }
-
-        if (action === "toggle") {
-          showPrivacyModal();
-          return [
-            { text: "Opening Privacy Mode control panel...", class: "info" },
-          ];
-        }
-
-        const enable = action === "on";
-        const password = args[1];
-        if (!password) {
-          return [
-            {
-              text: "Password is required to change Privacy Mode from CLI. Usage: privacy [on|off] [password]",
-              class: "error",
-            },
-          ];
-        }
-
-        try {
-          const res = await fetch(
-            "https://admin-control.piotrunius.workers.dev/",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                password,
-                action: enable ? "enable" : "disable",
-              }),
-            },
-          );
-          const data = await res.json();
-          if (data.success) {
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-            return [
-              {
-                text: `Privacy Mode successfully set to ${action.toUpperCase()}!`,
-                class: "success",
-              },
-              {
-                text: "Reloading page in 1 second to apply changes...",
-                class: "info",
-              },
-            ];
-          } else {
-            return [
-              {
-                text: `Failed: ${data.error || "Unknown error"}`,
-                class: "error",
-              },
-            ];
-          }
-        } catch (err) {
-          return [{ text: `Error: ${err.message}`, class: "error" }];
-        }
       },
     },
 
@@ -3549,81 +3427,7 @@ const Terminal = {
       },
     },
 
-    admin: {
-      description: "Access admin mode with password verification",
-      usage: "admin",
-      icon: "fa-lock",
-      fn: async function () {
-        // Track admin command execution
-        if (typeof umami !== "undefined") {
-          umami.track("admin_command_executed");
-        }
 
-        // Prompt for password
-        const password = window.prompt("Enter Admin Password:");
-
-        // If user cancelled the prompt
-        if (password === null) {
-          if (typeof umami !== "undefined") {
-            umami.track("admin_cancelled");
-          }
-          return [{ text: "Admin access cancelled.", class: "warning" }];
-        }
-
-        try {
-          // Send POST request to Cloudflare Worker
-          const response = await fetch(
-            "https://admin-control.piotrunius.workers.dev",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                password: password,
-                action: "toggle",
-              }),
-            },
-          );
-
-          // Parse JSON response
-          const data = await response.json();
-
-          // Handle response based on success flag
-          if (data.success) {
-            if (typeof umami !== "undefined") {
-              umami.track("admin_password_success", {
-                message: data.message,
-                action: "toggle",
-              });
-            }
-            Terminal.print([
-              { text: data.message, class: "success" },
-              { text: "Reloading page...", class: "info" },
-            ]);
-            setTimeout(() => window.location.reload(), 1000);
-            return [];
-          } else {
-            if (typeof umami !== "undefined") {
-              umami.track("admin_password_failed", {
-                error: data.message || "Admin command failed",
-              });
-            }
-            return [
-              { text: data.message || "Admin command failed", class: "error" },
-            ];
-          }
-        } catch (error) {
-          if (typeof umami !== "undefined") {
-            umami.track("admin_connection_error", {
-              error: error.message,
-            });
-          }
-          console.error("Admin command error:", error);
-          return [{ text: "Connection Failed", class: "error" }];
-        }
-      },
-    },
 
     sudo: {
       description: "Execute command as superuser",
@@ -6490,7 +6294,7 @@ if ("serviceWorker" in navigator) {
             newWorker.state === "installed" &&
             navigator.serviceWorker.controller
           ) {
-            ToastManager.info("New version available! Refresh to update.");
+            console.info("New version available. Refresh to update.");
           }
         });
       });
@@ -6515,162 +6319,31 @@ document.addEventListener("click", (e) => {
 });
 
 // --- PRIVACY CONTROL ---
-function showPrivacyModal() {
-  let overlay = document.getElementById("privacy-modal");
-  if (!overlay) {
-    overlay = document.createElement("div");
-    overlay.id = "privacy-modal";
-    overlay.className = "privacy-modal-overlay";
-    overlay.innerHTML = `
-      <div class="privacy-modal-content">
-        <div class="privacy-modal-header">
-          <i class="fas fa-shield-alt"></i>
-          <h3>🔐 Privacy Control</h3>
-          <p>Toggle visibility of live statuses on the site</p>
-        </div>
-        <div class="privacy-modal-body">
-          <div class="privacy-status-text" id="privacy-modal-status">
-            Checking status...
-          </div>
-          <div class="privacy-input-group">
-            <label for="privacy-password">Admin Password</label>
-            <input type="password" id="privacy-password" class="privacy-input" placeholder="••••••••" autocomplete="current-password">
-          </div>
-          <div class="privacy-message" id="privacy-modal-message"></div>
-        </div>
-        <div class="privacy-modal-actions">
-          <button class="privacy-btn privacy-btn-primary" id="privacy-btn-enable">
-            <i class="fas fa-eye-slash"></i> Hide Data
-          </button>
-          <button class="privacy-btn privacy-btn-danger" id="privacy-btn-disable">
-            <i class="fas fa-eye"></i> Show Data
-          </button>
-          <button class="privacy-btn privacy-btn-secondary" id="privacy-btn-close">
-            Cancel
-          </button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
+async function showPrivacyModal() {
+  const password = prompt("Enter admin password:");
+  if (!password) return;
 
-    document
-      .getElementById("privacy-btn-close")
-      .addEventListener("click", () => {
-        overlay.classList.remove("active");
-      });
+  try {
+    const statusRes = await fetch("https://github-api.piotrunius.workers.dev/");
+    const statusData = await statusRes.json();
+    const action = statusData.privacyMode === true ? "disable" : "enable";
 
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) {
-        overlay.classList.remove("active");
-      }
+    const res = await fetch("https://admin-control.piotrunius.workers.dev/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password, action }),
     });
-
-    document
-      .getElementById("privacy-password")
-      .addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          document.getElementById("privacy-btn-enable").click();
-        }
-      });
-
-    const handleToggle = async (enable) => {
-      const passwordEl = document.getElementById("privacy-password");
-      const messageEl = document.getElementById("privacy-modal-message");
-      const password = passwordEl.value;
-
-      if (!password) {
-        messageEl.textContent = "Please enter the password.";
-        messageEl.className = "privacy-message error";
-        return;
-      }
-
-      messageEl.textContent = "Updating Privacy Mode...";
-      messageEl.className = "privacy-message loading";
-
-      const buttons = overlay.querySelectorAll(".privacy-btn");
-      buttons.forEach((b) => (b.disabled = true));
-
-      try {
-        const res = await fetch(
-          "https://admin-control.piotrunius.workers.dev/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              password,
-              action: enable ? "enable" : "disable",
-            }),
-          },
-        );
-        const data = await res.json();
-        if (data.success) {
-          messageEl.textContent = `Privacy Mode ${enable ? "Enabled" : "Disabled"} successfully!`;
-          messageEl.className = "privacy-message success";
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        } else {
-          messageEl.textContent = data.error || "Incorrect password.";
-          messageEl.className = "privacy-message error";
-          buttons.forEach((b) => (b.disabled = false));
-        }
-      } catch (err) {
-        messageEl.textContent = `Error: ${err.message}`;
-        messageEl.className = "privacy-message error";
-        buttons.forEach((b) => (b.disabled = false));
-      }
-    };
-
-    document
-      .getElementById("privacy-btn-enable")
-      .addEventListener("click", () => handleToggle(true));
-    document
-      .getElementById("privacy-btn-disable")
-      .addEventListener("click", () => handleToggle(false));
-  }
-
-  document.getElementById("privacy-password").value = "";
-  const messageEl = document.getElementById("privacy-modal-message");
-  messageEl.textContent = "";
-  messageEl.className = "privacy-message";
-  const buttons = overlay.querySelectorAll(".privacy-btn");
-  buttons.forEach((b) => (b.disabled = false));
-
-  overlay.classList.add("active");
-  document.getElementById("privacy-password").focus();
-
-  const statusEl = document.getElementById("privacy-modal-status");
-  statusEl.textContent = "Checking current status...";
-  statusEl.className = "privacy-status-text";
-
-  fetch("https://github-api.piotrunius.workers.dev/")
-    .then((res) => res.json())
-    .then((data) => {
-      const active = data.privacyMode === true;
-      statusEl.textContent = `Current Status: ${active ? "ACTIVE (Live Data Hidden)" : "INACTIVE (Live Data Visible)"}`;
-      statusEl.className = `privacy-status-text ${active ? "active" : "inactive"}`;
-    })
-    .catch(() => {
-      statusEl.textContent = "Unable to fetch current status.";
-      statusEl.className = "privacy-status-text";
-    });
+    const data = await res.json();
+    if (data.success) window.location.reload();
+  } catch {}
 }
 
 function initPrivacyControl() {
-  // Key Combo: Ctrl + Alt + P
-  document.addEventListener("keydown", (e) => {
-    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "p") {
-      e.preventDefault();
-      showPrivacyModal();
-    }
-  });
-
-  // Footer Lock Click
-  const trigger = document.getElementById("privacy-lock-trigger");
-  if (trigger) {
-    trigger.addEventListener("click", (e) => {
+  const copyright = document.getElementById("copyright-year");
+  if (copyright) {
+    copyright.style.userSelect = "none";
+    copyright.style.webkitUserSelect = "none";
+    copyright.addEventListener("dblclick", (e) => {
       e.preventDefault();
       showPrivacyModal();
     });
@@ -6679,7 +6352,6 @@ function initPrivacyControl() {
 
 // Initialize all new features
 document.addEventListener("DOMContentLoaded", () => {
-  ToastManager.init();
   initThemeDetection();
   initFAQ();
   initPrivacyControl();
