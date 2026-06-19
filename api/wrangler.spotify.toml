@@ -1,0 +1,7 @@
+name = "spotify-api"
+main = "spotify.js"
+compatibility_date = "2024-01-20"
+
+[[kv_namespaces]]
+binding = "STATE"
+id = "168633bcbb054b9b83a9518e399ab364"
