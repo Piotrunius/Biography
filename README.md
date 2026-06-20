@@ -9,6 +9,7 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 ## ✨ Key Features
 
 - 🎨 **Glassmorphism UI** - Modern frosted-glass aesthetic with smooth animations
+- 👻 **Synchronized Ghost Loaders** - Elegant skeleton loading screens that reveal all statuses simultaneously
 - 🌙 **Theme Toggle** - Switch between light and dark modes
 - 🎵 **Local Audio Player** - Built-in music player with visualizer
 - 📊 **Live Status Panels** - Real-time data from:
@@ -19,7 +20,8 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
   - 🎮 Roblox (presence status)
 - 📱 **PWA Support** - Install as app + offline caching
 - 📊 **Responsive Design** - Works on desktop, tablet, mobile
-- 🔐 **Privacy Mode** - Global kill-switch for all data
+- 🔐 **Privacy Mode** - Global kill-switch for all data with a native browser prompt authentication
+- 🛡️ **Robust Fallbacks** - Graceful error handling UI with default Offline states when APIs are unreachable
 
 ---
 
@@ -57,7 +59,7 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
     ├── steam.js           # Steam Worker
     ├── discord.js         # Discord Worker
     ├── roblox.js          # Roblox Worker
-    └── README.md          # API Documentation
+    └── admin.js           # Admin Worker
 ```
 
 ---
@@ -109,6 +111,7 @@ The live status panels require Cloudflare Workers to fetch real-time data.
    STEAM_ID = "..."
    DISCORD_ID = "..."
    ROBLOX_USER_ID = "..."
+   ADMIN_PASSWORD = "..."
    ```
 
 5. **Update API URLs**
@@ -130,6 +133,7 @@ Each worker requires specific environment variables and API credentials.
 | **steam.js** | 🎮 Player status | `STEAM_API_KEY`, `STEAM_ID` |
 | **discord.js** | 💬 Status & activities | `DISCORD_ID` |
 | **roblox.js** | 🎮 Presence status | `ROBLOX_USER_ID` |
+| **admin.js** | 🔐 Privacy Mode toggle | `ADMIN_PASSWORD` |
 
 ### Privacy Mode
 
@@ -148,15 +152,6 @@ When enabled, all APIs return:
   "message": "Privacy Mode Active"
 }
 ```
-
-### Full Documentation
-
-👉 **[See `api/README.md`](api/README.md)** for:
-- How to obtain each API credential
-- Detailed deployment instructions
-- Response formats & examples
-- Security best practices
-- Troubleshooting guide
 
 ---
 
@@ -207,16 +202,19 @@ Edit `projects.json` to add/remove projects:
 
 Real-time data updates (configurable interval):
 - **Spotify:** Album art, song title, artist, progress
-- **GitHub:** Profile picture, repos, followers, stats
+- **GitHub:** Profile picture, repos, followers, stats, and animated skeletons for recent activity
 - **Steam:** Avatar, username, current game, status
 - **Discord:** Status indicator, current activity, avatar
 - **Roblox:** Presence status, avatar, game location
 
+*Note: Status panels use a coordinated loading mechanism, ensuring Discord, Steam, and Roblox data fetches are fully settled before gracefully revealing the content together from a skeleton state.*
+
 ### 🔐 Privacy Controls
 
 Disable all data fetching with one setting:
-- Set `PRIVACY_MODE = "true"` in KV
-- All endpoints return privacy notice
+- Toggle via the hidden lock icon with a native browser password prompt (`Piotrunius123`)
+- Or set `PRIVACY_MODE = "true"` in KV manually
+- All endpoints return a privacy notice, displaying lock icons and hiding sensitive data globally
 - No data leakage
 
 ### 🌙 Dark/Light Mode
@@ -245,7 +243,6 @@ Uses **Umami Analytics** for privacy-friendly statistics:
 
 ## 📖 Documentation
 
-- [API Workers Guide](api/README.md) - Complete API documentation
 - [Cloudflare Workers Docs](https://developers.cloudflare.com/workers/)
 - [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
 
