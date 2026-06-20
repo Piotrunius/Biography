@@ -129,7 +129,7 @@ Each worker requires specific environment variables and API credentials.
 | Worker | Data | Secrets |
 |--------|------|---------|
 | **spotify.js** | 🎵 Playing song | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN` |
-| **github.js** | 🐙 Profile & repos | `GITHUB_TOKEN`, `GITHUB_USERNAME` (optional) |
+| **github.js** | 🐙 Profile & repos | `GITHUB_TOKEN`, `GITHUB_USERNAME`|
 | **steam.js** | 🎮 Player status | `STEAM_API_KEY`, `STEAM_ID` |
 | **discord.js** | 💬 Status & activities | `DISCORD_ID` |
 | **roblox.js** | 🎮 Presence status | `ROBLOX_USER_ID` |
@@ -208,14 +208,6 @@ Real-time data updates (configurable interval):
 - **Roblox:** Presence status, avatar, game location
 
 *Note: Status panels use a coordinated loading mechanism, ensuring Discord, Steam, and Roblox data fetches are fully settled before gracefully revealing the content together from a skeleton state.*
-
-### 🔐 Privacy Controls
-
-Disable all data fetching with one setting:
-- Toggle via the hidden lock icon with a native browser password prompt (`Piotrunius123`)
-- Or set `PRIVACY_MODE = "true"` in KV manually
-- All endpoints return a privacy notice, displaying lock icons and hiding sensitive data globally
-- No data leakage
 
 ### 🌙 Dark/Light Mode
 
