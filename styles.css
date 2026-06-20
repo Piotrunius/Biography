@@ -633,11 +633,6 @@ a:where(
     flex-wrap: wrap;
 }
 
-.steam-username {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text);
-}
 
 .steam-status-text {
     font-size: 0.85rem;
@@ -723,10 +718,26 @@ a:where(
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #767d85;
-    /* Default Offline */
-    box-shadow: 0 0 8px rgba(118, 125, 133, 0.5);
+    background: transparent;
     transition: all 0.3s ease;
+}
+
+.activity-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 120px;
+    color: var(--text-secondary);
+}
+
+.activity-empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .online .status-dot {
@@ -3363,6 +3374,7 @@ a:where(
     flex-direction: column;
     gap: 0.25rem;
     flex: 1;
+    justify-content: center;
 }
 
 .discord-name-row,
@@ -3492,7 +3504,7 @@ a:where(
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #767d85;
+    background: transparent;
     transition: all 0.3s ease;
 }
 
@@ -5604,7 +5616,7 @@ body.konami-hacker-mode {
     font-size: 0.9rem;
 }
 
-.status-dot {
+.secret-status .status-dot {
     width: 8px;
     height: 8px;
     background: var(--primary);
@@ -6101,122 +6113,5 @@ input:focus-visible,
 
 }
 
-/* --- PRIVACY WIDGET PLACEHOLDER --- */
-.privacy-widget-placeholder {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
-    background: rgba(20, 25, 30, 0.4);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    text-align: center;
-    min-height: 150px;
-    position: relative;
-    overflow: hidden;
-}
 
-.privacy-widget-placeholder::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100px;
-    background: radial-gradient(
-        ellipse at top,
-        rgba(0, 255, 136, 0.05),
-        transparent 70%
-    );
-    pointer-events: none;
-}
 
-.privacy-widget-icon-wrapper {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(
-        135deg,
-        rgba(0, 255, 136, 0.1),
-        rgba(0, 255, 136, 0.02)
-    );
-    border: 1px solid rgba(0, 255, 136, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    position: relative;
-    z-index: 1;
-}
-
-.privacy-widget-icon-wrapper i {
-    font-size: 1.5rem;
-    color: var(--primary);
-    filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.3));
-}
-
-.privacy-widget-placeholder h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 0.25rem;
-    letter-spacing: 0.5px;
-    position: relative;
-    z-index: 1;
-}
-
-.privacy-widget-placeholder p {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    max-width: 250px;
-    position: relative;
-    z-index: 1;
-}
-
-.privacy-widget-placeholder-small {
-    padding: 1.5rem 1rem;
-    min-height: auto;
-}
-.privacy-widget-placeholder-small .privacy-widget-icon-wrapper {
-    width: 45px;
-    height: 45px;
-    margin-bottom: 0.5rem;
-}
-.privacy-widget-placeholder-small .privacy-widget-icon-wrapper i {
-    font-size: 1.2rem;
-}
-.privacy-widget-placeholder-small h4 {
-    font-size: 0.95rem;
-}
-.privacy-widget-placeholder-small p {
-    font-size: 0.8rem;
-}
-
-.activity-item.privacy-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(20, 25, 30, 0.4);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    color: var(--text-secondary);
-    font-style: italic;
-    font-size: 0.9rem;
-}
-.activity-item.privacy-placeholder i {
-    color: var(--primary);
-    margin-right: 0.5rem;
-    opacity: 0.7;
-}
-
-.avatar-lock-icon {
-    font-size: 1.5rem !important;
-    color: var(--primary) !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.3)) !important;
-}

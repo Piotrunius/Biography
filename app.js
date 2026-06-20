@@ -87,6 +87,7 @@ async function getGitHubData(force = false) {
     return githubCache.data;
   }
   const fallback = {
+    error: true,
     summary: { projects: 0, starredCount: 0, gistsCount: 0, commits: 0 },
     recentCommits: [],
     starred: [],
@@ -480,13 +481,26 @@ async function refreshGitHubStats() {
   // Check for Privacy Mode
   if (stats.privacyMode) {
     const privacyMessage =
-      '<div class="activity-item privacy-placeholder"><i class="fas fa-user-secret"></i> <span>Classified</span></div>';
+      '<div class="activity-item activity-empty-state"><i class="fas fa-lock"></i><span>Privacy Mode Active</span></div>';
     if (activityStarsEl) activityStarsEl.innerHTML = privacyMessage;
     if (activityCommitsEl) activityCommitsEl.innerHTML = privacyMessage;
     if (projectsEl) projectsEl.textContent = "?";
     if (commitsEl) commitsEl.textContent = "?";
     if (gistsEl) gistsEl.textContent = "?";
     if (lastUpdateEl) lastUpdateEl.textContent = "Privacy Mode Active";
+    return;
+  }
+
+  // Check for API Error
+  if (stats.error) {
+    const errorMessage =
+      '<div class="activity-item activity-empty-state"><i class="fas fa-exclamation-triangle"></i><span>Data unavailable</span></div>';
+    if (activityStarsEl) activityStarsEl.innerHTML = errorMessage;
+    if (activityCommitsEl) activityCommitsEl.innerHTML = errorMessage;
+    if (projectsEl) projectsEl.textContent = "?";
+    if (commitsEl) commitsEl.textContent = "?";
+    if (gistsEl) gistsEl.textContent = "?";
+    if (lastUpdateEl) lastUpdateEl.textContent = "Data unavailable";
     return;
   }
 
@@ -546,7 +560,7 @@ async function refreshGitHubStats() {
     activityStarsEl.appendChild(fragment);
   } else if (activityStarsEl) {
     activityStarsEl.innerHTML =
-      '<div class="activity-item">No recent stars</div>';
+      '<div class="activity-item activity-empty-state"><i class="fas fa-star"></i><span>No recent stars</span></div>';
   }
 
   // Display recent commits from GitHub Worker API
@@ -582,7 +596,7 @@ async function refreshGitHubStats() {
     activityCommitsEl.appendChild(fragment);
   } else if (activityCommitsEl) {
     activityCommitsEl.innerHTML =
-      '<div class="activity-item">No recent commits</div>';
+      '<div class="activity-item activity-empty-state"><i class="fas fa-code-commit"></i><span>No recent commits</span></div>';
   }
 }
 
@@ -627,12 +641,38 @@ function hideLoadingSpinner(panelId) {
   }
 }
 
+// --- REVEAL ALL STATUSES SYNCHRONOUSLY ---
+async function revealAllStatuses() {
+  const startTime = Date.now();
+  
+  // Wait for all three API calls to settle (success or fail)
+  await Promise.allSettled([
+    refreshSteamStatus(),
+    refreshDiscordStatus(),
+    refreshRobloxStatus(),
+  ]);
+
+  // Ensure minimum ghost loader display time of 600ms across all 3
+  const elapsed = Date.now() - startTime;
+  if (elapsed < 600) {
+    await new Promise(r => setTimeout(r, 600 - elapsed));
+  }
+
+  // Reveal all panels together
+  ["steam", "discord", "roblox"].forEach(platform => {
+    const skeleton = document.getElementById(`${platform}-skeleton`);
+    const content = document.getElementById(`${platform}-content`);
+    if (skeleton) skeleton.style.display = "none";
+    if (content) content.style.display = "flex";
+  });
+}
+
 // --- CORE FUNCTION: Render Steam Status ---
 async function refreshSteamStatus() {
   const steamPanel = document.getElementById("steam-status-panel");
   if (!steamPanel) return;
 
-  const fallback = { steam: { personastate: 0, gameextrainfo: null } };
+  const fallback = { error: true, steam: { personastate: -1, gameextrainfo: null } };
   const stats = await fetchApiJson(API_ENDPOINTS.steam, fallback, "Steam API");
 
   // Check for Privacy Mode
@@ -658,14 +698,29 @@ async function refreshSteamStatus() {
 
     // Add lock icon to avatar wrapper
     if (avatarWrapper) {
-      avatarWrapper.className = "steam-avatar-wrapper offline";
       const lockIcon = document.createElement("i");
-      lockIcon.className = "fas fa-user-secret avatar-lock-icon";
+      lockIcon.className = "fas fa-lock";
+      lockIcon.style.fontSize = "2rem";
+      lockIcon.style.color = "var(--primary)";
+      lockIcon.style.position = "absolute";
+      lockIcon.style.top = "50%";
+      lockIcon.style.left = "50%";
+      lockIcon.style.transform = "translate(-50%, -50%)";
       avatarWrapper.style.position = "relative";
       avatarWrapper.innerHTML = "";
       avatarWrapper.appendChild(lockIcon);
     }
 
+    return;
+  }
+
+  // Check for API Error
+  if (stats.error) {
+    const statusText = document.getElementById("steam-status-text");
+    if (statusText) statusText.textContent = "Offline";
+    const dotContainer = document.getElementById("steam-dot")?.parentElement;
+    if (dotContainer) dotContainer.className = "steam-avatar-wrapper offline";
+    hideLoadingSpinner("steam-status-panel");
     return;
   }
   const s = stats.steam || stats || {};
@@ -812,7 +867,13 @@ async function refreshDiscordStatus() {
 
           // Add lock icon
           const lockIcon = document.createElement("i");
-          lockIcon.className = "fas fa-user-secret avatar-lock-icon";
+          lockIcon.className = "fas fa-lock";
+          lockIcon.style.fontSize = "2rem";
+          lockIcon.style.color = "var(--primary)";
+          lockIcon.style.position = "absolute";
+          lockIcon.style.top = "50%";
+          lockIcon.style.left = "50%";
+          lockIcon.style.transform = "translate(-50%, -50%)";
           discordAvatarWrapper.style.position = "relative";
           discordAvatarWrapper.appendChild(lockIcon);
         }
@@ -881,8 +942,6 @@ async function refreshDiscordStatus() {
         }
       }
     }
-    // Show panel after data is loaded
-    if (discordPanel) discordPanel.style.display = "flex";
   } catch (e) {
     console.warn("Error fetching Discord status from Lanyard:", e.message);
     // Fallback
@@ -891,6 +950,9 @@ async function refreshDiscordStatus() {
       discordAvatarWrapper.className = "discord-avatar-wrapper offline";
     if (discordDot) discordDot.className = "status-dot";
   }
+
+  // Show panel after data is loaded
+  if (discordPanel) discordPanel.style.display = "flex";
 }
 
 // --- ROBLOX STATUS ---
@@ -898,7 +960,7 @@ async function refreshRobloxStatus() {
   const robloxPanel = document.getElementById("roblox-status-panel");
   if (!robloxPanel) return;
 
-  const fallback = { status: "Offline", game: null };
+  const fallback = { error: true, status: "?", game: null };
   const data = await fetchApiJson(API_ENDPOINTS.roblox, fallback, "Roblox API");
 
   // Check for Privacy Mode
@@ -918,12 +980,26 @@ async function refreshRobloxStatus() {
     if (avatarWrapper) {
       avatarWrapper.className = "roblox-avatar-wrapper offline";
       const lockIcon = document.createElement("i");
-      lockIcon.className = "fas fa-user-secret avatar-lock-icon";
+      lockIcon.className = "fas fa-lock";
+      lockIcon.style.fontSize = "2rem";
+      lockIcon.style.color = "var(--primary)";
+      lockIcon.style.position = "absolute";
+      lockIcon.style.top = "50%";
+      lockIcon.style.left = "50%";
+      lockIcon.style.transform = "translate(-50%, -50%)";
       avatarWrapper.style.position = "relative";
       avatarWrapper.innerHTML = "";
       avatarWrapper.appendChild(lockIcon);
     }
     robloxPanel.style.display = "flex";
+    return;
+  }
+
+  if (data.error) {
+    const statusText = document.getElementById("roblox-status-text");
+    if (statusText) statusText.textContent = "Offline";
+    const avatarWrapper = document.querySelector(".roblox-avatar-wrapper");
+    if (avatarWrapper) avatarWrapper.className = "roblox-avatar-wrapper offline";
     return;
   }
 
@@ -1486,12 +1562,9 @@ function renderSpotifyEmpty(container) {
 function renderSpotifyPrivacyMode(container) {
   if (container.classList.contains("privacy")) return;
   container.innerHTML = `
-        <div class="privacy-widget-placeholder privacy-widget-placeholder-small" style="height: 100%; border: none; background: transparent; padding: 1rem;">
-            <div class="privacy-widget-icon-wrapper">
-                <i class="fas fa-user-secret"></i>
-            </div>
-            <h4>Radio Silence</h4>
-            <p>Live feed is currently hidden.</p>
+        <div class="spotify-placeholder">
+            <i class="fas fa-lock"></i>
+            <span>Privacy Mode Active</span>
         </div>
     `;
   container.className = "spotify-content privacy";
@@ -1540,9 +1613,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initMusicMeta();
   initSetup();
   refreshGitHubStats();
-  refreshSteamStatus();
-  refreshDiscordStatus();
-  refreshRobloxStatus();
+  revealAllStatuses();
   updateSpotifyStatus();
   initControls();
 
@@ -1618,12 +1689,9 @@ async function loadProjects() {
     // Check for Privacy Mode - check before using as array
     if (allRepos.privacyMode || allRepos.privacyMode === true) {
       container.innerHTML = `
-                <div class="privacy-widget-placeholder">
-                    <div class="privacy-widget-icon-wrapper">
-                        <i class="fas fa-user-secret"></i>
-                    </div>
-                    <h4>Classified Intel</h4>
-                    <p>Projects are currently hidden under privacy mode.</p>
+                <div style="grid-column: 1/-1;" class="activity-empty-state">
+                    <i class="fas fa-lock"></i>
+                    <p>Privacy Mode Active</p>
                 </div>
             `;
       return;
@@ -1632,8 +1700,8 @@ async function loadProjects() {
     // Now safely check if it's an array with repos
     if (!Array.isArray(allRepos) || allRepos.length === 0) {
       container.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-secondary);">
-                    <i class="fas fa-code" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                <div style="grid-column: 1/-1;" class="activity-empty-state">
+                    <i class="fas fa-code"></i>
                     <p>No projects to display</p>
                 </div>
             `;
