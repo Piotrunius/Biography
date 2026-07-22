@@ -1,0 +1,24 @@
+{
+  "name": "biography",
+  "version": "1.0.0",
+  "description": "A beautiful, modern portfolio website showcasing real-time presence across multiple platforms. Features live status panels from Spotify, Steam, GitHub, Discord, and Roblox, combined with a glassmorphism design and interactive audio player.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Piotrunius/Biography.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Piotrunius/Biography/issues"
+  },
+  "homepage": "https://github.com/Piotrunius/Biography#readme",
+  "devDependencies": {
+    "prettier": "^3.9.6"
+  }
+}

@@ -1,952 +1,968 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Piotrunius - Developer & Tech Enthusiast</title>
-        <meta
-            name="description"
-            content="Personal portfolio of Piotrunius - a developer from Poland who builds projects, experiments with code, and shares tech insights. Check out my projects, skills, and real-time activity."
-        />
-        <meta
-            name="keywords"
-            content="Piotrunius, developer, portfolio, Poland, web development, programming, tech, projects"
-        />
-        <meta name="author" content="Piotrunius" />
-        <meta
-            name="theme-color"
-            content="#00ff88"
-            media="(prefers-color-scheme: dark)"
-        />
-        <meta
-            name="theme-color"
-            content="#00a859"
-            media="(prefers-color-scheme: light)"
-        />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piotrunius - Developer & Tech Enthusiast</title>
+    <meta
+      name="description"
+      content="Personal portfolio of Piotrunius - a developer from Poland who builds projects, experiments with code, and shares tech insights. Check out my projects, skills, and real-time activity."
+    />
+    <meta
+      name="keywords"
+      content="Piotrunius, developer, portfolio, Poland, web development, programming, tech, projects"
+    />
+    <meta name="author" content="Piotrunius" />
+    <meta
+      name="theme-color"
+      content="#00ff88"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#00a859"
+      media="(prefers-color-scheme: light)"
+    />
 
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://piotrunius.dev/" />
-        <meta
-            property="og:title"
-            content="Piotrunius - Developer & Tech Enthusiast"
-        />
-        <meta
-            property="og:description"
-            content="Personal portfolio showcasing projects, skills and socials"
-        />
-        <meta
-            property="og:image"
-            content="https://piotrunius.dev/assets/pfp.png"
-        />
-        <meta property="og:site_name" content="Piotrunius Portfolio" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://piotrunius.dev/" />
+    <meta
+      property="og:title"
+      content="Piotrunius - Developer & Tech Enthusiast"
+    />
+    <meta
+      property="og:description"
+      content="Personal portfolio showcasing projects, skills and socials"
+    />
+    <meta property="og:image" content="https://piotrunius.dev/assets/pfp.png" />
+    <meta property="og:site_name" content="Piotrunius Portfolio" />
 
-        <!-- Twitter Card -->
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" content="https://piotrunius.dev/" />
-        <meta
-            name="twitter:title"
-            content="Piotrunius - Developer & Tech Enthusiast"
-        />
-        <meta
-            name="twitter:description"
-            content="Personal portfolio showcasing projects, skills, and real-time activity."
-        />
-        <meta
-            name="twitter:image"
-            content="https://piotrunius.dev/assets/pfp.png"
-        />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://piotrunius.dev/" />
+    <meta
+      name="twitter:title"
+      content="Piotrunius - Developer & Tech Enthusiast"
+    />
+    <meta
+      name="twitter:description"
+      content="Personal portfolio showcasing projects, skills, and real-time activity."
+    />
+    <meta
+      name="twitter:image"
+      content="https://piotrunius.dev/assets/pfp.png"
+    />
 
-        <!-- Schema.org structured data -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "Person",
-                "name": "Piotrunius",
-                "url": "https://piotrunius.dev",
-                "image": "https://piotrunius.dev/assets/pfp.png",
-                "jobTitle": "Developer",
-                "description": "Developer & tech enthusiast from Poland",
-                "sameAs": [
-                    "https://github.com/Piotrunius",
-                    "https://steamcommunity.com/id/piotrunius"
-                ]
-            }
-        </script>
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Piotrunius",
+        "url": "https://piotrunius.dev",
+        "image": "https://piotrunius.dev/assets/pfp.png",
+        "jobTitle": "Developer",
+        "description": "Developer & tech enthusiast from Poland",
+        "sameAs": [
+          "https://github.com/Piotrunius",
+          "https://steamcommunity.com/id/piotrunius"
+        ]
+      }
+    </script>
 
-        <link rel="icon" type="image/png" href="assets/pfp.png" />
-        <link rel="apple-touch-icon" href="assets/pfp.png" />
-        <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="assets/pfp.png" />
+    <link rel="apple-touch-icon" href="assets/pfp.png" />
+    <link rel="manifest" href="manifest.json" />
 
-        <!-- Resource hints -->
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-        <link
-            rel="dns-prefetch"
-            href="https://github-api.piotrunius.workers.dev"
-        />
-        <link
-            rel="dns-prefetch"
-            href="https://spotify-api.piotrunius.workers.dev"
-        />
-        <link
-            rel="dns-prefetch"
-            href="https://steam-api.piotrunius.workers.dev"
-        />
-        <link
-            rel="dns-prefetch"
-            href="https://discord-api.piotrunius.workers.dev"
-        />
-        <link
-            rel="dns-prefetch"
-            href="https://roblox-api.piotrunius.workers.dev"
-        />
-        <link rel="preload" href="styles.css" as="style" />
-        <link rel="preload" href="app.js" as="script" />
+    <!-- Resource hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://github-api.piotrunius.workers.dev" />
+    <link
+      rel="dns-prefetch"
+      href="https://spotify-api.piotrunius.workers.dev"
+    />
+    <link rel="dns-prefetch" href="https://steam-api.piotrunius.workers.dev" />
+    <link
+      rel="dns-prefetch"
+      href="https://discord-api.piotrunius.workers.dev"
+    />
+    <link rel="dns-prefetch" href="https://roblox-api.piotrunius.workers.dev" />
+    <link rel="preload" href="styles.css" as="style" />
+    <link rel="preload" href="app.js" as="script" />
 
-        <link rel="stylesheet" href="styles.css" />
-        <script
-            src="https://kit.fontawesome.com/bd01feb821.js"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            defer
-            src="https://umami-proxy.piotrunius.workers.dev/script.js"
-            data-website-id="6fe44ce6-f537-41a6-9f7f-227556b3ba84"
-        ></script>
-    </head>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://kit.fontawesome.com/bd01feb821.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://umami-proxy.piotrunius.workers.dev/script.js"
+      data-website-id="6fe44ce6-f537-41a6-9f7f-227556b3ba84"
+    ></script>
+  </head>
 
-    <body>
-        <!-- Skip to content for accessibility -->
-        <a href="#main-content" class="skip-to-content">Skip to main content</a>
+  <body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
-        <div class="bg-layer"></div>
-        <canvas id="bg-canvas" class="bg-canvas"></canvas>
+    <div class="bg-layer"></div>
+    <canvas id="bg-canvas" class="bg-canvas"></canvas>
 
-        <!-- SVG Gradient for FontAwesome Kit SVGs -->
-        <svg
-            aria-hidden="true"
-            focusable="false"
-            style="width: 0; height: 0; position: absolute"
-        >
-            <defs>
-                <linearGradient
-                    id="fa-gradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                >
-                    <stop offset="0%" stop-color="#00ff88" />
-                    <stop offset="100%" stop-color="#00b8ff" />
-                </linearGradient>
-            </defs>
-        </svg>
+    <!-- SVG Gradient for FontAwesome Kit SVGs -->
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      style="width: 0; height: 0; position: absolute"
+    >
+      <defs>
+        <linearGradient id="fa-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00ff88" />
+          <stop offset="100%" stop-color="#00b8ff" />
+        </linearGradient>
+      </defs>
+    </svg>
 
-        <!-- WIP Notice Banner -->
-        <div class="wip-notice" id="wip-notice">
-            <div class="wip-content">
-                <div class="wip-icon-wrapper">
-                    <i class="fas fa-hammer"></i>
-                </div>
-                <div class="wip-text-content">
-                    <span class="wip-title">Work in Progress</span>
-                    <span class="wip-description"
-                        >This site is actively being developed. Expect updates,
-                        tweaks and occasional rough edges.</span
-                    >
-                </div>
-                <button
-                    class="wip-close"
-                    id="wip-close"
-                    aria-label="Close notice"
-                >
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- WIP Notice Banner -->
+    <div class="wip-notice" id="wip-notice">
+      <div class="wip-content">
+        <div class="wip-icon-wrapper">
+          <i class="fas fa-hammer"></i>
+        </div>
+        <div class="wip-text-content">
+          <span class="wip-title">Work in Progress</span>
+          <span class="wip-description"
+            >This site is actively being developed. Expect updates, tweaks and
+            occasional rough edges.</span
+          >
+        </div>
+        <button class="wip-close" id="wip-close" aria-label="Close notice">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Suggestions Container -->
+    <div id="suggestions-container" class="suggestions-container">
+      <!-- Suggestions will be dynamically added here -->
+    </div>
+
+    <audio id="bg-audio" loop>
+      <source src="assets/audio.mp3" type="audio/mpeg" />
+    </audio>
+
+    <main class="main-container" id="main-content">
+      <!-- LEFT: Spotify Status -->
+      <section class="spotify-status-card glass-card animate-slide-right">
+        <div class="music-label spotify-brand">
+          <i class="fa-brands fa-spotify"></i>
+          <span>SPOTIFY STATUS</span>
+        </div>
+        <div id="spotify-content" class="spotify-content empty">
+          <div class="spotify-placeholder">
+            <i class="fas fa-headphones"></i>
+            <span>Not listening right now</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CENTER: Profile Section -->
+      <section class="profile-section glass-card animate-fade-in">
+        <div class="avatar-container">
+          <img
+            id="avatar"
+            src="assets/pfp.png"
+            alt="Avatar"
+            class="avatar"
+            loading="lazy"
+            width="180"
+            height="180"
+          />
+          <div class="avatar-ring"></div>
+        </div>
+        <h2 id="profile-name" class="profile-name">Piotrunius</h2>
+        <p id="profile-bio" class="profile-bio">Developer & tech tinkerer</p>
+      </section>
+
+      <!-- RIGHT: Local Player -->
+      <section class="music-player-card glass-card animate-slide-left">
+        <div class="music-label">
+          <i class="fas fa-music"></i>
+          <span>LOCAL PLAYER</span>
+        </div>
+        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+        <div class="music-meta">
+          <span id="music-title" class="music-link">Smoking Alone</span>
+          <div id="music-artist">BackDrop</div>
+        </div>
+        <div class="music-controls">
+          <button id="audio-toggle" class="music-btn">
+            <i class="fas fa-play"></i>
+            <span>Play</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="about-section glass-card animate-slide-right">
+        <h3 class="section-title">
+          <i class="fas fa-id-card"></i>
+          ABOUT ME
+        </h3>
+        <div class="about-grid">
+          <div class="about-card">
+            <div class="about-title">Who am I?</div>
+            <div class="about-value">
+              Just a guy from Poland who likes building stuff and figuring out
+              how things work. I mess around with code, play games, listen to
+              way too much music, and occasionally break things (then fix
+              them... usually). Still learning, still experimenting. I run Linux
+              because it lets me tweak everything, and I share what I figure out
+              with friends when it actually works. I try to keep things chill
+              and stay emotionally balanced, life's too short for unnecessary
+              stress. I value a relaxed vibe, good conversations, and not taking
+              everything too seriously.
             </div>
+          </div>
+          <div class="about-card">
+            <div class="about-title">Languages</div>
+            <div class="lang-slider" data-level="100">
+              <div class="lang-label">
+                <span>Polish</span><span class="lvl">Native</span>
+              </div>
+              <div class="lang-track">
+                <div class="lang-fill"></div>
+              </div>
+            </div>
+            <div class="lang-slider" data-level="90">
+              <div class="lang-label">
+                <span>English</span><span class="lvl">C1/C2</span>
+              </div>
+              <div class="lang-track">
+                <div class="lang-fill"></div>
+              </div>
+            </div>
+            <div class="lang-slider" data-level="35">
+              <div class="lang-label">
+                <span>German</span><span class="lvl">A2</span>
+              </div>
+              <div class="lang-track">
+                <div class="lang-fill"></div>
+              </div>
+            </div>
+            <div class="lang-slider" data-level="20">
+              <div class="lang-label">
+                <span>Spanish</span><span class="lvl">A1</span>
+              </div>
+              <div class="lang-track">
+                <div class="lang-fill"></div>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <!-- Suggestions Container -->
-        <div id="suggestions-container" class="suggestions-container">
-            <!-- Suggestions will be dynamically added here -->
+      <section class="steam-panel-section glass-card animate-slide-right">
+        <h3 class="section-title">
+          <i class="fas fa-broadcast-tower"></i>
+          STATUS
+        </h3>
+        <div class="status-panels-grid">
+          <!-- Steam Panel -->
+          <div class="status-sub-panel compact-panel">
+            <div class="sub-panel-title">
+              <i class="fa-brands fa-steam"></i>
+              Steam
+            </div>
+            <div id="steam-status-panel" class="steam-status-panel">
+              <div
+                id="steam-skeleton"
+                style="
+                  display: flex;
+                  gap: 1rem;
+                  align-items: center;
+                  width: 100%;
+                "
+              >
+                <div
+                  class="skeleton"
+                  style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 12px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div style="flex: 1">
+                  <div class="skeleton skeleton-title" style="width: 60%"></div>
+                  <div
+                    class="skeleton skeleton-text"
+                    style="width: 30%; margin-bottom: 0"
+                  ></div>
+                </div>
+              </div>
+              <div
+                id="steam-content"
+                class="steam-user-info"
+                style="display: none"
+              >
+                <div class="steam-avatar-wrapper">
+                  <img
+                    id="steam-pfp"
+                    src="assets/pfp.png"
+                    alt="Steam Avatar"
+                    class="steam-avatar"
+                    loading="lazy"
+                    width="80"
+                    height="80"
+                  />
+                  <span id="steam-dot" class="status-dot"></span>
+                </div>
+                <div class="steam-details">
+                  <div class="steam-name-row">
+                    <span class="steam-username">Piotrunius</span>
+                    <span id="steam-status-text" class="steam-status-text"
+                      >Offline</span
+                    >
+                  </div>
+                  <div
+                    id="steam-game-info"
+                    class="steam-game-info"
+                    style="display: none"
+                  ></div>
+                  <div class="steam-extra-info" style="display: none">
+                    <span id="steam-member-since"></span>
+                    <span id="steam-game-count"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discord Panel -->
+          <div class="status-sub-panel compact-panel">
+            <div class="sub-panel-title">
+              <i class="fa-brands fa-discord"></i>
+              Discord
+            </div>
+            <div id="discord-status-panel" class="discord-status-panel">
+              <div
+                id="discord-skeleton"
+                style="
+                  display: flex;
+                  gap: 1rem;
+                  align-items: center;
+                  width: 100%;
+                "
+              >
+                <div
+                  class="skeleton"
+                  style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 12px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div style="flex: 1">
+                  <div class="skeleton skeleton-title" style="width: 50%"></div>
+                  <div
+                    class="skeleton skeleton-text"
+                    style="width: 40%; margin-bottom: 0"
+                  ></div>
+                </div>
+              </div>
+              <div
+                id="discord-content"
+                class="discord-user-info"
+                style="display: none"
+              >
+                <div class="discord-avatar-wrapper">
+                  <img
+                    id="discord-pfp"
+                    src="assets/pfp.png"
+                    alt="Discord Avatar"
+                    class="discord-avatar"
+                    loading="lazy"
+                    width="80"
+                    height="80"
+                  />
+                  <span id="discord-dot" class="status-dot"></span>
+                </div>
+                <div class="discord-details">
+                  <div class="discord-name-row">
+                    <span class="discord-username">Piotrunius</span>
+                    <span id="discord-status-text" class="discord-status-text"
+                      >Offline</span
+                    >
+                  </div>
+                  <div
+                    id="discord-activity-info"
+                    class="discord-activity-info"
+                    style="display: none"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roblox Panel -->
+          <div class="status-sub-panel compact-panel">
+            <div class="sub-panel-title">
+              <i class="fas fa-cube"></i>
+              Roblox
+            </div>
+            <div id="roblox-status-panel" class="roblox-status-panel">
+              <div
+                id="roblox-skeleton"
+                style="
+                  display: flex;
+                  gap: 1rem;
+                  align-items: center;
+                  width: 100%;
+                "
+              >
+                <div
+                  class="skeleton"
+                  style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 12px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div style="flex: 1">
+                  <div class="skeleton skeleton-title" style="width: 55%"></div>
+                  <div
+                    class="skeleton skeleton-text"
+                    style="width: 35%; margin-bottom: 0"
+                  ></div>
+                </div>
+              </div>
+              <div
+                id="roblox-content"
+                class="roblox-user-info"
+                style="display: none"
+              >
+                <div class="roblox-avatar-wrapper">
+                  <img
+                    id="roblox-pfp"
+                    src="assets/pfp.png"
+                    alt="Roblox Avatar"
+                    class="roblox-avatar"
+                    loading="lazy"
+                    width="80"
+                    height="80"
+                  />
+                  <span id="roblox-dot" class="status-dot"></span>
+                </div>
+                <div class="roblox-details">
+                  <div class="roblox-name-row">
+                    <span class="roblox-username">pioterson2000</span>
+                    <span id="roblox-status-text" class="roblox-status-text"
+                      >Offline</span
+                    >
+                  </div>
+                  <div
+                    id="roblox-game-info"
+                    class="roblox-game-info"
+                    style="display: none"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <audio id="bg-audio" loop>
-            <source src="assets/audio.mp3" type="audio/mpeg" />
-        </audio>
+      <section class="social-section glass-card animate-slide-right">
+        <h3 class="section-title">
+          <i class="fas fa-link"></i>
+          CONNECT
+        </h3>
+        <div id="socials-container" class="socials-grid"></div>
+      </section>
 
+      <section class="stats-section glass-card animate-slide-left">
+        <h3 class="section-title">
+          <i class="fas fa-chart-line"></i>
+          ACTIVITY
+        </h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="fas fa-fire"></i>
+            <div class="stat-value" id="stat-projects">?</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-code"></i>
+            <div class="stat-value" id="stat-commits">?</div>
+            <div class="stat-label">Commits</div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-star"></i>
+            <div class="stat-value" id="stat-gists">?</div>
+            <div class="stat-label">Stars</div>
+          </div>
+        </div>
+      </section>
 
-        <main class="main-container" id="main-content">
-            <!-- LEFT: Spotify Status -->
-            <section class="spotify-status-card glass-card animate-slide-right">
-                <div class="music-label spotify-brand">
-                    <i class="fa-brands fa-spotify"></i>
-                    <span>SPOTIFY STATUS</span>
-                </div>
-                <div id="spotify-content" class="spotify-content empty">
-                    <div class="spotify-placeholder">
-                        <i class="fas fa-headphones"></i>
-                        <span>Not listening right now</span>
-                    </div>
-                </div>
-            </section>
+      <section class="skills-section glass-card animate-slide-right">
+        <h3 class="section-title">
+          <i class="fas fa-code"></i>
+          SKILLS & TECH STACK
+        </h3>
+        <div class="skills-grid">
+          <a
+            href="https://www.python.org"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="python"
+          >
+            <i class="fab fa-python"></i>
+            <span>Python</span>
+          </a>
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="javascript"
+          >
+            <i class="fab fa-js"></i>
+            <span>JavaScript</span>
+          </a>
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/HTML"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="html"
+          >
+            <i class="fab fa-html5"></i>
+            <span>HTML5</span>
+          </a>
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/CSS"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="css"
+          >
+            <i class="fab fa-css3-alt"></i>
+            <span>CSS3</span>
+          </a>
+          <a
+            href="https://react.dev"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="react"
+          >
+            <i class="fab fa-react"></i>
+            <span>React</span>
+          </a>
+          <a
+            href="https://www.typescriptlang.org"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="typescript"
+          >
+            <i class="fab fa-typescript"></i>
+            <span>TypeScript</span>
+          </a>
+          <a
+            href="https://www.docker.com"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="docker"
+          >
+            <i class="fab fa-docker"></i>
+            <span>Docker</span>
+          </a>
+          <a
+            href="https://nodejs.org"
+            target="_blank"
+            rel="noreferrer"
+            class="skill-badge"
+            data-skill="node"
+          >
+            <i class="fab fa-node-js"></i>
+            <span>Node.js</span>
+          </a>
+        </div>
+      </section>
 
-            <!-- CENTER: Profile Section -->
-            <section class="profile-section glass-card animate-fade-in">
-                <div class="avatar-container">
-                    <img
-                        id="avatar"
-                        src="assets/pfp.png"
-                        alt="Avatar"
-                        class="avatar"
-                        loading="lazy"
-                        width="180"
-                        height="180"
-                    />
-                    <div class="avatar-ring"></div>
-                </div>
-                <h2 id="profile-name" class="profile-name">Piotrunius</h2>
-                <p id="profile-bio" class="profile-bio">
-                    Developer & tech tinkerer
-                </p>
-            </section>
+      <section class="activity-section glass-card animate-slide-up">
+        <h3 class="section-title">
+          <i class="fas fa-bolt"></i>
+          LIVE FEED
+        </h3>
+        <div class="activity-grid">
+          <div class="feed-card">
+            <div class="feed-header">
+              <i class="fas fa-star"></i>
+              Recent Starred
+            </div>
+            <div id="starred-list" class="scrollable-content">
+              <div class="activity-item" style="opacity: 1; animation: none">
+                <div class="skeleton skeleton-title" style="width: 50%"></div>
+                <div class="skeleton skeleton-text" style="width: 80%"></div>
+                <div
+                  class="skeleton skeleton-text"
+                  style="width: 40%; margin-bottom: 0"
+                ></div>
+              </div>
+              <div class="activity-item" style="opacity: 1; animation: none">
+                <div class="skeleton skeleton-title" style="width: 60%"></div>
+                <div class="skeleton skeleton-text" style="width: 70%"></div>
+                <div
+                  class="skeleton skeleton-text"
+                  style="width: 30%; margin-bottom: 0"
+                ></div>
+              </div>
+              <div class="activity-item" style="opacity: 1; animation: none">
+                <div class="skeleton skeleton-title" style="width: 45%"></div>
+                <div class="skeleton skeleton-text" style="width: 90%"></div>
+                <div
+                  class="skeleton skeleton-text"
+                  style="width: 35%; margin-bottom: 0"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="feed-card">
+            <div class="feed-header">
+              <i class="fas fa-code"></i>
+              Recent Commits
+            </div>
+            <div id="commits-list" class="scrollable-content">
+              <div class="activity-item" style="opacity: 1; animation: none">
+                <div class="skeleton skeleton-title" style="width: 70%"></div>
+                <div class="skeleton skeleton-text" style="width: 40%"></div>
+                <div
+                  class="skeleton skeleton-text"
+                  style="width: 50%; margin-bottom: 0"
+                ></div>
+              </div>
+              <div class="activity-item" style="opacity: 1; animation: none">
+                <div class="skeleton skeleton-title" style="width: 55%"></div>
+                <div class="skeleton skeleton-text" style="width: 30%"></div>
+                <div
+                  class="skeleton skeleton-text"
+                  style="width: 60%; margin-bottom: 0"
+                ></div>
+              </div>
+              <div class="activity-item" style="opacity: 1; animation: none">
+                <div class="skeleton skeleton-title" style="width: 65%"></div>
+                <div class="skeleton skeleton-text" style="width: 35%"></div>
+                <div
+                  class="skeleton skeleton-text"
+                  style="width: 45%; margin-bottom: 0"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <!-- RIGHT: Local Player -->
-            <section class="music-player-card glass-card animate-slide-left">
-                <div class="music-label">
-                    <i class="fas fa-music"></i>
-                    <span>LOCAL PLAYER</span>
-                </div>
-                <canvas id="visualizer" class="visualizer-canvas"></canvas>
-                <div class="music-meta">
-                    <span id="music-title" class="music-link"
-                        >Smoking Alone</span
-                    >
-                    <div id="music-artist">BackDrop</div>
-                </div>
-                <div class="music-controls">
-                    <button id="audio-toggle" class="music-btn">
-                        <i class="fas fa-play"></i>
-                        <span>Play</span>
-                    </button>
-                </div>
-            </section>
+      <section class="projects-section glass-card animate-slide-up">
+        <h3 class="section-title">
+          <i class="fas fa-code-branch"></i>
+          PROJECTS
+        </h3>
+        <div id="projects-container" class="projects-grid">
+          <div class="project-card-skeleton">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-desc"></div>
+            <div class="skeleton-footer"></div>
+          </div>
+        </div>
+      </section>
 
-            <section class="about-section glass-card animate-slide-right">
-                <h3 class="section-title">
-                    <i class="fas fa-id-card"></i>
-                    ABOUT ME
-                </h3>
-                <div class="about-grid">
-                    <div class="about-card">
-                        <div class="about-title">Who am I?</div>
-                        <div class="about-value">
-                            Just a guy from Poland who likes building stuff and
-                            figuring out how things work. I mess around with
-                            code, play games, listen to way too much music, and
-                            occasionally break things (then fix them...
-                            usually). Still learning, still experimenting. I run
-                            Linux because it lets me tweak everything, and I
-                            share what I figure out with friends when it
-                            actually works. I try to keep things chill and stay
-                            emotionally balanced, life's too short for
-                            unnecessary stress. I value a relaxed vibe, good
-                            conversations, and not taking everything too
-                            seriously.
-                        </div>
-                    </div>
-                    <div class="about-card">
-                        <div class="about-title">Languages</div>
-                        <div class="lang-slider" data-level="100">
-                            <div class="lang-label">
-                                <span>Polish</span
-                                ><span class="lvl">Native</span>
-                            </div>
-                            <div class="lang-track">
-                                <div class="lang-fill"></div>
-                            </div>
-                        </div>
-                        <div class="lang-slider" data-level="90">
-                            <div class="lang-label">
-                                <span>English</span
-                                ><span class="lvl">C1/C2</span>
-                            </div>
-                            <div class="lang-track">
-                                <div class="lang-fill"></div>
-                            </div>
-                        </div>
-                        <div class="lang-slider" data-level="35">
-                            <div class="lang-label">
-                                <span>German</span><span class="lvl">A2</span>
-                            </div>
-                            <div class="lang-track">
-                                <div class="lang-fill"></div>
-                            </div>
-                        </div>
-                        <div class="lang-slider" data-level="20">
-                            <div class="lang-label">
-                                <span>Spanish</span><span class="lvl">A1</span>
-                            </div>
-                            <div class="lang-track">
-                                <div class="lang-fill"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+      <section class="gaming-section glass-card animate-slide-left">
+        <h3 class="section-title">
+          <i class="fas fa-desktop"></i>
+          SETUP
+        </h3>
+        <div class="gaming-content">
+          <div class="pc-specs-container">
+            <h4 class="specs-title">
+              <i class="fas fa-microchip"></i>
+              PC BUILD
+            </h4>
+            <div id="pc-specs" class="pc-specs"></div>
+          </div>
+          <div class="pc-specs-container">
+            <h4 class="specs-title">
+              <i class="fas fa-headset"></i>
+              SETUP GEAR
+            </h4>
+            <div id="setup-specs" class="pc-specs"></div>
+          </div>
+        </div>
+      </section>
 
-            <section class="steam-panel-section glass-card animate-slide-right">
-                <h3 class="section-title">
-                    <i class="fas fa-broadcast-tower"></i>
-                    STATUS
-                </h3>
-                <div class="status-panels-grid">
-                    <!-- Steam Panel -->
-                    <div class="status-sub-panel compact-panel">
-                        <div class="sub-panel-title">
-                            <i class="fa-brands fa-steam"></i>
-                            Steam
-                        </div>
-                        <div id="steam-status-panel" class="steam-status-panel">
-                            <div id="steam-skeleton" style="display: flex; gap: 1rem; align-items: center; width: 100%;">
-                                <div class="skeleton" style="width: 80px; height: 80px; border-radius: 12px; flex-shrink: 0;"></div>
-                                <div style="flex: 1;">
-                                    <div class="skeleton skeleton-title" style="width: 60%;"></div>
-                                    <div class="skeleton skeleton-text" style="width: 30%; margin-bottom: 0;"></div>
-                                </div>
-                            </div>
-                            <div id="steam-content" class="steam-user-info" style="display: none;">
-                                <div class="steam-avatar-wrapper">
-                                    <img
-                                        id="steam-pfp"
-                                        src="assets/pfp.png"
-                                        alt="Steam Avatar"
-                                        class="steam-avatar"
-                                        loading="lazy"
-                                        width="80"
-                                        height="80"
-                                    />
-                                    <span
-                                        id="steam-dot"
-                                        class="status-dot"
-                                    ></span>
-                                </div>
-                                <div class="steam-details">
-                                    <div class="steam-name-row">
-                                        <span class="steam-username"
-                                            >Piotrunius</span
-                                        >
-                                        <span
-                                            id="steam-status-text"
-                                            class="steam-status-text"
-                                            >Offline</span
-                                        >
-                                    </div>
-                                    <div
-                                        id="steam-game-info"
-                                        class="steam-game-info"
-                                        style="display: none"
-                                    ></div>
-                                    <div class="steam-extra-info" style="display: none;">
-                                        <span id="steam-member-since"></span>
-                                        <span id="steam-game-count"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Discord Panel -->
-                    <div class="status-sub-panel compact-panel">
-                        <div class="sub-panel-title">
-                            <i class="fa-brands fa-discord"></i>
-                            Discord
-                        </div>
-                        <div
-                            id="discord-status-panel"
-                            class="discord-status-panel"
-                        >
-                            <div id="discord-skeleton" style="display: flex; gap: 1rem; align-items: center; width: 100%;">
-                                <div class="skeleton" style="width: 80px; height: 80px; border-radius: 12px; flex-shrink: 0;"></div>
-                                <div style="flex: 1;">
-                                    <div class="skeleton skeleton-title" style="width: 50%;"></div>
-                                    <div class="skeleton skeleton-text" style="width: 40%; margin-bottom: 0;"></div>
-                                </div>
-                            </div>
-                            <div id="discord-content" class="discord-user-info" style="display: none;">
-                                <div class="discord-avatar-wrapper">
-                                    <img
-                                        id="discord-pfp"
-                                        src="assets/pfp.png"
-                                        alt="Discord Avatar"
-                                        class="discord-avatar"
-                                        loading="lazy"
-                                        width="80"
-                                        height="80"
-                                    />
-                                    <span
-                                        id="discord-dot"
-                                        class="status-dot"
-                                    ></span>
-                                </div>
-                                <div class="discord-details">
-                                    <div class="discord-name-row">
-                                        <span class="discord-username"
-                                            >Piotrunius</span
-                                        >
-                                        <span
-                                            id="discord-status-text"
-                                            class="discord-status-text"
-                                            >Offline</span
-                                        >
-                                    </div>
-                                    <div
-                                        id="discord-activity-info"
-                                        class="discord-activity-info"
-                                        style="display: none"
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Roblox Panel -->
-                    <div class="status-sub-panel compact-panel">
-                        <div class="sub-panel-title">
-                            <i class="fas fa-cube"></i>
-                            Roblox
-                        </div>
-                        <div
-                            id="roblox-status-panel"
-                            class="roblox-status-panel"
-                        >
-                            <div id="roblox-skeleton" style="display: flex; gap: 1rem; align-items: center; width: 100%;">
-                                <div class="skeleton" style="width: 80px; height: 80px; border-radius: 12px; flex-shrink: 0;"></div>
-                                <div style="flex: 1;">
-                                    <div class="skeleton skeleton-title" style="width: 55%;"></div>
-                                    <div class="skeleton skeleton-text" style="width: 35%; margin-bottom: 0;"></div>
-                                </div>
-                            </div>
-                            <div id="roblox-content" class="roblox-user-info" style="display: none;">
-                                <div class="roblox-avatar-wrapper">
-                                    <img
-                                        id="roblox-pfp"
-                                        src="assets/pfp.png"
-                                        alt="Roblox Avatar"
-                                        class="roblox-avatar"
-                                        loading="lazy"
-                                        width="80"
-                                        height="80"
-                                    />
-                                    <span
-                                        id="roblox-dot"
-                                        class="status-dot"
-                                    ></span>
-                                </div>
-                                <div class="roblox-details">
-                                    <div class="roblox-name-row">
-                                        <span class="roblox-username"
-                                            >pioterson2000</span
-                                        >
-                                        <span
-                                            id="roblox-status-text"
-                                            class="roblox-status-text"
-                                            >Offline</span
-                                        >
-                                    </div>
-                                    <div
-                                        id="roblox-game-info"
-                                        class="roblox-game-info"
-                                        style="display: none"
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="social-section glass-card animate-slide-right">
-                <h3 class="section-title">
-                    <i class="fas fa-link"></i>
-                    CONNECT
-                </h3>
-                <div id="socials-container" class="socials-grid"></div>
-            </section>
-
-            <section class="stats-section glass-card animate-slide-left">
-                <h3 class="section-title">
-                    <i class="fas fa-chart-line"></i>
-                    ACTIVITY
-                </h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <i class="fas fa-fire"></i>
-                        <div class="stat-value" id="stat-projects">?</div>
-                        <div class="stat-label">Projects</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-code"></i>
-                        <div class="stat-value" id="stat-commits">?</div>
-                        <div class="stat-label">Commits</div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-star"></i>
-                        <div class="stat-value" id="stat-gists">?</div>
-                        <div class="stat-label">Stars</div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="skills-section glass-card animate-slide-right">
-                <h3 class="section-title">
-                    <i class="fas fa-code"></i>
-                    SKILLS & TECH STACK
-                </h3>
-                <div class="skills-grid">
-                    <a
-                        href="https://www.python.org"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="python"
-                    >
-                        <i class="fab fa-python"></i>
-                        <span>Python</span>
-                    </a>
-                    <a
-                        href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="javascript"
-                    >
-                        <i class="fab fa-js"></i>
-                        <span>JavaScript</span>
-                    </a>
-                    <a
-                        href="https://developer.mozilla.org/en-US/docs/Web/HTML"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="html"
-                    >
-                        <i class="fab fa-html5"></i>
-                        <span>HTML5</span>
-                    </a>
-                    <a
-                        href="https://developer.mozilla.org/en-US/docs/Web/CSS"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="css"
-                    >
-                        <i class="fab fa-css3-alt"></i>
-                        <span>CSS3</span>
-                    </a>
-                    <a
-                        href="https://react.dev"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="react"
-                    >
-                        <i class="fab fa-react"></i>
-                        <span>React</span>
-                    </a>
-                    <a
-                        href="https://www.typescriptlang.org"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="typescript"
-                    >
-                        <i class="fab fa-typescript"></i>
-                        <span>TypeScript</span>
-                    </a>
-                    <a
-                        href="https://www.docker.com"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="docker"
-                    >
-                        <i class="fab fa-docker"></i>
-                        <span>Docker</span>
-                    </a>
-                    <a
-                        href="https://nodejs.org"
-                        target="_blank"
-                        rel="noreferrer"
-                        class="skill-badge"
-                        data-skill="node"
-                    >
-                        <i class="fab fa-node-js"></i>
-                        <span>Node.js</span>
-                    </a>
-                </div>
-            </section>
-
-            <section class="activity-section glass-card animate-slide-up">
-                <h3 class="section-title">
-                    <i class="fas fa-bolt"></i>
-                    LIVE FEED
-                </h3>
-                <div class="activity-grid">
-                    <div class="feed-card">
-                        <div class="feed-header">
-                            <i class="fas fa-star"></i>
-                            Recent Starred
-                        </div>
-                        <div id="starred-list" class="scrollable-content">
-                            <div class="activity-item" style="opacity: 1; animation: none;">
-                                <div class="skeleton skeleton-title" style="width: 50%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 80%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 40%; margin-bottom: 0;"></div>
-                            </div>
-                            <div class="activity-item" style="opacity: 1; animation: none;">
-                                <div class="skeleton skeleton-title" style="width: 60%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 70%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 30%; margin-bottom: 0;"></div>
-                            </div>
-                            <div class="activity-item" style="opacity: 1; animation: none;">
-                                <div class="skeleton skeleton-title" style="width: 45%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 90%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 35%; margin-bottom: 0;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="feed-card">
-                        <div class="feed-header">
-                            <i class="fas fa-code"></i>
-                            Recent Commits
-                        </div>
-                        <div id="commits-list" class="scrollable-content">
-                            <div class="activity-item" style="opacity: 1; animation: none;">
-                                <div class="skeleton skeleton-title" style="width: 70%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 40%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 50%; margin-bottom: 0;"></div>
-                            </div>
-                            <div class="activity-item" style="opacity: 1; animation: none;">
-                                <div class="skeleton skeleton-title" style="width: 55%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 30%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 60%; margin-bottom: 0;"></div>
-                            </div>
-                            <div class="activity-item" style="opacity: 1; animation: none;">
-                                <div class="skeleton skeleton-title" style="width: 65%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 35%;"></div>
-                                <div class="skeleton skeleton-text" style="width: 45%; margin-bottom: 0;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="projects-section glass-card animate-slide-up">
-                <h3 class="section-title">
-                    <i class="fas fa-code-branch"></i>
-                    PROJECTS
-                </h3>
-                <div id="projects-container" class="projects-grid">
-                    <div class="project-card-skeleton">
-                        <div class="skeleton-header"></div>
-                        <div class="skeleton-desc"></div>
-                        <div class="skeleton-footer"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="gaming-section glass-card animate-slide-left">
-                <h3 class="section-title">
-                    <i class="fas fa-desktop"></i>
-                    SETUP
-                </h3>
-                <div class="gaming-content">
-                    <div class="pc-specs-container">
-                        <h4 class="specs-title">
-                            <i class="fas fa-microchip"></i>
-                            PC BUILD
-                        </h4>
-                        <div id="pc-specs" class="pc-specs"></div>
-                    </div>
-                    <div class="pc-specs-container">
-                        <h4 class="specs-title">
-                            <i class="fas fa-headset"></i>
-                            SETUP GEAR
-                        </h4>
-                        <div id="setup-specs" class="pc-specs"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                id="contact-section"
-                class="contact-section glass-card animate-fade-in"
+      <section
+        id="contact-section"
+        class="contact-section glass-card animate-fade-in"
+      >
+        <h3 class="section-title">
+          <i class="fas fa-envelope"></i>
+          GET IN TOUCH
+        </h3>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-card-header">
+              <i class="fa-brands fa-discord"></i>
+              Discord
+            </div>
+            <a
+              id="discord-button"
+              href="https://discord.com/users/1166309729371439104"
+              class="contact-btn"
+              target="_blank"
+              rel="noreferrer"
             >
-                <h3 class="section-title">
-                    <i class="fas fa-envelope"></i>
-                    GET IN TOUCH
-                </h3>
-                <div class="contact-grid">
-                    <div class="contact-card">
-                        <div class="contact-card-header">
-                            <i class="fa-brands fa-discord"></i>
-                            Discord
-                        </div>
-                        <a
-                            id="discord-button"
-                            href="https://discord.com/users/1166309729371439104"
-                            class="contact-btn"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <span class="btn-label">Add me</span>
-                        </a>
-                    </div>
-                    <div class="contact-card">
-                        <div class="contact-card-header">
-                            <i class="fas fa-paper-plane"></i>
-                            Email
-                        </div>
-                        <a
-                            id="contact-button"
-                            href="mailto:piotrunius.v2@gmail.com"
-                            class="contact-btn"
-                        >
-                            <span class="btn-label">Send Email</span>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="system-section glass-card animate-slide-left">
-                <h3 class="section-title">
-                    <i class="fas fa-microchip"></i>
-                    SYSTEM
-                </h3>
-                <div class="system-card">
-                    <div class="system-left">
-                        <img
-                            src="assets/nobara-icon.png"
-                            alt="Nobara"
-                            class="system-logo"
-                            loading="lazy"
-                            width="52"
-                            height="52"
-                        />
-                        <div>
-                            <div class="system-name">Nobara (KDE Plasma)</div>
-                            <a
-                                class="system-link"
-                                href="https://nobaraproject.org"
-                                target="_blank"
-                                rel="noreferrer"
-                                >nobaraproject.org</a
-                            >
-                        </div>
-                    </div>
-                    <p class="system-desc">
-                        Fedora base with KDE Plasma tuned for gaming and
-                        workstation stability.
-                    </p>
-                </div>
-            </section>
-
-            <!-- FAQ Section -->
-            <section class="faq-section glass-card animate-fade-in">
-                <h3 class="section-title">
-                    <i class="fas fa-question-circle"></i>
-                    FAQ
-                </h3>
-                <div class="faq-grid">
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>What technologies do you work with?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                I mainly work with Python, JavaScript, HTML/CSS,
-                                and I'm learning Go. I also mess around with
-                                Docker, React, and Node.js. Check out the Skills
-                                section above for the full list.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>Do you charge for your work?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                I do most of my projects out of passion and
-                                boredom. If I'm the one proposing or initiating
-                                something, I never ask for anything in return,
-                                just a credit/mention that the project was made
-                                by me or with my help. Gotta build that
-                                portfolio for the future, you know ;P
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>Are you available for collaborations?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Always open to interesting projects and
-                                collaborations! Hit me up via Discord or email
-                                and let's chat about what you have in mind. I'm
-                                especially interested in open-source
-                                contributions and learning opportunities.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>Why do you code?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Honestly? Passion and boredom. I love building
-                                stuff, solving problems, and seeing ideas come
-                                to life. Coding gives me an outlet to create
-                                things that are useful (or just fun) while
-                                constantly learning something new :D
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>Why Nobara?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Nobara gives me the stability of Fedora with
-                                gaming optimizations out of the box. Plus, KDE
-                                Plasma lets me tweak everything exactly how I
-                                want it. It's the best of both worlds for
-                                development and gaming (personal opinion :P)
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>How did you build this website?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Plain HTML, CSS, and JavaScript with custom APIs
-                                on Cloudflare Workers for real-time status
-                                updates. Made by a human with about 20-30% AI
-                                assistance for ideation and small refinements.
-                                Check the GitHub repo for the source code.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>What's your experience level?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                I'm still relatively early in my coding journey,
-                                but I've been steadily building projects and
-                                learning by doing. I believe in hands-on
-                                experience and contributing to open-source
-                                whenever I can. Every project is a learning
-                                opportunity.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>Can I use your code?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Sure! Most of my projects are open-source. Just
-                                give credit where it's due and let me know if
-                                you build something cool with it. I'd love to
-                                see what you create ;D
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>What are you currently learning?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Right now I'm diving deeper into Go, improving
-                                my React skills, and exploring more backend
-                                development (hate it). I'm also learning about
-                                system administration and containerization with
-                                Docker. Always something new to learn :D
-                            </p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" aria-expanded="false">
-                            <span>What is Privacy Mode?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>
-                                Privacy Mode is a toggle-able feature that hides
-                                sensitive real-time data across my portfolio
-                                when enabled. When active, status cards show
-                                'Privacy Mode Active' instead of live Discord,
-                                Steam, Spotify, and Roblox updates. GitHub
-                                projects and activity feeds also get hidden.
-                                It's useful when I want to limit what's publicly
-                                visible while keeping the site running.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <div class="copyright-bar" id="copyright-year">
-            © 2025 Piotrunius - All Rights Reserved
-        </div>
-
-        <!-- Setup Spec Modal -->
-        <div id="spec-modal" class="spec-modal-overlay">
-            <div class="spec-modal-content glass-card">
-                <button
-                    id="spec-modal-close"
-                    class="spec-modal-close"
-                    aria-label="Close modal"
-                >
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="spec-modal-header">
-                    <div class="spec-modal-icon-ring">
-                        <i id="spec-modal-icon" class="fas fa-microchip"></i>
-                    </div>
-                    <div class="spec-modal-title-group">
-                        <h3 id="spec-modal-title">CPU</h3>
-                        <p id="spec-modal-subtitle">Intel Core i5-13400F</p>
-                    </div>
-                </div>
-                <div id="spec-modal-body" class="spec-modal-body">
-                    <!-- Specs injected via JS -->
-                </div>
-                <div id="spec-modal-actions" class="spec-modal-actions">
-                    <!-- Buttons injected via JS -->
-                </div>
+              <span class="btn-label">Add me</span>
+            </a>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card-header">
+              <i class="fas fa-paper-plane"></i>
+              Email
             </div>
+            <a
+              id="contact-button"
+              href="mailto:piotrunius.v2@gmail.com"
+              class="contact-btn"
+            >
+              <span class="btn-label">Send Email</span>
+            </a>
+          </div>
         </div>
+      </section>
 
-        <script src="app.js"></script>
-    </body>
+      <section class="system-section glass-card animate-slide-left">
+        <h3 class="section-title">
+          <i class="fas fa-microchip"></i>
+          SYSTEM
+        </h3>
+        <div class="system-card">
+          <div class="system-left">
+            <img
+              src="assets/nobara-icon.png"
+              alt="Nobara"
+              class="system-logo"
+              loading="lazy"
+              width="52"
+              height="52"
+            />
+            <div>
+              <div class="system-name">Nobara (KDE Plasma)</div>
+              <a
+                class="system-link"
+                href="https://nobaraproject.org"
+                target="_blank"
+                rel="noreferrer"
+                >nobaraproject.org</a
+              >
+            </div>
+          </div>
+          <p class="system-desc">
+            Fedora base with KDE Plasma tuned for gaming and workstation
+            stability.
+          </p>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="faq-section glass-card animate-fade-in">
+        <h3 class="section-title">
+          <i class="fas fa-question-circle"></i>
+          FAQ
+        </h3>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What technologies do you work with?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                I mainly work with Python, JavaScript, HTML/CSS, and I'm
+                learning Go. I also mess around with Docker, React, and Node.js.
+                Check out the Skills section above for the full list.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Do you charge for your work?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                I do most of my projects out of passion and boredom. If I'm the
+                one proposing or initiating something, I never ask for anything
+                in return, just a credit/mention that the project was made by me
+                or with my help. Gotta build that portfolio for the future, you
+                know ;P
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Are you available for collaborations?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Always open to interesting projects and collaborations! Hit me
+                up via Discord or email and let's chat about what you have in
+                mind. I'm especially interested in open-source contributions and
+                learning opportunities.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Why do you code?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Honestly? Passion and boredom. I love building stuff, solving
+                problems, and seeing ideas come to life. Coding gives me an
+                outlet to create things that are useful (or just fun) while
+                constantly learning something new :D
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Why Nobara?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Nobara gives me the stability of Fedora with gaming
+                optimizations out of the box. Plus, KDE Plasma lets me tweak
+                everything exactly how I want it. It's the best of both worlds
+                for development and gaming (personal opinion :P)
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>How did you build this website?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Plain HTML, CSS, and JavaScript with custom APIs on Cloudflare
+                Workers for real-time status updates. Made by a human with about
+                20-30% AI assistance for ideation and small refinements. Check
+                the GitHub repo for the source code.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What's your experience level?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                I'm still relatively early in my coding journey, but I've been
+                steadily building projects and learning by doing. I believe in
+                hands-on experience and contributing to open-source whenever I
+                can. Every project is a learning opportunity.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Can I use your code?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Sure! Most of my projects are open-source. Just give credit
+                where it's due and let me know if you build something cool with
+                it. I'd love to see what you create ;D
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What are you currently learning?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Right now I'm diving deeper into Go, improving my React skills,
+                and exploring more backend development (hate it). I'm also
+                learning about system administration and containerization with
+                Docker. Always something new to learn :D
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What is Privacy Mode?</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Privacy Mode is a toggle-able feature that hides sensitive
+                real-time data across my portfolio when enabled. When active,
+                status cards show 'Privacy Mode Active' instead of live Discord,
+                Steam, Spotify, and Roblox updates. GitHub projects and activity
+                feeds also get hidden. It's useful when I want to limit what's
+                publicly visible while keeping the site running.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="copyright-bar" id="copyright-year">
+      © 2025 Piotrunius - All Rights Reserved
+    </div>
+
+    <!-- Setup Spec Modal -->
+    <div id="spec-modal" class="spec-modal-overlay">
+      <div class="spec-modal-content glass-card">
+        <button
+          id="spec-modal-close"
+          class="spec-modal-close"
+          aria-label="Close modal"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="spec-modal-header">
+          <div class="spec-modal-icon-ring">
+            <i id="spec-modal-icon" class="fas fa-microchip"></i>
+          </div>
+          <div class="spec-modal-title-group">
+            <h3 id="spec-modal-title">CPU</h3>
+            <p id="spec-modal-subtitle">Intel Core i5-13400F</p>
+          </div>
+        </div>
+        <div id="spec-modal-body" class="spec-modal-body">
+          <!-- Specs injected via JS -->
+        </div>
+        <div id="spec-modal-actions" class="spec-modal-actions">
+          <!-- Buttons injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
 </html>

@@ -27,15 +27,15 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 
 ## 🛠 Tech Stack
 
-| Technology | Purpose |
-|-----------|---------|
-| **HTML5** | Semantic markup |
-| **CSS3** | Modern styling & animations |
-| **JavaScript (ES6+)** | Interactivity & API calls |
-| **Cloudflare Workers** | Serverless API layer |
-| **KV Storage** | Token caching & settings |
-| **Font Awesome 6.5.1** | Icon library |
-| **Umami Analytics** | Privacy-friendly analytics |
+| Technology             | Purpose                     |
+| ---------------------- | --------------------------- |
+| **HTML5**              | Semantic markup             |
+| **CSS3**               | Modern styling & animations |
+| **JavaScript (ES6+)**  | Interactivity & API calls   |
+| **Cloudflare Workers** | Serverless API layer        |
+| **KV Storage**         | Token caching & settings    |
+| **Font Awesome 6.5.1** | Icon library                |
+| **Umami Analytics**    | Privacy-friendly analytics  |
 
 ---
 
@@ -69,9 +69,11 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 ### Local Development
 
 #### Option 1: Direct File
+
 Simply open `index.html` in your browser.
 
 #### Option 2: Local Server
+
 ```bash
 # Python 3
 python -m http.server 8000
@@ -93,6 +95,7 @@ The live status panels require Cloudflare Workers to fetch real-time data.
    - Create a new Workers project
 
 2. **Create KV Namespace**
+
    ```bash
    wrangler kv:namespace create "STATE"
    ```
@@ -102,6 +105,7 @@ The live status panels require Cloudflare Workers to fetch real-time data.
    - Deploy to Cloudflare (or use Wrangler CLI)
 
 4. **Add Secrets to Dashboard**
+
    ```
    SPOTIFY_CLIENT_ID = "..."
    SPOTIFY_CLIENT_SECRET = "..."
@@ -126,14 +130,14 @@ Each worker requires specific environment variables and API credentials.
 
 ### Available Workers
 
-| Worker | Data | Secrets |
-|--------|------|---------|
-| **spotify.js** | 🎵 Playing song | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN` |
-| **github.js** | 🐙 Profile & repos | `GITHUB_TOKEN`, `GITHUB_USERNAME`|
-| **steam.js** | 🎮 Player status | `STEAM_API_KEY`, `STEAM_ID` |
-| **discord.js** | 💬 Status & activities | `DISCORD_ID` |
-| **roblox.js** | 🎮 Presence status | `ROBLOX_USER_ID` |
-| **admin.js** | 🔐 Privacy Mode toggle | `ADMIN_PASSWORD` |
+| Worker         | Data                   | Secrets                                                               |
+| -------------- | ---------------------- | --------------------------------------------------------------------- |
+| **spotify.js** | 🎵 Playing song        | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN` |
+| **github.js**  | 🐙 Profile & repos     | `GITHUB_TOKEN`, `GITHUB_USERNAME`                                     |
+| **steam.js**   | 🎮 Player status       | `STEAM_API_KEY`, `STEAM_ID`                                           |
+| **discord.js** | 💬 Status & activities | `DISCORD_ID`                                                          |
+| **roblox.js**  | 🎮 Presence status     | `ROBLOX_USER_ID`                                                      |
+| **admin.js**   | 🔐 Privacy Mode toggle | `ADMIN_PASSWORD`                                                      |
 
 ### Privacy Mode
 
@@ -146,6 +150,7 @@ Value: "true" | "false"
 ```
 
 When enabled, all APIs return:
+
 ```json
 {
   "privacyMode": true,
@@ -160,6 +165,7 @@ When enabled, all APIs return:
 ### Change Colors & Theme
 
 Edit `styles.css` to customize:
+
 - Primary colors: `--color-primary`, `--color-secondary`
 - Backgrounds: `--bg-light`, `--bg-dark`
 - Fonts: `:root` CSS variables
@@ -167,6 +173,7 @@ Edit `styles.css` to customize:
 ### Update Profile Info
 
 Edit `index.html`:
+
 - Name, bio, links in the hero section
 - Social media URLs
 - Contact information
@@ -174,6 +181,7 @@ Edit `index.html`:
 ### Modify Project Data
 
 Edit `projects.json` to add/remove projects:
+
 ```json
 {
   "projects": [
@@ -201,17 +209,19 @@ Edit `projects.json` to add/remove projects:
 ### 📊 Status Panels
 
 Real-time data updates (configurable interval):
+
 - **Spotify:** Album art, song title, artist, progress
 - **GitHub:** Profile picture, repos, followers, stats, and animated skeletons for recent activity
 - **Steam:** Avatar, username, current game, status
 - **Discord:** Status indicator, current activity, avatar
 - **Roblox:** Presence status, avatar, game location
 
-*Note: Status panels use a coordinated loading mechanism, ensuring Discord, Steam, and Roblox data fetches are fully settled before gracefully revealing the content together from a skeleton state.*
+_Note: Status panels use a coordinated loading mechanism, ensuring Discord, Steam, and Roblox data fetches are fully settled before gracefully revealing the content together from a skeleton state._
 
 ### 🌙 Dark/Light Mode
 
 Automatic detection + manual toggle:
+
 - Respects system preference
 - Toggle button in header
 - Persists to localStorage
@@ -221,6 +231,7 @@ Automatic detection + manual toggle:
 ## 📊 Analytics
 
 Uses **Umami Analytics** for privacy-friendly statistics:
+
 - No cookies or identifiers
 - Respects user privacy
 - Basic traffic metrics only
@@ -242,11 +253,11 @@ Uses **Umami Analytics** for privacy-friendly statistics:
 
 ## 🔗 Contact & Links
 
-| Platform | Link |
-|----------|------|
+| Platform    | Link                                                           |
+| ----------- | -------------------------------------------------------------- |
 | **Discord** | [@alciaforlife](https://discord.com/users/1166309729371439104) |
-| **GitHub** | [@Piotrunius](https://github.com/Piotrunius) |
-| **Email** | [piotrunius.v2@gmail.com](mailto:piotrunius.v2@gmail.com) |
+| **GitHub**  | [@Piotrunius](https://github.com/Piotrunius)                   |
+| **Email**   | [piotrunius.v2@gmail.com](mailto:piotrunius.v2@gmail.com)      |
 
 ---
 

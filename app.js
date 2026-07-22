@@ -24,7 +24,6 @@ const githubCache = {
 
 const GITHUB_CACHE_MS = 60_000;
 
-
 // Auto detect dark mode preference
 function initThemeDetection() {
   const savedTheme = localStorage.getItem("theme");
@@ -644,7 +643,7 @@ function hideLoadingSpinner(panelId) {
 // --- REVEAL ALL STATUSES SYNCHRONOUSLY ---
 async function revealAllStatuses() {
   const startTime = Date.now();
-  
+
   // Wait for all three API calls to settle (success or fail)
   await Promise.allSettled([
     refreshSteamStatus(),
@@ -655,11 +654,11 @@ async function revealAllStatuses() {
   // Ensure minimum ghost loader display time of 600ms across all 3
   const elapsed = Date.now() - startTime;
   if (elapsed < 600) {
-    await new Promise(r => setTimeout(r, 600 - elapsed));
+    await new Promise((r) => setTimeout(r, 600 - elapsed));
   }
 
   // Reveal all panels together
-  ["steam", "discord", "roblox"].forEach(platform => {
+  ["steam", "discord", "roblox"].forEach((platform) => {
     const skeleton = document.getElementById(`${platform}-skeleton`);
     const content = document.getElementById(`${platform}-content`);
     if (skeleton) skeleton.style.display = "none";
@@ -672,7 +671,10 @@ async function refreshSteamStatus() {
   const steamPanel = document.getElementById("steam-status-panel");
   if (!steamPanel) return;
 
-  const fallback = { error: true, steam: { personastate: -1, gameextrainfo: null } };
+  const fallback = {
+    error: true,
+    steam: { personastate: -1, gameextrainfo: null },
+  };
   const stats = await fetchApiJson(API_ENDPOINTS.steam, fallback, "Steam API");
 
   // Check for Privacy Mode
@@ -999,7 +1001,8 @@ async function refreshRobloxStatus() {
     const statusText = document.getElementById("roblox-status-text");
     if (statusText) statusText.textContent = "Offline";
     const avatarWrapper = document.querySelector(".roblox-avatar-wrapper");
-    if (avatarWrapper) avatarWrapper.className = "roblox-avatar-wrapper offline";
+    if (avatarWrapper)
+      avatarWrapper.className = "roblox-avatar-wrapper offline";
     return;
   }
 
@@ -3483,8 +3486,6 @@ const Terminal = {
         return [];
       },
     },
-
-
 
     sudo: {
       description: "Execute command as superuser",
