@@ -796,11 +796,7 @@ async function refreshSteamStatus() {
   if (gameName) {
     dotContainer.classList.add("in-game");
     if (statusText) statusText.textContent = "In-game";
-    if (gameInfo) {
-      gameInfo.textContent = `Playing: ${gameName}`;
-      gameInfo.style.color = "#43b581";
-      gameInfo.style.display = "block";
-    }
+    if (gameInfo) gameInfo.style.display = "none";
   } else {
     if (gameInfo) gameInfo.style.display = "none";
     // Map personastate values properly:
