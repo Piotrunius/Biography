@@ -257,7 +257,7 @@ Uses **Umami Analytics** for privacy-friendly statistics:
 | ----------- | -------------------------------------------------------------- |
 | **Discord** | [@alciaforlife](https://discord.com/users/1166309729371439104) |
 | **GitHub**  | [@Piotrunius](https://github.com/Piotrunius)                   |
-| **Email**   | [piotrunius.v2@gmail.com](mailto:piotrunius.v2@gmail.com)      |
+| **Email**   | [contact@piotrunius.dev](mailto:contact@piotrunius.dev)      |
 
 ---
 

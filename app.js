@@ -2000,7 +2000,7 @@ const Terminal = {
         "contact.txt": {
           type: "file",
           content:
-            "Email: piotrunius.v2@gmail.com\nDiscord: Piotrunius\nGitHub: github.com/Piotrunius",
+            "Email: contact@piotrunius.dev\nDiscord: Piotrunius\nGitHub: github.com/Piotrunius",
         },
         "skills.txt": {
           type: "file",
@@ -2543,7 +2543,7 @@ const Terminal = {
             class: "highlight",
           },
           { text: "" },
-          { text: "  Email:    piotrunius.v2@gmail.com" },
+          { text: "  Email:    contact@piotrunius.dev" },
           { text: "  Discord:  Piotrunius" },
           { text: "  GitHub:   github.com/Piotrunius" },
           { text: "  Insta:    @piotrunius" },
