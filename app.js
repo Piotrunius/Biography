@@ -446,13 +446,7 @@ function initSocials() {
             ${iconHtml}
             <span>${s.label}</span>
         `;
-    // Track social link clicks
-    a.addEventListener("click", () => {
-      if (window.umami) {
-        window.umami.track("Social Link Clicked", { platform: s.label });
-      }
-    });
-    container.appendChild(a);
+
   });
 }
 
@@ -1782,9 +1776,6 @@ async function loadProjects() {
         const projectName =
           link.closest(".project-card")?.querySelector(".project-title")
             ?.textContent || "Unknown";
-        if (window.umami) {
-          window.umami.track("Project Viewed", { project: projectName });
-        }
       });
     });
 
@@ -5110,16 +5101,7 @@ const Terminal = {
     const parts = trimmed.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
     const cmdName = parts[0]?.toLowerCase();
 
-    // Track command execution
-    if (window.umami && cmdName) {
-      try {
-        window.umami.track("Terminal Command", { command: cmdName });
-      } catch (e) {
-        // Umami tracking failed silently
-      }
-    }
 
-    // Check if root mode (Konami active)
     const isRoot =
       typeof KonamiEasterEgg !== "undefined" && KonamiEasterEgg.activated;
     const userName = isRoot ? "root" : "guest";
@@ -5444,12 +5426,7 @@ const Terminal = {
       this.print(this.getWelcomeMessage());
     }
 
-    // Track terminal open
-    if (window.umami) {
-      window.umami.track("Terminal Opened");
-    }
 
-    // Focus input
     setTimeout(() => input?.focus(), 100);
   },
 
@@ -5461,14 +5438,7 @@ const Terminal = {
     container?.classList.remove("visible");
     toggle?.classList.remove("active");
 
-    // Track terminal close
-    if (window.umami) {
-      window.umami.track("Terminal Closed", {
-        commandsExecuted: this.commandCount,
-      });
-    }
 
-    // Stop matrix if running
     if (this.matrixInterval) {
       clearInterval(this.matrixInterval);
       this.matrixInterval = null;
@@ -5610,10 +5580,6 @@ const KonamiEasterEgg = {
       this.playKeySound();
 
       if (this.index === this.code.length) {
-        // Track Konami Code activation
-        if (window.umami) {
-          window.umami.track("Konami Code Activated");
-        }
         this.activate();
         this.index = 0;
       }

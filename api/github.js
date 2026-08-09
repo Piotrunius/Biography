@@ -1,10 +1,8 @@
 export default {
   async fetch(request, env) {
-    const origin = request.headers.get("Origin");
     const ALLOWED_ORIGIN = "https://piotrunius.dev";
     const corsHeaders = {
-      "Access-Control-Allow-Origin":
-        origin === "http://127.0.0.1:5500" ? origin : ALLOWED_ORIGIN,
+      "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
       "Access-Control-Allow-Methods": "GET, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
@@ -13,7 +11,25 @@ export default {
       return new Response(null, { headers: corsHeaders });
 
     try {
-      // 1. Sprawdzenie trybu prywatności (Privacy Mode) z bazy KV
+      // 1. Rate limiting: max 30 requestów / 60 sekund / IP
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      const rlKey = `RL_github_${ip}`;
+      const now = Date.now();
+      let rl = null;
+      try { rl = await env.STATE.get(rlKey, { type: "json" }); } catch (_) {}
+      if (rl && now - rl.w < 60_000) {
+        if (rl.c >= 30) {
+          return new Response(JSON.stringify({ error: "Too Many Requests" }), {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        await env.STATE.put(rlKey, JSON.stringify({ c: rl.c + 1, w: rl.w }), { expirationTtl: 120 });
+      } else {
+        await env.STATE.put(rlKey, JSON.stringify({ c: 1, w: now }), { expirationTtl: 120 });
+      }
+
+      // 2. Sprawdzenie trybu prywatności (Privacy Mode) z bazy KV
       const privacyStatus = await env.STATE.get("PRIVACY_MODE");
 
       if (privacyStatus === "true") {
@@ -67,9 +83,6 @@ export default {
       const publicReposCount = Array.isArray(repos)
         ? repos.filter((r) => !r.private).length
         : 0;
-      const privateReposCount = Array.isArray(repos)
-        ? repos.filter((r) => r.private).length
-        : 0;
       const totalGists = Array.isArray(gists) ? gists.length : 0;
       const totalStarsReceived = Array.isArray(repos)
         ? repos.reduce((acc, r) => acc + (r.stargazers_count || 0), 0)
@@ -112,7 +125,6 @@ export default {
           name: uJ.name,
           avatar: uJ.avatar_url,
           bio: uJ.bio,
-          privateRepos: privateReposCount,
           publicRepos: publicReposCount,
         },
         summary: {
@@ -158,7 +170,7 @@ export default {
       });
     } catch (err) {
       return new Response(
-        JSON.stringify({ error: "GitHub Worker Error", details: err.message }),
+        JSON.stringify({ error: "GitHub Worker Error" }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },

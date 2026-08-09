@@ -35,7 +35,7 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 | **Cloudflare Workers** | Serverless API layer        |
 | **KV Storage**         | Token caching & settings    |
 | **Font Awesome 6.5.1** | Icon library                |
-| **Umami Analytics**    | Privacy-friendly analytics  |
+| **Cloudflare Analytics** | Privacy-friendly analytics  |
 
 ---
 
@@ -230,11 +230,12 @@ Automatic detection + manual toggle:
 
 ## 📊 Analytics
 
-Uses **Umami Analytics** for privacy-friendly statistics:
+Uses **Cloudflare Web Analytics** for privacy-friendly statistics:
 
-- No cookies or identifiers
-- Respects user privacy
-- Basic traffic metrics only
+- No cookies, no fingerprinting, no PII
+- GDPR-compliant without a cookie banner (EU included)
+- Traffic metrics auto-collected via Cloudflare beacon
+- Configured in the Cloudflare dashboard under **Web Analytics → piotrunius.dev**
 
 ---
 
