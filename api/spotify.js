@@ -15,10 +15,10 @@ export default {
       // Rate limiting: max 30 requestów / 60 sekund / IP
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
       const rlKey = `RL_spotify_${ip}`;
-      const now = Date.now();
+      const rlNow = Date.now();
       let rl = null;
       try { rl = await env.STATE.get(rlKey, { type: "json" }); } catch (_) {}
-      if (rl && now - rl.w < 60_000) {
+      if (rl && rlNow - rl.w < 60_000) {
         if (rl.c >= 30) {
           return new Response(JSON.stringify({ error: "Too Many Requests" }), {
             status: 429,
@@ -27,7 +27,7 @@ export default {
         }
         await env.STATE.put(rlKey, JSON.stringify({ c: rl.c + 1, w: rl.w }), { expirationTtl: 120 });
       } else {
-        await env.STATE.put(rlKey, JSON.stringify({ c: 1, w: now }), { expirationTtl: 120 });
+        await env.STATE.put(rlKey, JSON.stringify({ c: 1, w: rlNow }), { expirationTtl: 120 });
       }
 
       // 1) Privacy mode check
