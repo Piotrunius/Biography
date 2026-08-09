@@ -27,14 +27,14 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 
 ## 🛠 Tech Stack
 
-| Technology             | Purpose                     |
-| ---------------------- | --------------------------- |
-| **HTML5**              | Semantic markup             |
-| **CSS3**               | Modern styling & animations |
-| **JavaScript (ES6+)**  | Interactivity & API calls   |
-| **Cloudflare Workers** | Serverless API layer        |
-| **KV Storage**         | Token caching & settings    |
-| **Font Awesome 6.5.1** | Icon library                |
+| Technology               | Purpose                     |
+| ------------------------ | --------------------------- |
+| **HTML5**                | Semantic markup             |
+| **CSS3**                 | Modern styling & animations |
+| **JavaScript (ES6+)**    | Interactivity & API calls   |
+| **Cloudflare Workers**   | Serverless API layer        |
+| **KV Storage**           | Token caching & settings    |
+| **Font Awesome 6.5.1**   | Icon library                |
 | **Cloudflare Analytics** | Privacy-friendly analytics  |
 
 ---
@@ -258,7 +258,7 @@ Uses **Cloudflare Web Analytics** for privacy-friendly statistics:
 | ----------- | -------------------------------------------------------------- |
 | **Discord** | [@alciaforlife](https://discord.com/users/1166309729371439104) |
 | **GitHub**  | [@Piotrunius](https://github.com/Piotrunius)                   |
-| **Email**   | [contact@piotrunius.dev](mailto:contact@piotrunius.dev)      |
+| **Email**   | [contact@piotrunius.dev](mailto:contact@piotrunius.dev)        |
 
 ---
 

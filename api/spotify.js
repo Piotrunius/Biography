@@ -17,7 +17,9 @@ export default {
       const rlKey = `RL_spotify_${ip}`;
       const rlNow = Date.now();
       let rl = null;
-      try { rl = await env.STATE.get(rlKey, { type: "json" }); } catch (_) {}
+      try {
+        rl = await env.STATE.get(rlKey, { type: "json" });
+      } catch (_) {}
       if (rl && rlNow - rl.w < 60_000) {
         if (rl.c >= 30) {
           return new Response(JSON.stringify({ error: "Too Many Requests" }), {
@@ -25,9 +27,13 @@ export default {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
-        await env.STATE.put(rlKey, JSON.stringify({ c: rl.c + 1, w: rl.w }), { expirationTtl: 120 });
+        await env.STATE.put(rlKey, JSON.stringify({ c: rl.c + 1, w: rl.w }), {
+          expirationTtl: 120,
+        });
       } else {
-        await env.STATE.put(rlKey, JSON.stringify({ c: 1, w: rlNow }), { expirationTtl: 120 });
+        await env.STATE.put(rlKey, JSON.stringify({ c: 1, w: rlNow }), {
+          expirationTtl: 120,
+        });
       }
 
       // 1) Privacy mode check

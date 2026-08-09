@@ -447,6 +447,7 @@ function initSocials() {
             <span>${s.label}</span>
         `;
 
+    container.appendChild(a);
   });
 }
 
@@ -5101,7 +5102,6 @@ const Terminal = {
     const parts = trimmed.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
     const cmdName = parts[0]?.toLowerCase();
 
-
     const isRoot =
       typeof KonamiEasterEgg !== "undefined" && KonamiEasterEgg.activated;
     const userName = isRoot ? "root" : "guest";
@@ -5426,7 +5426,6 @@ const Terminal = {
       this.print(this.getWelcomeMessage());
     }
 
-
     setTimeout(() => input?.focus(), 100);
   },
 
@@ -5437,7 +5436,6 @@ const Terminal = {
     this.isOpen = false;
     container?.classList.remove("visible");
     toggle?.classList.remove("active");
-
 
     if (this.matrixInterval) {
       clearInterval(this.matrixInterval);
