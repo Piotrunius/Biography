@@ -50,6 +50,11 @@ function initThemeDetection() {
     });
 }
 
+// We cannot cache non-GET requests (e.g. POST to Cloudflare Analytics)
+if (request.method !== "GET") {
+  return;
+}
+
 // Enhanced fetch with retry logic and exponential backoff
 async function fetchWithRetry(url, options = {}, maxRetries = 3) {
   let lastError;
@@ -434,13 +439,12 @@ function initSocials() {
     a.style.animationDelay = `${index * 0.05}s`;
     const iconHtml = s.svg
       ? `<span class="social-custom-svg" style="--svg-url: url('${s.svg}')"></span>`
-      : `<i class="${
-          ["github", "discord", "spotify", "steam", "twitch"].includes(
-            (s.icon || "").toLowerCase(),
-          )
-            ? "fa-brands"
-            : "fas"
-        } fa-${s.icon || "link"}"></i>`;
+      : `<i class="${["github", "discord", "spotify", "steam", "twitch"].includes(
+        (s.icon || "").toLowerCase(),
+      )
+        ? "fa-brands"
+        : "fas"
+      } fa-${s.icon || "link"}"></i>`;
 
     a.innerHTML = `
             ${iconHtml}
@@ -5637,7 +5641,7 @@ const KonamiEasterEgg = {
 
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.1);
-    } catch (e) {}
+    } catch (e) { }
   },
 
   playErrorSound: function () {
@@ -5656,7 +5660,7 @@ const KonamiEasterEgg = {
 
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.15);
-    } catch (e) {}
+    } catch (e) { }
   },
 
   activate: function () {
@@ -5716,7 +5720,7 @@ const KonamiEasterEgg = {
         bass.start(ctx.currentTime);
         bass.stop(ctx.currentTime + 0.5);
       }, 700);
-    } catch (e) {}
+    } catch (e) { }
   },
 
   showHackerOverlay: function () {
@@ -6275,7 +6279,7 @@ const KonamiEasterEgg = {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.3);
-    } catch (e) {}
+    } catch (e) { }
   },
 };
 
@@ -6353,7 +6357,7 @@ async function showPrivacyModal() {
     });
     const data = await res.json();
     if (data.success) window.location.reload();
-  } catch {}
+  } catch { }
 }
 
 function initPrivacyControl() {

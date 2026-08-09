@@ -1,5 +1,5 @@
 // Service Worker
-const CACHE_NAME = "piotrunius-bio-v3";
+const CACHE_NAME = "piotrunius-bio-v4";
 const urlsToCache = [
   "/",
   "/index.html",
@@ -47,6 +47,11 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   if (url.origin !== location.origin) {
+    return;
+  }
+
+  // We cannot cache non-GET requests (e.g. POST to Cloudflare Analytics)
+  if (request.method !== "GET") {
     return;
   }
 
