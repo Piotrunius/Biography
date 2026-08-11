@@ -50,11 +50,6 @@ function initThemeDetection() {
     });
 }
 
-// We cannot cache non-GET requests (e.g. POST to Cloudflare Analytics)
-if (request.method !== "GET") {
-  return;
-}
-
 // Enhanced fetch with retry logic and exponential backoff
 async function fetchWithRetry(url, options = {}, maxRetries = 3) {
   let lastError;
