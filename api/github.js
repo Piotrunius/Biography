@@ -63,7 +63,9 @@ export default {
         fetch(`https://api.github.com/user`, { headers: gHeaders }),
         fetch(
           `https://api.github.com/user/repos?per_page=50&sort=updated&visibility=all`,
-          { headers: gHeaders },
+          {
+            headers: gHeaders,
+          },
         ),
         fetch(`https://api.github.com/user/starred?per_page=30`, {
           headers: { ...gHeaders, Accept: "application/vnd.github.star+json" },
@@ -84,20 +86,21 @@ export default {
       const starred = await starredR.json();
       const searchCommits = await searchCommitsR.json();
       const gists = await gistsR.json();
-
       // 3. Obliczenia na podstawie rzeczywistych danych
       const publicReposCount = Array.isArray(repos)
         ? repos.filter((r) => !r.private).length
         : 0;
       const totalGists = Array.isArray(gists) ? gists.length : 0;
       const totalStarsReceived = Array.isArray(repos)
-        ? repos.reduce((acc, r) => acc + (r.stargazers_count || 0), 0)
+        ? repos
+            .filter((r) => !r.private)
+            .reduce((acc, r) => acc + (r.stargazers_count || 0), 0)
         : 0;
-
-      // 4. Pobieranie ostatnich commitów
-      const commitPromises = (
-        Array.isArray(repos) ? repos.slice(0, 5) : []
-      ).map(async (repo) => {
+      // 4. Pobieranie ostatnich commitów (only public repos)
+      const publicRepos = Array.isArray(repos)
+        ? repos.filter((r) => !r.private).slice(0, 5)
+        : [];
+      const commitPromises = publicRepos.map(async (repo) => {
         try {
           const res = await fetch(
             `https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits?author=${gUser}&per_page=5`,
@@ -108,6 +111,7 @@ export default {
           return commits.map((c) => ({
             message: c.commit.message.split("\n")[0],
             repo: repo.name,
+            repoPrivate: repo.private || false,
             author: gUser,
             date: c.commit.author.date,
             url: c.html_url,
@@ -148,7 +152,8 @@ export default {
               stars: r.stargazers_count,
               lang: r.language || "Mixed",
               url: r.html_url,
-              isPrivate: r.private,
+              fork: r.fork || false,
+              private: r.private || false,
             }))
           : [],
         starred: Array.isArray(starred)
@@ -163,10 +168,12 @@ export default {
           : [],
         recentCommits: recentCommitsList,
         languages: Object.entries(
-          (Array.isArray(repos) ? repos : []).reduce((acc, r) => {
-            if (r.language) acc[r.language] = (acc[r.language] || 0) + 1;
-            return acc;
-          }, {}),
+          (Array.isArray(repos) ? repos : [])
+            .filter((r) => !r.private)
+            .reduce((acc, r) => {
+              if (r.language) acc[r.language] = (acc[r.language] || 0) + 1;
+              return acc;
+            }, {}),
         ).map(([name, count]) => ({ name, repos: count })),
         lastUpdate: new Date().toISOString(),
       };

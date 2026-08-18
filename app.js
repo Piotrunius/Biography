@@ -434,12 +434,13 @@ function initSocials() {
     a.style.animationDelay = `${index * 0.05}s`;
     const iconHtml = s.svg
       ? `<span class="social-custom-svg" style="--svg-url: url('${s.svg}')"></span>`
-      : `<i class="${["github", "discord", "spotify", "steam", "twitch"].includes(
-        (s.icon || "").toLowerCase(),
-      )
-        ? "fa-brands"
-        : "fas"
-      } fa-${s.icon || "link"}"></i>`;
+      : `<i class="${
+          ["github", "discord", "spotify", "steam", "twitch"].includes(
+            (s.icon || "").toLowerCase(),
+          )
+            ? "fa-brands"
+            : "fas"
+        } fa-${s.icon || "link"}"></i>`;
 
     a.innerHTML = `
             ${iconHtml}
@@ -1415,6 +1416,7 @@ function initVisibilityOptimization() {
 // --- SPOTIFY HUB LOGIC ---
 let lastSpotifyData = null;
 let spotifyPredictorInterval = null;
+let projectsConfig = null;
 
 async function updateSpotifyStatus() {
   const container = document.getElementById("spotify-content");
@@ -1601,6 +1603,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   applyPerformanceOptimizations();
 
   await loadConfig();
+  await loadProjectsConfig();
   initProfile();
   initSocials();
   initMusicMeta();
@@ -1635,6 +1638,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadProjects();
 });
 
+// --- PROJECTS CONFIG ---
+async function loadProjectsConfig() {
+  try {
+    const resp = await fetch("projects.json");
+    if (resp.ok) {
+      projectsConfig = await resp.json();
+    }
+  } catch (e) {
+    console.warn("Failed to load projects config:", e.message);
+  }
+}
+
 // --- PROJECTS SECTION ---
 async function fetchGitHubRepos() {
   try {
@@ -1648,20 +1663,29 @@ async function fetchGitHubRepos() {
     const repos = data.projects || data.repos || data.repositories || [];
     if (!Array.isArray(repos)) return null;
 
-    return repos
-      .filter(
-        (repo) =>
-          ((!repo.isPrivate && !repo.private && !repo.fork) ||
-            repo.name === "NexVid") &&
-          repo.name !== "Offline-Casino" &&
-          repo.name !== "AutoClicker-AntiAFK" &&
-          repo.name !== "Piotrunius",
-      )
-      .sort(
-        (a, b) =>
-          new Date(b.updated_at || b.pushed_at || 0) -
-          new Date(a.updated_at || a.pushed_at || 0),
+    // If config exists, use it as source of truth for visibility and order
+    if (projectsConfig && Array.isArray(projectsConfig.projects)) {
+      const configMap = new Map(
+        projectsConfig.projects.map((p) => [p.repo, p]),
       );
+
+      return repos
+        .filter((repo) => configMap.has(repo.name))
+        .map((repo) => {
+          const cfg = configMap.get(repo.name);
+          return {
+            ...repo,
+            displayType: cfg.type || "active",
+            displayOrder: cfg.order ?? 999,
+          };
+        })
+        .sort((a, b) => a.displayOrder - b.displayOrder);
+    }
+
+    // Fallback: no config, show all public non-fork repos
+    return repos
+      .filter((repo) => !repo.fork)
+      .sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
     console.error("Error fetching GitHub repos:", error);
     return null;
@@ -1715,41 +1739,18 @@ async function loadProjects() {
 
       const description = repo.description || "No description available";
       const language = repo.lang || repo.language || "Unknown";
-      const author = repo.owner?.login || "Unknown";
-      const nexVidDescription =
-        "Stream movies and TV shows in a fast, modern hub with search, watchlists, and smooth playback.";
+      const projectLink = repo.url;
 
-      // Determine badge based on repo name
-      let badge = "";
-      let badgeClass = "";
-      let projectLink = repo.url;
-
-      // Special handling for specific projects
-      if (repo.name === "Biography") {
-        badge = "current";
-        badgeClass = "project-badge-current";
-      } else if (repo.name === "Broadcast-generator") {
-        badge = "collab";
-        badgeClass = "project-badge-collab";
-        projectLink = repo.url;
-      } else if (repo.name === "NexVid") {
-        badge = "archive";
-        badgeClass = "project-badge-archive";
-        projectLink = repo.url;
-      } else if (repo.private) {
-        badge = "private";
-        badgeClass = "project-badge-private";
-      } else {
-        badge = "active";
-        badgeClass = "project-badge-active";
-      }
+      // Badge from config-driven displayType
+      const badge = repo.displayType || "active";
+      const badgeClass = `project-badge-${badge}`;
 
       card.innerHTML = `
                 <div class="project-header">
                     <div class="project-title">${escapeHtml(repo.name)}</div>
                     ${badge ? `<span class="project-badge ${badgeClass}">${badge}</span>` : ""}
                 </div>
-                <div class="project-description">${escapeHtml(repo.name === "NexVid" ? nexVidDescription : description)}</div>
+                <div class="project-description">${escapeHtml(description)}</div>
                 <div class="project-footer">
                     <div class="project-stats">
                         <div class="project-stat" title="Language">
@@ -2479,25 +2480,20 @@ const Terminal = {
         const topProjects = repos.slice(0, 5);
 
         topProjects.forEach((repo, index) => {
-          let badge = "[PROJECT]";
-          let badgeClass = "system";
-
-          if (repo.name === "Biography") {
-            badge = "[THIS SITE]";
-            badgeClass = "info";
-          } else if (repo.name === "Broadcast-generator") {
-            badge = "[COLLAB]";
-            badgeClass = "highlight";
-          } else if (repo.name === "NexVid") {
-            badge = "[PRIVATE]";
-            badgeClass = "warning";
-          }
+          const type = repo.displayType || "active";
+          const badge = `[${type.toUpperCase()}]`;
+          const badgeClass =
+            type === "current"
+              ? "info"
+              : type === "collab"
+                ? "highlight"
+                : type === "archive"
+                  ? "warning"
+                  : "system";
 
           output.push(
             { text: `  ${badge} ${repo.name}`, class: badgeClass },
-            {
-              text: `           ${repo.name === "NexVid" ? "Stream movies and TV shows in a fast, modern hub with search, watchlists, and smooth playback." : repo.description}`,
-            },
+            { text: `           ${repo.description || "No description"}` },
           );
 
           if (index < topProjects.length - 1) {
@@ -5636,7 +5632,7 @@ const KonamiEasterEgg = {
 
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.1);
-    } catch (e) { }
+    } catch (e) {}
   },
 
   playErrorSound: function () {
@@ -5655,7 +5651,7 @@ const KonamiEasterEgg = {
 
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.15);
-    } catch (e) { }
+    } catch (e) {}
   },
 
   activate: function () {
@@ -5715,7 +5711,7 @@ const KonamiEasterEgg = {
         bass.start(ctx.currentTime);
         bass.stop(ctx.currentTime + 0.5);
       }, 700);
-    } catch (e) { }
+    } catch (e) {}
   },
 
   showHackerOverlay: function () {
@@ -6274,7 +6270,7 @@ const KonamiEasterEgg = {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.3);
-    } catch (e) { }
+    } catch (e) {}
   },
 };
 
@@ -6352,7 +6348,7 @@ async function showPrivacyModal() {
     });
     const data = await res.json();
     if (data.success) window.location.reload();
-  } catch { }
+  } catch {}
 }
 
 function initPrivacyControl() {
