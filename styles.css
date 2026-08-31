@@ -2582,6 +2582,10 @@ a:where(
     grid-template-columns: 1fr;
   }
 
+  .profile-section {
+    order: -1;
+  }
+
   .profile-section,
   .visualizer-section,
   .social-section,
