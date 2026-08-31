@@ -150,20 +150,6 @@ svg.svg-inline--fa:not(.social-link svg) {
   animation: blobMove2 32s ease-in-out infinite alternate;
 }
 
-@keyframes hueShift {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-
-  50% {
-    filter: hue-rotate(25deg);
-  }
-
-  100% {
-    filter: hue-rotate(0deg);
-  }
-}
-
 @keyframes blobMove1 {
   0% {
     transform: translate(0, 0) scale(1);
@@ -1071,19 +1057,6 @@ a:where(
   mask-position: center;
   -webkit-mask-position: center;
   transition: all 0.4s ease;
-}
-
-@keyframes iconPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-  }
 }
 
 .social-link:hover i,
@@ -2450,7 +2423,9 @@ a:where(
   background: linear-gradient(90deg, #00ff88, #00d4b4, #00aaff);
   box-shadow: 0 0 18px rgba(0, 255, 136, 0.4);
   border-radius: inherit;
-  animation: fillSlide 1.2s ease forwards;
+  transform-origin: left;
+  animation: fillSlide 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  will-change: transform;
 }
 
 .lang-thumb {
@@ -2479,22 +2454,11 @@ a:where(
 
 @keyframes fillSlide {
   from {
-    width: 0;
+    transform: scaleX(0);
   }
 
   to {
-    width: var(--fill);
-  }
-}
-
-@keyframes thumbPulse {
-  0%,
-  100% {
-    box-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
-  }
-
-  50% {
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.9);
+    transform: scaleX(1);
   }
 }
 
@@ -3812,24 +3776,30 @@ a:where(
 
 /* Skeleton loader styles */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+  will-change: transform;
+}
 
+@keyframes shimmer {
   100% {
-    background-position: -200% 0;
+    transform: translateX(100%);
   }
 }
 
