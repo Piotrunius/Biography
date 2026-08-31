@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piotrunius - 404</title>
+    <meta
+      name="description"
+      content="Page not found. Head back home to explore projects, skills, and real-time activity."
+    />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://piotrunius.dev/" />
+    <meta
+      name="theme-color"
+      content="#00ff88"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#00a859"
+      media="(prefers-color-scheme: light)"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://piotrunius.dev/404" />
+    <meta property="og:title" content="Piotrunius — 404 Page Not Found" />
+    <meta
+      property="og:description"
+      content="The page you are looking for does not exist. Head back to the homepage to explore projects and activity."
+    />
+    <meta property="og:image" content="https://piotrunius.dev/assets/pfp.png" />
+    <meta property="og:site_name" content="Piotrunius" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://piotrunius.dev/404" />
+    <meta name="twitter:title" content="Piotrunius — 404 Page Not Found" />
+    <meta
+      name="twitter:description"
+      content="The page you are looking for does not exist. Head back to the homepage to explore projects and activity."
+    />
+    <meta
+      name="twitter:image"
+      content="https://piotrunius.dev/assets/pfp.png"
+    />
+
+    <link rel="icon" type="image/png" href="assets/pfp.png" />
+    <link rel="apple-touch-icon" href="assets/pfp.png" />
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Resource hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preload" href="styles.css" as="style" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://kit.fontawesome.com/bd01feb821.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
+        padding: 1.25rem 1.5rem;
+        box-sizing: border-box;
+      }
+
+      .main-container {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 540px;
+        margin: auto 0;
+        padding: 0;
+        gap: 1.15rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .profile-section {
+        min-height: unset !important;
+        width: 100%;
+        grid-column: unset !important;
+        padding: 1.4rem 2rem !important;
+        justify-content: flex-start !important;
+      }
+
+      .profile-section .avatar-container {
+        width: 160px !important;
+        height: 160px !important;
+        margin: 0.5rem auto 1rem !important;
+      }
+
+      .profile-section .avatar {
+        width: 160px !important;
+        height: 160px !important;
+      }
+
+      .profile-section .profile-name {
+        font-size: 1.8rem !important;
+        font-weight: 700;
+        margin-bottom: 0.3rem !important;
+      }
+
+      .profile-section .profile-bio {
+        margin-bottom: 0 !important;
+        font-size: 0.98rem !important;
+        color: var(--text-secondary);
+      }
+
+      .error-section {
+        width: 100%;
+        padding: 1.4rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .error-body {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        margin: 0.1rem 0;
+      }
+
+      .error-code {
+        font-size: 4.2rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        background: linear-gradient(135deg, var(--primary), #00b8ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .error-copy {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        max-width: 420px;
+      }
+
+      .error-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        width: 100%;
+        margin-top: 0.25rem;
+      }
+
+      .error-actions .contact-btn {
+        font-size: 1.02rem;
+        padding: 0.85rem 1.25rem;
+      }
+
+      .contact-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+      }
+
+      .contact-row .contact-btn {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.1rem;
+      }
+
+      .copyright-bar {
+        text-align: center;
+        padding: 0.75rem 0 0.5rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <div class="bg-layer"></div>
+    <canvas id="bg-canvas" class="bg-canvas"></canvas>
+
+    <!-- SVG Gradient for FontAwesome Kit SVGs -->
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      style="width: 0; height: 0; position: absolute"
+    >
+      <defs>
+        <linearGradient id="fa-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00ff88" />
+          <stop offset="100%" stop-color="#00b8ff" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <main class="main-container" id="main-content">
+      <!-- Profile Card -->
+      <section class="profile-section glass-card animate-fade-in">
+        <div class="music-label">
+          <i class="fas fa-user"></i>
+          <span>PROFILE</span>
+        </div>
+        <div class="avatar-container">
+          <img
+            src="assets/pfp.png"
+            alt="Profile photo of Piotrunius"
+            class="avatar"
+            width="160"
+            height="160"
+          />
+          <div class="avatar-ring"></div>
+        </div>
+        <h2 class="profile-name">Piotrunius</h2>
+        <p id="profile-bio" class="profile-bio">
+          Developer &amp; tech enthusiast from Poland.
+        </p>
+      </section>
+
+      <!-- 404 Message + Actions -->
+      <section class="error-section glass-card animate-slide-up">
+        <div class="music-label">
+          <i class="fas fa-compass"></i>
+          <span>NOT FOUND</span>
+        </div>
+        <div class="error-body">
+          <div class="error-code">404</div>
+          <p class="error-copy">
+            This page doesn't exist. It may have been moved, renamed, or is
+            still being built.
+          </p>
+        </div>
+        <div class="error-actions">
+          <a href="/" class="contact-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span class="btn-label">Back to home</span>
+          </a>
+          <div class="contact-row">
+            <a
+              href="https://discord.com/users/1166309729371439104"
+              class="contact-btn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <i class="fa-brands fa-discord"></i>
+              <span class="btn-label">Discord</span>
+            </a>
+            <a href="mailto:contact@piotrunius.dev" class="contact-btn">
+              <i class="fas fa-paper-plane"></i>
+              <span class="btn-label">Email</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="copyright-bar" id="copyright-year">
+      &copy; 2026 Piotrunius &middot; MIT License
+    </div>
+
+    <script>
+      // Dynamic Copyright Year
+      (function () {
+        var el = document.getElementById("copyright-year");
+        if (el) {
+          el.textContent =
+            "\u00a9 " +
+            new Date().getFullYear() +
+            " Piotrunius \u00b7 MIT License";
+        }
+      })();
+
+      // Theme detection (mirrors app.js initThemeDetection)
+      (function () {
+        var savedTheme = localStorage.getItem("theme");
+        if (!savedTheme) {
+          var prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          if (!prefersDark) {
+            document.body.classList.add("light-mode");
+          }
+        }
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", function (e) {
+            if (!localStorage.getItem("theme")) {
+              if (e.matches) {
+                document.body.classList.remove("light-mode");
+              } else {
+                document.body.classList.add("light-mode");
+              }
+            }
+          });
+      })();
+
+      // Scroll reveal (mirrors app.js initScrollReveal)
+      (function () {
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("in-view");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
+        document
+          .querySelectorAll(
+            ".animate-fade-in, .animate-slide-up, .animate-slide-right, .animate-slide-left",
+          )
+          .forEach(function (el) {
+            observer.observe(el);
+          });
+      })();
+
+      // Typing effect on the bio (mirrors app.js initTypingEffect)
+      (function () {
+        var bioEl = document.getElementById("profile-bio");
+        if (!bioEl) return;
+        var text = "Developer & tech enthusiast from Poland.";
+        bioEl.textContent = "";
+        bioEl.classList.add("typing-cursor");
+        var i = 0;
+        (function type() {
+          if (i < text.length) {
+            bioEl.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, 30 + Math.random() * 50);
+          } else {
+            setTimeout(function () {
+              bioEl.classList.remove("typing-cursor");
+            }, 1000);
+          }
+        })();
+      })();
+
+      // Clipboard copy with feedback
+      (function () {
+        var discordLinks = document.querySelectorAll('a[href*="discord.com"]');
+        discordLinks.forEach(function (link) {
+          link.addEventListener("click", function () {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard
+                .writeText("alciaforlife")
+                .catch(function () {});
+              var label = link.querySelector("span") || link;
+              var originalText = label.textContent;
+              label.textContent = "Copied!";
+              link.style.borderColor = "var(--primary)";
+              setTimeout(function () {
+                label.textContent = originalText;
+                link.style.borderColor = "";
+              }, 1500);
+            }
+          });
+        });
+
+        var emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+        emailLinks.forEach(function (link) {
+          link.addEventListener("click", function () {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard
+                .writeText("contact@piotrunius.dev")
+                .catch(function () {});
+              var label = link.querySelector("span") || link;
+              var originalText = label.textContent;
+              label.textContent = "Copied!";
+              link.style.borderColor = "var(--primary)";
+              setTimeout(function () {
+                label.textContent = originalText;
+                link.style.borderColor = "";
+              }, 1500);
+            }
+          });
+        });
+      })();
+
+      // Register Service Worker
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(function () {});
+      }
+
+      // Animated particle background (mirrors app.js initParticles)
+      (function () {
+        var canvas = document.getElementById("bg-canvas");
+        if (!canvas) return;
+        var ctx = canvas.getContext("2d");
+        var width, height;
+        var particles = [];
+
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resize);
+        resize();
+
+        function Particle() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.4;
+          this.vy = (Math.random() - 0.5) * 0.4;
+          this.size = Math.random() * 3 + 2;
+          this.color = "rgba(0, 255, 136, " + Math.random() * 0.3 + ")";
+        }
+        Particle.prototype.update = function () {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0) this.x = width;
+          if (this.x > width) this.x = 0;
+          if (this.y < 0) this.y = height;
+          if (this.y > height) this.y = 0;
+        };
+        Particle.prototype.draw = function () {
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        };
+
+        var isLowEnd =
+          navigator.hardwareConcurrency !== undefined &&
+          navigator.hardwareConcurrency <= 4 &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        var count = isLowEnd ? 25 : 60;
+        for (var i = 0; i < count; i++) particles.push(new Particle());
+
+        function animate() {
+          if (document.hidden) {
+            requestAnimationFrame(animate);
+            return;
+          }
+          ctx.clearRect(0, 0, width, height);
+          particles.forEach(function (p) {
+            p.update();
+            p.draw();
+          });
+          requestAnimationFrame(animate);
+        }
+        animate();
+      })();
+    </script>
+  </body>
+</html>

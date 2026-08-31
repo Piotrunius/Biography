@@ -1,0 +1,39 @@
+# Piotrunius
+
+> Developer & Tech Enthusiast from Poland
+
+Piotrunius (piotrunius.dev) is a developer and tech enthusiast based in Poland. This website is a personal portfolio showcasing projects, technical skills, setup specifications, and real-time activity status across developer and gaming platforms.
+
+## Core Information
+
+- **Name / Handle**: Piotrunius
+- **Role**: Developer & Tech Enthusiast
+- **Location**: Poland
+- **Primary Website**: https://piotrunius.dev
+- **Discord Handle**: `alciaforlife` (ID: 1166309729371439104)
+- **Contact Email**: `contact@piotrunius.dev`
+- **GitHub**: https://github.com/Piotrunius
+- **Steam Profile**: https://steamcommunity.com/id/piotrunius
+
+## Technical Stack & Skills
+
+- **Languages**: TypeScript, JavaScript, Python, C++, HTML5, CSS3
+- **Frameworks & Libraries**: Next.js, React, Node.js, Express, TailwindCSS
+- **Cloud & Edge Infrastructure**: Cloudflare Workers, Cloudflare Pages, Cloudflare D1, Cloudflare R2
+- **Tools & Environments**: Linux (Nobara / Fedora KDE Plasma), Docker, Git, Zsh, Zed Editor
+
+## Real-Time Integrations
+
+The portfolio actively integrates real-time presence and activity tracking:
+- **Spotify**: Current track playback status and history via Cloudflare Worker API.
+- **Steam**: Live gaming activity and persona state via Steam Web API.
+- **Discord**: Real-time presence, activity, and custom status.
+- **Roblox**: User presence and status.
+- **GitHub**: Live commit activity, repository stars, and language breakdown.
+
+## Useful Links & Documents
+
+- [Full LLM Context](https://piotrunius.dev/llms-full.txt): Detailed system documentation and project breakdown.
+- [API Catalog](https://piotrunius.dev/api-catalog.json): Web services and public endpoints.
+- [Sitemap](https://piotrunius.dev/sitemap.xml): Machine-readable sitemap.
+- [Auth Guidance for Bots](https://piotrunius.dev/auth.md): Authentication and access instructions for automated agents.

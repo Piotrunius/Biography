@@ -1,0 +1,57 @@
+# Piotrunius — Full System & Developer Documentation
+
+> Developer & Tech Enthusiast | Poland | piotrunius.dev
+
+## Overview
+
+Piotrunius is a software developer and tech enthusiast based in Poland. This document provides complete machine-readable context for AI models, search crawlers, and automated agents querying information about Piotrunius, their technical profile, active projects, system architecture, hardware setup, and public APIs.
+
+---
+
+## Identity & Contact
+
+- **Name / Pseudonym**: Piotrunius
+- **Primary Domain**: https://piotrunius.dev
+- **Email**: contact@piotrunius.dev
+- **Discord Tag**: `alciaforlife` (Profile: https://discord.com/users/1166309729371439104)
+- **GitHub**: https://github.com/Piotrunius
+- **Steam**: https://steamcommunity.com/id/piotrunius
+- **License**: MIT License (Copyright (c) 2026 Piotrunius)
+
+---
+
+## Technical Stack & Competencies
+
+- **Core Technologies**: TypeScript, JavaScript (ESNext), Python 3, C++
+- **Frontend Architecture**: Next.js, React, Vanilla JS, HTML5, Modern CSS3, TailwindCSS
+- **Backend & Edge Ecosystem**: Cloudflare Workers, Cloudflare Pages, Cloudflare D1 (SQLite Edge DB), Cloudflare R2, Node.js, Express
+- **Operating Systems & Environment**: Linux (Nobara / Fedora KDE Plasma), Zsh, Starship, Ghostty, Zed Editor, Docker, Git
+
+---
+
+## Hardware & Workspace Setup
+
+### PC Specifications
+- **Processor (CPU)**: Intel Core i5-13400F (10 cores, 16 threads, up to 4.6 GHz)
+- **Graphics Card (GPU)**: Gigabyte GeForce RTX 4060 EAGLE OC 8G
+- **Motherboard**: Gigabyte B760 GAMING X AX DDR4 (LGA1700)
+- **RAM**: 32 GB (2x 16 GB) Kingston Fury Beast Black DDR4 3200 MHz CL16
+- **Storage**: Kingston KC3000 1TB M.2 PCIe 4.0 NVMe SSD + Lexar NM620 1TB M.2 PCIe 3.0 NVMe SSD
+- **Power Supply (PSU)**: be quiet! Pure Power 12 M 650W (80 Plus Gold, ATX 3.0)
+- **Case**: be quiet! Pure Base 500 FX Black (4x Light Wings ARGB PWM fans)
+
+### Peripherals
+- **Monitors**: MSI MAG 274UPF (27", 4K UHD 3840x2160, 144Hz, Rapid IPS) + Acer Nitro VG240Y (23.8", FHD 1920x1080, 165Hz, IPS)
+- **Audio & Microphone**: Audio-Technica ATH-M50x / SPC Gear VIRO Plus, Fifine K688 Dynamic USB/XLR Microphone
+- **Keyboard & Mouse**: Endorfy Threepack Wireless Kailh Red / Genesis Thor 300 RGB, Endgame Gear XM1r / Razer DeathAdder V2
+
+---
+
+## Public APIs & Real-Time Endpoints
+
+Public status workers running on Cloudflare Edge:
+- **Spotify Status**: `https://spotify-api.piotrunius.workers.dev/` (Returns current listening track and metadata)
+- **Steam Status**: `https://steam-api.piotrunius.workers.dev/` (Returns persona status and current game)
+- **Discord Status**: `https://discord-api.piotrunius.workers.dev/` (Returns live Discord presence and status)
+- **Roblox Status**: `https://roblox-api.piotrunius.workers.dev/` (Returns Roblox presence)
+- **GitHub Stats**: `https://github-api.piotrunius.workers.dev/` (Returns public commit and repository analytics)

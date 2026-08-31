@@ -1,0 +1,101 @@
+User-agent: *
+Allow: /$
+Allow: /index.html
+Allow: /404.html
+Allow: /styles.css
+Allow: /app.js
+Allow: /manifest.json
+Allow: /projects.json
+Allow: /assets/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /auth.md
+Allow: /api-catalog.json
+Allow: /sitemap.xml
+Disallow: /admin
+Disallow: /api/
+Disallow: /private/
+Disallow: /config/
+Disallow: /.git/
+
+# AI Search & Assistant Bots (Strictly restricted to public bio & info)
+User-agent: GPTBot
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: OAI-SearchBot
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: ChatGPT-User
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: ClaudeBot
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: PerplexityBot
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: Google-Extended
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: Bingbot
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+User-agent: Applebot
+Allow: /$
+Allow: /index.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+Allow: /assets/
+Disallow: /
+
+# Aggressive & Scraping Bots — Blocked Entirely
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://piotrunius.dev/sitemap.xml
