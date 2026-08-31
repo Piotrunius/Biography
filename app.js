@@ -1586,6 +1586,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Initialize scroll reveal immediately for instant smooth entrance
+  initScrollReveal();
+
   // Detect device capabilities first
   detectDeviceCapabilities();
   applyPerformanceOptimizations();
@@ -1604,7 +1607,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize particles only after capability detection
   initParticles();
 
-  initScrollReveal();
   initTypingEffect();
   initMouseEffects();
   initVisibilityOptimization();

@@ -294,7 +294,7 @@ svg.svg-inline--fa:not(.social-link svg) {
   grid-column: 5 / 9;
   padding: 1.5rem;
   text-align: center;
-  animation-delay: 0.15s;
+  animation-delay: 0.2s;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -316,12 +316,12 @@ svg.svg-inline--fa:not(.social-link svg) {
 
 .spotify-status-card {
   grid-column: 1 / 5;
-  animation-delay: 0.15s;
+  animation-delay: 0.1s;
 }
 
 .music-player-card {
   grid-column: 9 / 13;
-  animation-delay: 0.15s;
+  animation-delay: 0.3s;
 }
 
 .spotify-status-card,
