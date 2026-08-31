@@ -294,7 +294,6 @@ svg.svg-inline--fa:not(.social-link svg) {
   grid-column: 5 / 9;
   padding: 1.5rem;
   text-align: center;
-  animation-delay: 0.2s;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -316,12 +315,10 @@ svg.svg-inline--fa:not(.social-link svg) {
 
 .spotify-status-card {
   grid-column: 1 / 5;
-  animation-delay: 0.1s;
 }
 
 .music-player-card {
   grid-column: 9 / 13;
-  animation-delay: 0.3s;
 }
 
 .spotify-status-card,
@@ -915,7 +912,6 @@ a:where(
 .visualizer-section {
   grid-column: 5 / 13;
   padding: 2rem;
-  animation-delay: 0.2s;
 }
 
 .visualizer-header {
@@ -978,7 +974,6 @@ a:where(
 .social-section {
   grid-column: 1 / 7;
   padding: 2rem;
-  animation-delay: 0.3s;
 }
 
 .section-title {
@@ -1090,13 +1085,11 @@ a:where(
 .stats-section {
   grid-column: 7 / 13;
   padding: 2rem;
-  animation-delay: 0.4s;
 }
 
 .activity-section {
   grid-column: 1 / 13;
   padding: 2rem;
-  animation-delay: 0.45s;
 }
 
 .activity-grid {
@@ -1413,14 +1406,12 @@ a:where(
 .skills-section {
   grid-column: 1 / 13;
   padding: 2rem;
-  animation-delay: 0.6s;
 }
 
 /* Projects Section */
 .projects-section {
   grid-column: 1 / 13;
   padding: 2rem;
-  animation-delay: 0.5s;
 }
 
 .projects-grid {
@@ -1671,7 +1662,6 @@ a:where(
 .contact-section {
   grid-column: 1 / 9;
   padding: 2.6rem;
-  animation-delay: 0.7s;
 }
 
 .contact-grid {
@@ -2596,15 +2586,6 @@ a:where(
 
   .profile-section {
     order: -1;
-    animation-delay: 0.1s;
-  }
-
-  .spotify-status-card {
-    animation-delay: 0.2s;
-  }
-
-  .music-player-card {
-    animation-delay: 0.3s;
   }
 
   .profile-section,
