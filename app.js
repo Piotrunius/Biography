@@ -261,7 +261,7 @@ const setupData = {
     {
       icon: "network-wired",
       label: "Motherboard",
-      value: "Gigabyte B760 GAMING X DDR4",
+      value: "Gigabyte B760 GAMING",
       url: "https://www.google.com/search?q=Gigabyte+B760+GAMING+X+DDR4",
       specs: ["LGA 1700", "ATX"],
     },
