@@ -71,18 +71,19 @@
     <link rel="manifest" href="manifest.json" />
 
     <!-- Resource hints -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-    <link rel="dns-prefetch" href="https://github-api.piotrunius.workers.dev" />
+    <link rel="preconnect" href="https://ka-f.fontawesome.com" crossorigin />
+    <link rel="preconnect" href="https://steam-api.piotrunius.workers.dev" />
+    <link rel="preconnect" href="https://spotify-api.piotrunius.workers.dev" />
+    <link rel="preconnect" href="https://github-api.piotrunius.workers.dev" />
+    <link rel="preconnect" href="https://discord-api.piotrunius.workers.dev" />
+    <link rel="preconnect" href="https://roblox-api.piotrunius.workers.dev" />
     <link
-      rel="dns-prefetch"
-      href="https://spotify-api.piotrunius.workers.dev"
+      rel="preload"
+      href="assets/pfp.webp"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
     />
-    <link rel="dns-prefetch" href="https://steam-api.piotrunius.workers.dev" />
-    <link
-      rel="dns-prefetch"
-      href="https://discord-api.piotrunius.workers.dev"
-    />
-    <link rel="dns-prefetch" href="https://roblox-api.piotrunius.workers.dev" />
     <link rel="preload" href="styles.css" as="style" />
     <link rel="preload" href="app.js" as="script" />
 
@@ -90,6 +91,7 @@
     <script
       src="https://kit.fontawesome.com/bd01feb821.js"
       crossorigin="anonymous"
+      defer
     ></script>
   </head>
 
@@ -114,13 +116,13 @@
       </defs>
     </svg>
 
-    <audio id="bg-audio" loop>
+    <audio id="bg-audio" loop preload="none">
       <source src="assets/audio.mp3" type="audio/mpeg" />
     </audio>
 
     <main class="main-container" id="main-content">
       <!-- LEFT: Spotify Status -->
-      <section class="spotify-status-card glass-card animate-slide-right">
+      <section class="spotify-status-card glass-card">
         <div class="music-label spotify-brand">
           <i class="fa-brands fa-spotify"></i>
           <span>SPOTIFY STATUS</span>
@@ -134,21 +136,24 @@
       </section>
 
       <!-- CENTER: Profile Section -->
-      <section class="profile-section glass-card animate-fade-in">
+      <section class="profile-section glass-card">
         <div class="music-label">
           <i class="fas fa-user"></i>
           <span>PROFILE</span>
         </div>
         <div class="avatar-container">
-          <img
-            id="avatar"
-            src="assets/pfp.png"
-            alt="Profile photo of Piotrunius"
-            class="avatar"
-            loading="lazy"
-            width="180"
-            height="180"
-          />
+          <picture>
+            <source srcset="assets/pfp.webp" type="image/webp" />
+            <img
+              id="avatar"
+              src="assets/pfp.webp"
+              alt="Profile photo of Piotrunius"
+              class="avatar"
+              fetchpriority="high"
+              width="180"
+              height="180"
+            />
+          </picture>
           <div class="avatar-ring"></div>
         </div>
         <h2 id="profile-name" class="profile-name">Piotrunius</h2>
@@ -158,7 +163,7 @@
       </section>
 
       <!-- RIGHT: Local Player -->
-      <section class="music-player-card glass-card animate-slide-left">
+      <section class="music-player-card glass-card">
         <div class="music-label">
           <i class="fas fa-music"></i>
           <span>LOCAL PLAYER</span>
@@ -281,7 +286,7 @@
                 <div class="steam-avatar-wrapper">
                   <img
                     id="steam-pfp"
-                    src="assets/pfp.png"
+                    src="assets/pfp.webp"
                     alt="Steam profile avatar of Piotrunius"
                     class="steam-avatar"
                     loading="lazy"
@@ -352,7 +357,7 @@
                 <div class="discord-avatar-wrapper">
                   <img
                     id="discord-pfp"
-                    src="assets/pfp.png"
+                    src="assets/pfp.webp"
                     alt="Discord profile avatar of Piotrunius"
                     class="discord-avatar"
                     loading="lazy"
@@ -419,7 +424,7 @@
                 <div class="roblox-avatar-wrapper">
                   <img
                     id="roblox-pfp"
-                    src="assets/pfp.png"
+                    src="assets/pfp.webp"
                     alt="Roblox profile avatar of pioterson2000"
                     class="roblox-avatar"
                     loading="lazy"
@@ -726,7 +731,7 @@
         <div class="system-card">
           <div class="system-left">
             <img
-              src="assets/nobara-icon.png"
+              src="assets/nobara-icon.webp"
               alt="Nobara"
               class="system-logo"
               loading="lazy"

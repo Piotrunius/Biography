@@ -787,45 +787,30 @@ a:where(
   width: 100%;
   height: 100%;
   border-radius: 50%;
-
   object-fit: cover;
   border: 4px solid var(--primary);
-  box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  animation: avatarGlow 3s ease-in-out infinite;
-}
-
-@keyframes avatarGlow {
-  0%,
-  100% {
-    box-shadow:
-      0 0 40px rgba(0, 255, 136, 0.3),
-      0 0 60px rgba(0, 255, 136, 0.2),
-      inset 0 0 20px rgba(0, 255, 136, 0.1);
-  }
-
-  50% {
-    box-shadow:
-      0 0 60px rgba(0, 255, 136, 0.5),
-      0 0 90px rgba(0, 255, 136, 0.3),
-      inset 0 0 30px rgba(0, 255, 136, 0.2);
-  }
+  box-shadow: 0 0 35px rgba(0, 255, 136, 0.35);
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
 }
 
 .avatar:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+  box-shadow: 0 0 45px rgba(0, 255, 136, 0.5);
 }
 
 .avatar-ring {
   position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
   border-radius: 50%;
   border: 2px solid var(--primary);
-  opacity: 0.3;
+  opacity: 0.35;
+  animation: pulse 3s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes pulse {
@@ -1818,7 +1803,7 @@ a:where(
 .copyright-bar {
   text-align: center;
   padding: 1.5rem 0 2rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.88);
   font-weight: 600;
   letter-spacing: 0.5px;
 }
@@ -1830,7 +1815,7 @@ a:where(
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
 
   to {
@@ -1844,13 +1829,12 @@ a:where(
 .animate-slide-right,
 .animate-slide-left {
   opacity: 0;
-  visibility: hidden;
+  transform: translateY(20px);
   will-change: opacity, transform;
 }
 
 .in-view {
-  visibility: visible;
-  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 /* Typing Cursor */
@@ -2104,14 +2088,14 @@ a:where(
   align-items: center;
   justify-content: center;
   opacity: 0;
-  visibility: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
   padding: 1rem;
 }
 
 .spec-modal-overlay.active {
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 
 .spec-modal-content {
@@ -2123,7 +2107,9 @@ a:where(
   position: relative;
   transform: scale(0.95) translateY(20px);
   opacity: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -3443,13 +3429,6 @@ a:where(
 .offline .status-dot {
   background: #747f8d;
   box-shadow: none;
-}
-
-.copyright-bar {
-  text-align: center;
-  padding: 2rem;
-  opacity: 0.6;
-  font-weight: 600;
 }
 
 @keyframes iconBounce {

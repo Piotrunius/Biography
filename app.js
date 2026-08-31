@@ -352,7 +352,7 @@ function getDefaultConfig() {
     profile: {
       name: "Piotrunius",
       bio: "Developer & tech enthusiast from Poland.",
-      avatar: "assets/pfp.png",
+      avatar: "assets/pfp.webp",
     },
     socials: [
       {
@@ -414,9 +414,11 @@ function initProfile() {
   const avatar = document.getElementById("avatar");
   const nameEl = document.getElementById("profile-name");
   const bioEl = document.getElementById("profile-bio");
-  if (avatar) avatar.src = config.profile?.avatar || "assets/pfp.png";
+  if (avatar) avatar.src = config.profile?.avatar || "assets/pfp.webp";
   if (nameEl) nameEl.textContent = config.profile?.name || "Piotrunius";
-  if (bioEl) bioEl.textContent = config.profile?.bio || "Bio";
+  if (bioEl && !bioEl.textContent.trim()) {
+    bioEl.textContent = config.profile?.bio || "Bio";
+  }
 }
 
 function initSocials() {
@@ -734,11 +736,11 @@ async function refreshSteamStatus() {
     ) {
       steamPfp.src = avatarUrl;
       steamPfp.onerror = () => {
-        steamPfp.src = "assets/pfp.png";
+        steamPfp.src = "assets/pfp.webp";
       };
     } else {
       console.warn("Invalid Steam avatar URL detected:", avatarUrl);
-      steamPfp.src = "assets/pfp.png";
+      steamPfp.src = "assets/pfp.webp";
     }
   }
 
@@ -1328,21 +1330,10 @@ function initScrollReveal() {
 function initTypingEffect() {
   const bioEl = document.getElementById("profile-bio");
   if (!bioEl) return;
-  const text = config.profile?.bio || bioEl.textContent;
-  bioEl.textContent = "";
-  bioEl.classList.add("typing-cursor");
-
-  let i = 0;
-  const type = () => {
-    if (i < text.length) {
-      bioEl.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 30 + Math.random() * 50);
-    } else {
-      setTimeout(() => bioEl.classList.remove("typing-cursor"), 1000);
-    }
-  };
-  setTimeout(type, 500); // Initial delay
+  const text = config.profile?.bio;
+  if (text && bioEl.textContent !== text) {
+    bioEl.textContent = text;
+  }
 }
 
 function initMouseEffects() {

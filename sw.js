@@ -1,5 +1,5 @@
 // Service Worker — Stale-While-Revalidate Cache Strategy
-const CACHE_NAME = "piotrunius-bio-v5";
+const CACHE_NAME = "piotrunius-bio-v6";
 const urlsToCache = [
   "/",
   "/index.html",
@@ -8,7 +8,9 @@ const urlsToCache = [
   "/app.js",
   "/projects.json",
   "/manifest.json",
+  "/assets/pfp.webp",
   "/assets/pfp.png",
+  "/assets/nobara-icon.webp",
   "/assets/nobara-icon.png",
 ];
 
