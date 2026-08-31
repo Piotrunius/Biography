@@ -1,9 +1,32 @@
-.wrangler/
+# Dependencies
 node_modules/
+
+# Cloudflare & Workers Local State
+.wrangler/
 .dev.vars
+
+# Environment Variables & Secrets
 .env
 .env.*
+*.pem
+*.key
+
+# Build Outputs & Logs
 dist/
 build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.tmp
+
+# Operating System & Editors
 .DS_Store
-.opencode/memory/
+Thumbs.db
+.vscode/
+.idea/
+.zed/
+
+# Local AI & Tooling State
+.opencode/
+.codegraph/

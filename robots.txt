@@ -1,29 +1,44 @@
+# As a condition of accessing this website, you agree to abide by the following
+# content signals:
+
+# (a)  If a Content-Signal = yes, you may collect content for the corresponding
+#      use.
+# (b)  If a Content-Signal = no, you may not collect content for the
+#      corresponding use.
+# (c)  If the website operator does not include a Content-Signal for a
+#      corresponding use, the website operator neither grants nor restricts
+#      permission via Content-Signal with respect to the corresponding use.
+
+# The content signals and their meanings are:
+
+# search:   building a search index and providing search results
+# ai-input: inputting content into one or more AI models
+# ai-train: training or fine-tuning AI models.
+# use:      how AI systems may consume the content (immediate, reference, or full).
+
 User-agent: *
-Allow: /$
-Allow: /index.html
-Allow: /404.html
-Allow: /styles.css
-Allow: /app.js
-Allow: /manifest.json
-Allow: /projects.json
-Allow: /assets/
-Allow: /llms.txt
-Allow: /llms-full.txt
-Allow: /auth.md
-Allow: /api-catalog.json
-Allow: /sitemap.xml
+Content-Signal: search=yes,ai-train=no,use=reference
 Disallow: /admin
 Disallow: /api/
 Disallow: /private/
 Disallow: /config/
 Disallow: /.git/
 
+# Aggressive & Scraping Bots — Blocked Entirely
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
 # AI Search & Assistant Bots (Strictly restricted to public bio & info)
 User-agent: GPTBot
 Allow: /$
 Allow: /index.html
 Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /sitemap.xml
 Allow: /assets/
 Disallow: /
@@ -32,7 +47,6 @@ User-agent: OAI-SearchBot
 Allow: /$
 Allow: /index.html
 Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /sitemap.xml
 Allow: /assets/
 Disallow: /
@@ -41,7 +55,6 @@ User-agent: ChatGPT-User
 Allow: /$
 Allow: /index.html
 Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /sitemap.xml
 Allow: /assets/
 Disallow: /
@@ -50,7 +63,6 @@ User-agent: ClaudeBot
 Allow: /$
 Allow: /index.html
 Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /sitemap.xml
 Allow: /assets/
 Disallow: /
@@ -59,7 +71,6 @@ User-agent: PerplexityBot
 Allow: /$
 Allow: /index.html
 Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /sitemap.xml
 Allow: /assets/
 Disallow: /
@@ -68,34 +79,8 @@ User-agent: Google-Extended
 Allow: /$
 Allow: /index.html
 Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /sitemap.xml
 Allow: /assets/
-Disallow: /
-
-User-agent: Bingbot
-Allow: /$
-Allow: /index.html
-Allow: /llms.txt
-Allow: /llms-full.txt
-Allow: /sitemap.xml
-Allow: /assets/
-Disallow: /
-
-User-agent: Applebot
-Allow: /$
-Allow: /index.html
-Allow: /llms.txt
-Allow: /llms-full.txt
-Allow: /sitemap.xml
-Allow: /assets/
-Disallow: /
-
-# Aggressive & Scraping Bots — Blocked Entirely
-User-agent: CCBot
-Disallow: /
-
-User-agent: Bytespider
 Disallow: /
 
 Sitemap: https://piotrunius.dev/sitemap.xml

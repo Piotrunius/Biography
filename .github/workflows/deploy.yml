@@ -5,55 +5,35 @@ on:
     branches:
       - main
     paths:
-      - 'api/**'
-      - '.github/workflows/deploy.yml'
+      - "api/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-workers-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
-    name: Deploy Workers
+    name: Deploy ${{ matrix.worker }}-api
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        worker:
+          - discord
+          - github
+          - roblox
+          - spotify
+          - steam
+          - admin
+      fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy discord-api
+      - name: Deploy ${{ matrix.worker }} worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'api'
-          command: deploy --config wrangler.discord.toml
-
-      - name: Deploy github-api
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'api'
-          command: deploy --config wrangler.github.toml
-
-      - name: Deploy roblox-api
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'api'
-          command: deploy --config wrangler.roblox.toml
-
-      - name: Deploy spotify-api
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'api'
-          command: deploy --config wrangler.spotify.toml
-
-      - name: Deploy steam-api
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'api'
-          command: deploy --config wrangler.steam.toml
-
-      - name: Deploy admin-control
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: 'api'
-          command: deploy --config wrangler.admin.toml
+          workingDirectory: "api"
+          command: deploy --config wrangler.${{ matrix.worker }}.toml
