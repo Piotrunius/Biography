@@ -42,22 +42,30 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 ```
 .
 ├── 📄 index.html           # Main HTML
+├── 📄 404.html             # Custom error page
 ├── 🎨 styles.css           # Global styles
-├── ⚙️  app.js              # Main JavaScript
-├── 🔧 sw.js                # Service Worker (PWA)
+├── ⚙️ app.js              # Main JavaScript
+├── 🔧 sw.js                # Service Worker
 ├── 📋 manifest.json        # PWA manifest
 ├── 📚 projects.json        # Project data
-├── 🎼 assets/
-│   ├── pfp.png            # Profile picture
+├── 🤖 robots.txt           # Search engine rules
+├── 🗺️ sitemap.xml         # XML sitemap
+├── 🌐 CNAME                # Custom domain configuration
+├── 🎼 assets/              # Static assets
+│   ├── pfp.*              # Profile pictures
 │   ├── audio.mp3          # Background music
-│   └── nobara-icon.png    # App icon
-└── 🔌 api/
-    ├── spotify.js         # Spotify Worker
-    ├── github.js          # GitHub Worker
-    ├── steam.js           # Steam Worker
-    ├── discord.js         # Discord Worker
-    ├── roblox.js          # Roblox Worker
-    └── admin.js           # Admin Worker
+│   ├── nobara-icon.*      # OS icons
+│   └── *.svg              # Social icons
+├── 🔌 api/                 # Cloudflare Workers
+│   ├── spotify.js         # Spotify integration
+│   ├── github.js          # GitHub integration
+│   ├── steam.js           # Steam integration
+│   ├── discord.js         # Discord integration
+│   ├── roblox.js          # Roblox integration
+│   ├── admin.js           # Admin endpoint
+│   └── wrangler.*.toml    # Worker configurations
+└── 🚀 .github/workflows/   # CI/CD pipelines
+    └── deploy.yml         # GitHub Actions deployment
 ```
 
 ---
@@ -205,8 +213,6 @@ Edit `projects.json` to add/remove projects:
 
 - Local music playback with visualizer
 - Play/pause controls
-- Volume adjustment
-- Progress bar
 
 ### 📊 Status Panels
 
