@@ -2,15 +2,14 @@
 
 A beautiful, modern portfolio website showcasing real-time presence across multiple platforms. Features live status panels from Spotify, Steam, GitHub, Discord, and Roblox, combined with a glassmorphism design and interactive audio player.
 
-> **Authorship Note:** This project was created by a human with approximately 20–30% AI assistance for ideation, wording, and refinements.
+> **Authorship Note:** This project was created by a human with approximately 15-20% AI assistance for ideation, wording, and refinements.
 
 ---
 
 ## ✨ Key Features
 
-- 🎨 **Glassmorphism UI** - Modern frosted-glass aesthetic with smooth animations
+- 🎨 **Modern UI** - Modern frosted-glass aesthetic with smooth animations
 - 👻 **Synchronized Ghost Loaders** - Elegant skeleton loading screens that reveal all statuses simultaneously
-- 🌙 **Auto Theme Detection** - Follows system light/dark preference
 - 🎵 **Local Audio Player** - Built-in music player with visualizer
 - 📊 **Live Status Panels** - Real-time data from:
   - 🎵 Spotify (currently playing song)
@@ -220,14 +219,6 @@ Real-time data updates (configurable interval):
 - **Roblox:** Presence status, avatar, game location
 
 _Note: Status panels use a coordinated loading mechanism, ensuring Discord, Steam, and Roblox data fetches are fully settled before gracefully revealing the content together from a skeleton state._
-
-### 🌙 Dark/Light Mode
-
-Automatic detection via `prefers-color-scheme`:
-
-- Matches system light/dark preference on load
-- Listens for live system theme changes
-- Default is dark; light mode activates when system preference is not dark
 
 ---
 
