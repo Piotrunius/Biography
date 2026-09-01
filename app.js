@@ -1332,6 +1332,11 @@ function initTypingEffect() {
   if (!bioEl) return;
   const text = config.profile?.bio;
   if (!text) return;
+  // Prevent CLS by preserving the height before clearing text
+  const currentHeight = bioEl.getBoundingClientRect().height;
+  if (currentHeight > 0) {
+    bioEl.style.minHeight = `${currentHeight}px`;
+  }
   bioEl.textContent = "";
   bioEl.classList.add("typing-cursor");
   let i = 0;
