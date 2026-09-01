@@ -1,3 +1,32 @@
+function hexToBytes(hex) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+  }
+  return bytes;
+}
+
+function constantTimeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a[i] ^ b[i];
+  }
+  return result === 0;
+}
+
+async function verifyPassword(password, storedHash) {
+  if (typeof crypto === "undefined" || !crypto.subtle) {
+    throw new Error("crypto.subtle is not available");
+  }
+  const encoder = new TextEncoder();
+  const passwordHash = new Uint8Array(
+    await crypto.subtle.digest("SHA-256", encoder.encode(password)),
+  );
+  const storedBytes = hexToBytes(storedHash);
+  return constantTimeEqual(passwordHash, storedBytes);
+}
+
 export default {
   async fetch(request, env) {
     const ALLOWED_ORIGIN = "https://piotrunius.dev";
@@ -24,7 +53,7 @@ export default {
     }
 
     try {
-      // 1. IP lockout — blokada po 5 nieudanych próbach przez 15 minut
+      // 1. IP lockout - block after 5 failed attempts for 15 minutes
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
       const lockKey = `ADMIN_FAIL_${ip}`;
       const now = Date.now();
@@ -47,14 +76,17 @@ export default {
         );
       }
 
-      // 2. Opóźnienie brute-force (1–3 sekundy)
+      // 2. Brute-force delay (1-3 seconds)
       const delay = Math.floor(Math.random() * 2000) + 1000;
       await new Promise((resolve) => setTimeout(resolve, delay));
 
       const { password, action } = await request.json();
 
-      // 3. Weryfikacja hasła
-      if (!env.ADMIN_PASSWORD || password !== env.ADMIN_PASSWORD) {
+      // 3. Password verification
+      if (
+        !env.ADMIN_PASSWORD ||
+        !(await verifyPassword(password, env.ADMIN_PASSWORD))
+      ) {
         const attempts = (lockData?.count || 0) + 1;
         const newLock =
           attempts >= 5
@@ -73,10 +105,10 @@ export default {
         );
       }
 
-      // 4. Reset licznika po poprawnym haśle
+      // 4. Reset counter after correct password
       await env.STATE.delete(lockKey);
 
-      // 5. Logika przełączania
+      // 5. Toggle logic
       let newState;
       const current = await env.STATE.get("PRIVACY_MODE");
 

@@ -1562,30 +1562,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize performance monitoring
   initPerformanceMonitoring();
 
-  // Register Service Worker for offline support
-  if ("serviceWorker" in navigator && false) {
-    // Disabled temporarily
-    try {
-      const registration = await navigator.serviceWorker.register("/sw.js");
-      console.log("Service Worker registered:", registration.scope);
-
-      // Check for updates
-      registration.addEventListener("updatefound", () => {
-        const newWorker = registration.installing;
-        newWorker.addEventListener("statechange", () => {
-          if (
-            newWorker.state === "installed" &&
-            navigator.serviceWorker.controller
-          ) {
-            console.log("New version available! Refresh to update.");
-          }
-        });
-      });
-    } catch (error) {
-      console.warn("Service Worker registration failed:", error);
-    }
-  }
-
   // Initialize scroll reveal immediately for instant smooth entrance
   initScrollReveal();
 

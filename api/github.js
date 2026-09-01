@@ -15,7 +15,7 @@ export default {
       return new Response(null, { headers: corsHeaders });
 
     try {
-      // 1. Rate limiting: max 30 requestów / 60 sekund / IP
+      // 1. Rate limiting: max 30 requests / 60 seconds / IP
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
       const rlKey = `RL_github_${ip}`;
       const now = Date.now();
@@ -39,7 +39,7 @@ export default {
         });
       }
 
-      // 2. Sprawdzenie trybu prywatności (Privacy Mode) z bazy KV
+      // 2. Check privacy mode from KV database
       const privacyStatus = await env.STATE.get("PRIVACY_MODE");
 
       if (privacyStatus === "true") {
@@ -62,7 +62,7 @@ export default {
         Accept: "application/vnd.github.v3+json",
       };
 
-      // 2. Pobieranie zasobów
+      // 2. Fetch resources
       const [uR, reposR, starredR, searchCommitsR, gistsR] = await Promise.all([
         fetch(`https://api.github.com/user`, { headers: gHeaders }),
         fetch(
@@ -90,7 +90,7 @@ export default {
       const starred = await starredR.json();
       const searchCommits = await searchCommitsR.json();
       const gists = await gistsR.json();
-      // 3. Obliczenia na podstawie rzeczywistych danych
+      // 3. Calculations based on actual data
       const publicReposCount = Array.isArray(repos)
         ? repos.filter((r) => !r.private).length
         : 0;
@@ -100,7 +100,7 @@ export default {
             .filter((r) => !r.private)
             .reduce((acc, r) => acc + (r.stargazers_count || 0), 0)
         : 0;
-      // 4. Pobieranie ostatnich commitów (only public repos)
+      // 4. Fetch recent commits (only public repos)
       const publicRepos = Array.isArray(repos)
         ? repos.filter((r) => !r.private).slice(0, 5)
         : [];
@@ -131,7 +131,7 @@ export default {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 15);
 
-      // 5. Budowanie końcowego payloadu
+      // 5. Build final payload
       const payload = {
         privacyMode: false,
         user: {

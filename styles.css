@@ -609,7 +609,6 @@ a:where(
     .spec-sub-link,
     .spec-more-link,
     .activity-link,
-    .steam-profile-link,
     .status-view-link
   )
 ) {
@@ -627,7 +626,6 @@ a:where(
       .spec-sub-link,
       .spec-more-link,
       .activity-link,
-      .steam-profile-link,
       .status-view-link
     )
   )::after {
@@ -650,7 +648,6 @@ a:where(
       .spec-sub-link,
       .spec-more-link,
       .activity-link,
-      .steam-profile-link,
       .status-view-link
     )
   ):hover::after {
@@ -686,37 +683,6 @@ a:where(
   color: var(--primary);
   font-weight: 500;
   opacity: 0.9;
-}
-
-.steam-profile-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1.4rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: var(--text);
-  text-decoration: none !important;
-  font-weight: 700;
-  font-size: 0.9rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-}
-
-.steam-profile-link:hover {
-  background: var(--primary) !important;
-  color: #000 !important;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
-}
-
-.steam-profile-link:hover i,
-.steam-profile-link:hover svg.svg-inline--fa {
-  background: none !important;
-  -webkit-text-fill-color: initial !important;
-  color: #000 !important;
 }
 
 /* Mobile Adjustments */
@@ -907,21 +873,6 @@ a:where(
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.visualizer-section {
-  grid-column: 5 / 13;
-  padding: 2rem;
-}
-
-.visualizer-header {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  margin-bottom: 1.2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--primary);
 }
 
 .music-meta {
@@ -1753,22 +1704,6 @@ a:where(
   box-shadow: 0 12px 36px rgba(0, 255, 136, 0.4);
 }
 
-.footer {
-  margin-top: 4rem;
-  padding: 2rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--glass-border);
-}
-
-.footer-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .perf-indicator {
   display: flex;
   gap: 0.5rem;
@@ -2563,22 +2498,6 @@ a:where(
   }
 }
 
-.bg-canvas {
-  z-index: -1;
-}
-
-.float-particle {
-  z-index: -2 !important;
-}
-
-/* Footer Styles */
-.footer {
-  text-align: center;
-  padding: 2rem;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.9rem;
-}
-
 @media (max-width: 1024px) {
   .main-container {
     grid-template-columns: 1fr;
@@ -2589,7 +2508,6 @@ a:where(
   }
 
   .profile-section,
-  .visualizer-section,
   .social-section,
   .stats-section,
   .gaming-section,
@@ -2635,16 +2553,7 @@ a:where(
   }
 }
 
-/* Naprawa niewidzialnych modułów/przycisków */
-.nav-buttons,
-.action-module {
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: flex;
-  z-index: 10;
-}
-
-/* Kontener ze scrollem */
+/* Scrollable container */
 .scrollable-content {
   height: 380px;
   /* Fixed height to force layout */
@@ -2663,7 +2572,7 @@ a:where(
   scrollbar-color: #00ff99 rgba(255, 255, 255, 0.05);
 }
 
-/* Customowy Scrollbar dla Nobara/Chrome */
+/* Custom Scrollbar for Nobara/Chrome */
 .scrollable-content::-webkit-scrollbar {
   width: 4px;
 }
@@ -2677,7 +2586,7 @@ a:where(
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Animacja wejścia */
+/* Entry animation */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -2929,16 +2838,6 @@ a:where(
   color: var(--text);
 }
 
-.steam-status-text {
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  opacity: 0.7;
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
 .steam-game-info {
   font-size: 0.95rem;
   color: var(--primary);
@@ -3032,37 +2931,6 @@ a:where(
 .discord-activity-item .activity-type {
   opacity: 0.7;
   font-size: 0.75rem;
-}
-
-.steam-profile-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1.4rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: var(--text);
-  text-decoration: none !important;
-  font-weight: 700;
-  font-size: 0.9rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-}
-
-.steam-profile-link:hover {
-  background: var(--primary) !important;
-  color: #000 !important;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
-}
-
-.steam-profile-link:hover i,
-.steam-profile-link:hover svg.svg-inline--fa {
-  background: none !important;
-  -webkit-text-fill-color: initial !important;
-  color: #000 !important;
 }
 
 /* ========================================== */
@@ -3376,39 +3244,6 @@ a:where(
   .status-view-link {
     width: 100%;
   }
-}
-
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: transparent;
-  transition: all 0.3s ease;
-}
-
-.online .status-dot {
-  background: #43b581;
-  box-shadow: 0 0 10px rgba(67, 181, 129, 0.6);
-}
-
-.away .status-dot {
-  background: #faa61a;
-  box-shadow: 0 0 10px rgba(250, 166, 26, 0.6);
-}
-
-.busy .status-dot {
-  background: #f04747;
-  box-shadow: 0 0 10px rgba(240, 71, 71, 0.6);
-}
-
-.in-game .status-dot {
-  background: #43b581;
-  box-shadow: 0 0 10px rgba(67, 181, 129, 0.6);
-}
-
-.offline .status-dot {
-  background: #747f8d;
-  box-shadow: none;
 }
 
 @keyframes iconBounce {

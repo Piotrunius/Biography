@@ -10,7 +10,7 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 
 - 🎨 **Glassmorphism UI** - Modern frosted-glass aesthetic with smooth animations
 - 👻 **Synchronized Ghost Loaders** - Elegant skeleton loading screens that reveal all statuses simultaneously
-- 🌙 **Theme Toggle** - Switch between light and dark modes
+- 🌙 **Auto Theme Detection** - Follows system light/dark preference
 - 🎵 **Local Audio Player** - Built-in music player with visualizer
 - 📊 **Live Status Panels** - Real-time data from:
   - 🎵 Spotify (currently playing song)
@@ -27,15 +27,14 @@ A beautiful, modern portfolio website showcasing real-time presence across multi
 
 ## 🛠 Tech Stack
 
-| Technology               | Purpose                     |
-| ------------------------ | --------------------------- |
-| **HTML5**                | Semantic markup             |
-| **CSS3**                 | Modern styling & animations |
-| **JavaScript (ES6+)**    | Interactivity & API calls   |
-| **Cloudflare Workers**   | Serverless API layer        |
-| **KV Storage**           | Token caching & settings    |
-| **Font Awesome 6.5.1**   | Icon library                |
-| **Cloudflare Analytics** | Privacy-friendly analytics  |
+| Technology             | Purpose                     |
+| ---------------------- | --------------------------- |
+| **HTML5**              | Semantic markup             |
+| **CSS3**               | Modern styling & animations |
+| **JavaScript (ES6+)**  | Interactivity & API calls   |
+| **Cloudflare Workers** | Serverless API layer        |
+| **KV Storage**         | Token caching & settings    |
+| **Font Awesome 6.5.1** | Icon library                |
 
 ---
 
@@ -118,6 +117,8 @@ The live status panels require Cloudflare Workers to fetch real-time data.
    ADMIN_PASSWORD = "..."
    ```
 
+> **Admin password (SHA-256):** The `ADMIN_PASSWORD` secret must store a **SHA-256 hash** of the admin password, not the plaintext. Generate the hash locally with `echo -n "your-password" | sha256sum` (take the hex output, drop the trailing `-`), or compute it in a Worker with `crypto.subtle.digest('SHA-256', ...)`. Use a strong, high-entropy password. Note: this is a source/config change only - no deploy is part of this cleanup.
+
 5. **Update API URLs**
    - Edit `app.js` to point to your deployed workers
    - Example: `https://workers.example.com/spotify`
@@ -166,9 +167,9 @@ When enabled, all APIs return:
 
 Edit `styles.css` to customize:
 
-- Primary colors: `--color-primary`, `--color-secondary`
-- Backgrounds: `--bg-light`, `--bg-dark`
-- Fonts: `:root` CSS variables
+- Primary color: `--primary`
+- Background: `--bg`
+- Other variables: `--text`, `--border`, `--card-bg`, `--glass-bg` (see `styles.css` `:root`)
 
 ### Update Profile Info
 
@@ -220,22 +221,11 @@ _Note: Status panels use a coordinated loading mechanism, ensuring Discord, Stea
 
 ### 🌙 Dark/Light Mode
 
-Automatic detection + manual toggle:
+Automatic detection via `prefers-color-scheme`:
 
-- Respects system preference
-- Toggle button in header
-- Persists to localStorage
-
----
-
-## 📊 Analytics
-
-Uses **Cloudflare Web Analytics** for privacy-friendly statistics:
-
-- No cookies, no fingerprinting, no PII
-- GDPR-compliant without a cookie banner (EU included)
-- Traffic metrics auto-collected via Cloudflare beacon
-- Configured in the Cloudflare dashboard under **Web Analytics → piotrunius.dev**
+- Matches system light/dark preference on load
+- Listens for live system theme changes
+- Default is dark; light mode activates when system preference is not dark
 
 ---
 

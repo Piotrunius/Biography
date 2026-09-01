@@ -16,7 +16,7 @@ export default {
     }
 
     try {
-      // Rate limiting: max 30 requestów / 60 sekund / IP
+      // Rate limiting: max 30 requests / 60 seconds / IP
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
       const rlKey = `RL_spotify_${ip}`;
       const rlNow = Date.now();

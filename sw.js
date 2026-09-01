@@ -121,7 +121,12 @@ self.addEventListener("fetch", (event) => {
                   console.warn("[SW] Cache update failed:", error);
                 });
             })
-            .catch(() => {}); // Silently fail if network is unavailable
+            .catch(() => {
+              console.warn(
+                "[SW] Revalidation fetch failed (network unavailable):",
+                url.pathname,
+              );
+            });
 
           return cachedResponse;
         }
