@@ -186,15 +186,17 @@ Edit `projects.json` to add/remove projects:
 ```json
 {
   "projects": [
-    {
-      "name": "Project Name",
-      "description": "Brief description",
-      "technologies": ["Tech1", "Tech2"],
-      "link": "https://..."
-    }
+    { "repo": "NexVid", "type": "archive", "order": 1 },
+    { "repo": "Biography", "type": "current", "order": 2 },
+    { "repo": "Exam-Scraper", "type": "active", "order": 3 },
+    { "repo": "Broadcast-generator", "type": "collab", "order": 4 }
   ]
 }
 ```
+
+- `repo` must match the GitHub repository name exactly (app.js matches `configMap` against `repo.name`).
+- `type` is one of `archive`, `current`, `active`, or `collab` (used as `displayType`; falls back to `active`).
+- `order` is an integer sort order (lower values appear first).
 
 ---
 

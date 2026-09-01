@@ -1331,9 +1331,22 @@ function initTypingEffect() {
   const bioEl = document.getElementById("profile-bio");
   if (!bioEl) return;
   const text = config.profile?.bio;
-  if (text && bioEl.textContent !== text) {
-    bioEl.textContent = text;
+  if (!text) return;
+  bioEl.textContent = "";
+  bioEl.classList.add("typing-cursor");
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      bioEl.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, 30 + Math.random() * 50);
+    } else {
+      setTimeout(() => {
+        bioEl.classList.remove("typing-cursor");
+      }, 1000);
+    }
   }
+  type();
 }
 
 function initMouseEffects() {

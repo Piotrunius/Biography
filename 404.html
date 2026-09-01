@@ -293,18 +293,6 @@
             " Piotrunius \u00b7 MIT License";
       })();
 
-      // Theme detection
-      (function () {
-        var mq = window.matchMedia("(prefers-color-scheme: dark)");
-        function apply() {
-          if (!localStorage.getItem("theme")) {
-            document.body.classList.toggle("light-mode", !mq.matches);
-          }
-        }
-        apply();
-        mq.addEventListener("change", apply);
-      })();
-
       // Scroll reveal
       (function () {
         var observer = new IntersectionObserver(
