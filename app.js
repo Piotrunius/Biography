@@ -2020,8 +2020,7 @@ function showProjectsMessage(container, inner) {
   // show ONLY the message (no skeleton loaders behind it) so the page
   // does not jump when the skeleton disappears.
   const h = container.offsetHeight || 0;
-  container.innerHTML =
-    `<div class="grid-overlay"><div class="activity-empty-state">${inner}</div></div>`;
+  container.innerHTML = `<div class="grid-overlay"><div class="activity-empty-state">${inner}</div></div>`;
   if (h > 0) container.style.height = h + "px";
 }
 

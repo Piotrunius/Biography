@@ -3516,7 +3516,6 @@ input:focus-visible {
   pointer-events: none;
 }
 
-
 /* Locked/empty project grid: keep the 4-skeleton height, overlay a message */
 .projects-grid {
   position: relative;
