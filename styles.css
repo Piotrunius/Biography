@@ -1405,26 +1405,9 @@ a:where(
   position: relative;
   overflow: hidden;
   height: 100%;
-}
-
-.project-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 255, 136, 0.1),
-    transparent
-  );
-  transition: left 0.6s ease;
-}
-
-.project-card:hover::before {
-  left: 100%;
+  /* Match the 2-line description card footprint exactly so swapping the
+     skeletons in never pushes the page (no layout shift). */
+  min-height: 213px;
 }
 
 .project-card:hover {
@@ -1496,6 +1479,10 @@ a:where(
   color: var(--text-secondary);
   line-height: 1.5;
   flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .project-footer {
@@ -1555,26 +1542,6 @@ a:where(
   filter: brightness(0) !important;
 }
 
-.project-link::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition:
-    width 0.5s,
-    height 0.5s;
-}
-
-.project-link:hover::before {
-  width: 200px;
-  height: 200px;
-}
-
 .project-link:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
@@ -1590,6 +1557,7 @@ a:where(
   /* Mirror the real project card layout so the ghost loader reserves the same
      vertical space (no layout jump when the loaded cards replace it). */
   height: 100%;
+  min-height: 213px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -1887,29 +1855,11 @@ a:where(
   overflow: hidden;
 }
 
-.spec-item-v2::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 255, 136, 0.1) 0%,
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
 .spec-item-v2:hover {
   transform: translateY(-3px) scale(1.01);
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(0, 255, 136, 0.4);
   box-shadow: 0 8px 24px rgba(0, 255, 136, 0.15);
-}
-
-.spec-item-v2:hover::before {
-  opacity: 1;
 }
 
 .spec-v2-icon {
@@ -3197,26 +3147,6 @@ a:where(
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-}
-
-.skill-badge::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 255, 136, 0.1),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.skill-badge:hover::before {
-  left: 100%;
 }
 
 .skill-badge:hover {
