@@ -940,7 +940,7 @@ async function refreshSteamStatus() {
       ".steam-avatar-wrapper",
       "fas fa-lock",
       "steam-status-text",
-      "Privacy Mode Active",
+      "Privacy Mode",
     );
     return;
   }
@@ -1089,7 +1089,7 @@ async function refreshDiscordStatus() {
           ".discord-avatar-wrapper",
           "fas fa-lock",
           "discord-status-text",
-          "Privacy Mode Active",
+          "Privacy Mode",
         );
         if (discordPanel) discordPanel.style.display = "flex";
         return;
@@ -1190,7 +1190,7 @@ async function refreshRobloxStatus() {
       ".roblox-avatar-wrapper",
       "fas fa-lock",
       "roblox-status-text",
-      "Privacy Mode Active",
+      "Privacy Mode",
     );
     robloxPanel.style.display = "flex";
     return;
@@ -2013,6 +2013,18 @@ async function fetchGitHubRepos() {
   }
 }
 
+// Renders the 4-card skeleton grid (matches index.html) so privacy/offline
+// states keep the exact same container height as the loaded projects grid.
+function showProjectsMessage(container, inner) {
+  // Keep the exact container height the 4-card skeleton established, then
+  // show ONLY the message (no skeleton loaders behind it) so the page
+  // does not jump when the skeleton disappears.
+  const h = container.offsetHeight || 0;
+  container.innerHTML =
+    `<div class="grid-overlay"><div class="activity-empty-state">${inner}</div></div>`;
+  if (h > 0) container.style.height = h + "px";
+}
+
 async function loadProjects() {
   const container = document.getElementById("projects-container");
   if (!container) return;
@@ -2026,23 +2038,21 @@ async function loadProjects() {
 
     // Check for Privacy Mode - check before using as array
     if (allRepos.privacyMode || allRepos.privacyMode === true) {
-      container.innerHTML = `
-                <div style="grid-column: 1/-1;" class="activity-empty-state">
-                    <i class="fas fa-lock"></i>
-                    <p>Privacy Mode Active</p>
-                </div>
-            `;
+      showProjectsMessage(
+        container,
+        `<i class="fas fa-lock"></i>
+         <p>Privacy Mode Active</p>`,
+      );
       return;
     }
 
     // Now safely check if it's an array with repos
     if (!Array.isArray(allRepos) || allRepos.length === 0) {
-      container.innerHTML = `
-                <div style="grid-column: 1/-1;" class="activity-empty-state">
-                    <i class="fas fa-code"></i>
-                    <p>No projects yet</p>
-                </div>
-            `;
+      showProjectsMessage(
+        container,
+        `<i class="fas fa-code"></i>
+         <p>No projects yet</p>`,
+      );
       return;
     }
 
@@ -2089,6 +2099,7 @@ async function loadProjects() {
       fragment.appendChild(card);
     });
 
+    container.style.height = "";
     container.innerHTML = "";
     container.appendChild(fragment);
 
@@ -2119,13 +2130,12 @@ async function loadProjects() {
     });
   } catch (error) {
     console.error("Error loading projects:", error);
-    container.innerHTML = `
-                <div style="grid-column: 1/-1;" class="activity-empty-state">
-                    <i class="fas fa-plug-circle-xmark"></i>
-                    <p>Failed to load projects</p>
-                    <small style="opacity: 0.7;">Check back later or visit <a href="https://github.com/${githubUsername}" target="_blank" rel="noreferrer" style="color: var(--primary); text-decoration: none;">GitHub</a></small>
-                </div>
-            `;
+    showProjectsMessage(
+      container,
+      `<i class="fas fa-plug-circle-xmark"></i>
+       <p>Failed to load</p>
+       <small style="opacity: 0.7;">Check back later</small>`,
+    );
   }
 }
 
