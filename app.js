@@ -155,7 +155,7 @@ const PERF = {
     blur: 0,
     glassAnim: "off",
     hover: false,
-    visStep: 0,
+    visStep: 6, // sparse bars: still shows music is playing at minimal cost
     intervals: [900000, 180000, 90000],
     typing: false,
   },
@@ -316,25 +316,11 @@ function buildPerfStyle(tier) {
   const hover = cfg.hover
     ? ""
     : `.perf-o .glass-card:hover { transform: none; }`;
-  // Tier 0 drops the canvas visualizer; give the player card a slow CSS pulse
-  // so the user can still tell the music is playing while in power-saving mode.
-  const visPulse =
-    cfg.visStep === 0
-      ? `
-    @keyframes perf-vis-pulse {
-        0%, 100% { opacity: 0.35; }
-        50% { opacity: 0.9; }
-    }
-    .perf-o .music-player-card {
-        animation: perf-vis-pulse 2.4s ease-in-out infinite;
-    }`
-      : "";
   return `
     ${blur}
     ${layer}
     ${glassAnim}
     ${hover}
-    ${visPulse}
     .perf-t .stat-card,
     .perf-t .social-link {
         transition-duration: 0.15s;
@@ -667,6 +653,12 @@ function initMusicMeta() {
 
 // --- CORE FUNCTION: Render GitHub Activity ---
 async function refreshGitHubStats() {
+  // Animate the counters on the very first load only; on later refreshes
+  // values are set directly so the count-up is never replayed from 0.
+  if (refreshGitHubStats.firstRender === undefined) {
+    refreshGitHubStats.firstRender = true;
+  }
+
   const projectsEl = document.getElementById("stat-projects");
   const commitsEl = document.getElementById("stat-commits");
   const followersEl = document.getElementById("stat-followers");
@@ -689,10 +681,8 @@ async function refreshGitHubStats() {
 
   // Check for Privacy Mode
   if (stats.privacyMode) {
-    const privacyMessage =
-      '<div class="activity-item activity-empty-state"><i class="fas fa-lock"></i><span>Privacy Mode Active</span></div>';
-    if (activityStarsEl) activityStarsEl.innerHTML = privacyMessage;
-    if (activityCommitsEl) activityCommitsEl.innerHTML = privacyMessage;
+    renderFeedState(activityStarsEl, "fas fa-lock", "Privacy Mode Active");
+    renderFeedState(activityCommitsEl, "fas fa-lock", "Privacy Mode Active");
     if (projectsEl) projectsEl.textContent = "\u2014";
     if (commitsEl) commitsEl.textContent = "\u2014";
     if (followersEl) followersEl.textContent = "\u2014";
@@ -702,10 +692,18 @@ async function refreshGitHubStats() {
 
   // Check for API Error
   if (stats.error) {
-    const errorMessage =
-      '<div class="activity-item activity-empty-state"><i class="fas fa-wifi"></i><span>Connection issues</span></div>';
-    if (activityStarsEl) activityStarsEl.innerHTML = errorMessage;
-    if (activityCommitsEl) activityCommitsEl.innerHTML = errorMessage;
+    renderFeedState(
+      activityStarsEl,
+      "fas fa-plug-circle-xmark",
+      "Failed to load",
+      "Check back later",
+    );
+    renderFeedState(
+      activityCommitsEl,
+      "fas fa-plug-circle-xmark",
+      "Failed to load",
+      "Check back later",
+    );
     if (projectsEl) projectsEl.textContent = "\u2014";
     if (commitsEl) commitsEl.textContent = "\u2014";
     if (followersEl) followersEl.textContent = "\u2014";
@@ -762,11 +760,11 @@ async function refreshGitHubStats() {
             `;
       fragment.appendChild(item);
     });
+    clearFeedState(activityStarsEl);
     activityStarsEl.innerHTML = "";
     activityStarsEl.appendChild(fragment);
   } else if (activityStarsEl) {
-    activityStarsEl.innerHTML =
-      '<div class="activity-item activity-empty-state"><i class="fas fa-star"></i><span>No recent stars</span></div>';
+    renderFeedState(activityStarsEl, "fas fa-star", "No recent stars");
   }
 
   // Display recent commits from GitHub Worker API
@@ -798,11 +796,15 @@ async function refreshGitHubStats() {
                 `;
         fragment.appendChild(item);
       });
+    clearFeedState(activityCommitsEl);
     activityCommitsEl.innerHTML = "";
     activityCommitsEl.appendChild(fragment);
   } else if (activityCommitsEl) {
-    activityCommitsEl.innerHTML =
-      '<div class="activity-item activity-empty-state"><i class="fas fa-code-commit"></i><span>No recent commits</span></div>';
+    renderFeedState(
+      activityCommitsEl,
+      "fas fa-code-commit",
+      "No recent commits",
+    );
   }
 }
 
@@ -847,6 +849,48 @@ function hideLoadingSpinner(panelId) {
   }
 }
 
+// Unified "no live data" state for the status panels (both privacy mode and
+// an unreachable service). Clears the avatar slot and renders a centered
+// design-system icon, and sets the status caption - so a panel never shows a
+// broken avatar or a bare "Offline" label that breaks the layout.
+function renderStatusFallback(avatarWrapperSel, iconClass, statusId, label) {
+  const avatarWrapper = document.querySelector(avatarWrapperSel);
+  if (avatarWrapper) {
+    avatarWrapper.innerHTML = "";
+    const icon = document.createElement("i");
+    icon.className = iconClass;
+    icon.style.fontSize = "2rem";
+    icon.style.color = "var(--primary)";
+    icon.style.position = "absolute";
+    icon.style.top = "50%";
+    icon.style.left = "50%";
+    icon.style.transform = "translate(-50%, -50%)";
+    avatarWrapper.style.position = "relative";
+    avatarWrapper.appendChild(icon);
+  }
+  const status = document.getElementById(statusId);
+  if (status) status.textContent = label;
+}
+
+// Render a full-tile message into a live-feed list (no scroll, centered on the card).
+function renderFeedState(listEl, iconClass, title, subtext) {
+  if (!listEl) return;
+  listEl.classList.add("feed-state");
+  listEl.innerHTML = `
+                <div class="activity-empty-state">
+                    <i class="${iconClass}"></i>
+                    <p>${title}</p>
+                    ${subtext ? `<small style="opacity: 0.7;">${subtext}</small>` : ""}
+                </div>
+            `;
+}
+
+// Restore a feed list to scrollable content (remove the full-tile message state).
+function clearFeedState(listEl) {
+  if (!listEl || !listEl.classList) return;
+  listEl.classList.remove("feed-state");
+}
+
 // --- REVEAL ALL STATUSES SYNCHRONOUSLY ---
 async function revealAllStatuses() {
   const startTime = Date.now();
@@ -884,51 +928,33 @@ async function refreshSteamStatus() {
   };
   const stats = await fetchApiJson(API_ENDPOINTS.steam, fallback, "Steam API");
 
-  // Check for Privacy Mode
+  // Check for Privacy Mode - hide live data, show a lock state
   if (stats.privacyMode) {
-    const statusText = document.getElementById("steam-status-text");
     const gameInfo = document.getElementById("steam-game-info");
-    const memberSince = document.getElementById("steam-member-since");
-    const gameCount = document.getElementById("steam-game-count");
     const extraInfo = document.querySelector(".steam-extra-info");
     const steamUsernameEl = document.querySelector(".steam-username");
-    const steamPfp = document.getElementById("steam-pfp");
-    const steamDot = document.getElementById("steam-dot");
-    const avatarWrapper = document.querySelector(".steam-avatar-wrapper");
-
-    if (statusText) statusText.textContent = "Privacy Mode";
     if (gameInfo) gameInfo.style.display = "none";
-    if (memberSince) memberSince.style.display = "none";
-    if (gameCount) gameCount.style.display = "none";
     if (extraInfo) extraInfo.style.display = "none";
     if (steamUsernameEl) steamUsernameEl.textContent = "Hidden";
-    if (steamPfp) steamPfp.style.display = "none";
-    if (steamDot) steamDot.style.display = "none";
-
-    // Add lock icon to avatar wrapper
-    if (avatarWrapper) {
-      const lockIcon = document.createElement("i");
-      lockIcon.className = "fas fa-lock";
-      lockIcon.style.fontSize = "2rem";
-      lockIcon.style.color = "var(--primary)";
-      lockIcon.style.position = "absolute";
-      lockIcon.style.top = "50%";
-      lockIcon.style.left = "50%";
-      lockIcon.style.transform = "translate(-50%, -50%)";
-      avatarWrapper.style.position = "relative";
-      avatarWrapper.innerHTML = "";
-      avatarWrapper.appendChild(lockIcon);
-    }
-
+    renderStatusFallback(
+      ".steam-avatar-wrapper",
+      "fas fa-lock",
+      "steam-status-text",
+      "Privacy Mode Active",
+    );
     return;
   }
 
-  // Check for API Error
+  // Check for API Error - cannot reach the service
   if (stats.error) {
-    const statusText = document.getElementById("steam-status-text");
-    if (statusText) statusText.textContent = "Offline";
-    const dotContainer = document.getElementById("steam-dot")?.parentElement;
-    if (dotContainer) dotContainer.className = "steam-avatar-wrapper offline";
+    const steamUsernameEl = document.querySelector(".steam-username");
+    if (steamUsernameEl) steamUsernameEl.textContent = "Offline";
+    renderStatusFallback(
+      ".steam-avatar-wrapper",
+      "fas fa-plug-circle-xmark",
+      "steam-status-text",
+      "Unavailable",
+    );
     hideLoadingSpinner("steam-status-panel");
     return;
   }
@@ -1055,35 +1081,16 @@ async function refreshDiscordStatus() {
       const data = await response.json();
       console.log("Discord API response:", data);
 
-      // Check for Privacy Mode
+      // Check for Privacy Mode - hide live data, show a lock state
       if (data.privacyMode) {
-        if (discordStatus) discordStatus.textContent = "Privacy Mode";
         if (discordUsernameEl) discordUsernameEl.textContent = "Hidden";
         if (discordActivityInfo) discordActivityInfo.style.display = "none";
-
-        // Replace avatar with lock icon and hide dot
-        if (discordAvatarWrapper) {
-          discordAvatarWrapper.className = "discord-avatar-wrapper offline";
-          const avatarImg = discordAvatarWrapper.querySelector("img");
-          if (avatarImg) {
-            avatarImg.style.display = "none";
-          }
-          const dotEl = discordAvatarWrapper.querySelector(".status-dot");
-          if (dotEl) dotEl.style.display = "none";
-
-          // Add lock icon
-          const lockIcon = document.createElement("i");
-          lockIcon.className = "fas fa-lock";
-          lockIcon.style.fontSize = "2rem";
-          lockIcon.style.color = "var(--primary)";
-          lockIcon.style.position = "absolute";
-          lockIcon.style.top = "50%";
-          lockIcon.style.left = "50%";
-          lockIcon.style.transform = "translate(-50%, -50%)";
-          discordAvatarWrapper.style.position = "relative";
-          discordAvatarWrapper.appendChild(lockIcon);
-        }
-
+        renderStatusFallback(
+          ".discord-avatar-wrapper",
+          "fas fa-lock",
+          "discord-status-text",
+          "Privacy Mode Active",
+        );
         if (discordPanel) discordPanel.style.display = "flex";
         return;
       }
@@ -1150,11 +1157,15 @@ async function refreshDiscordStatus() {
     }
   } catch (e) {
     console.warn("Error fetching Discord status from Lanyard:", e.message);
-    // Fallback
-    if (discordStatus) discordStatus.textContent = "Offline";
-    if (discordAvatarWrapper)
-      discordAvatarWrapper.className = "discord-avatar-wrapper offline";
-    if (discordDot) discordDot.className = "status-dot";
+    // Cannot reach the service - show the unified unavailable state
+    const discordUsernameElCatch = document.querySelector(".discord-username");
+    if (discordUsernameElCatch) discordUsernameElCatch.textContent = "Offline";
+    renderStatusFallback(
+      ".discord-avatar-wrapper",
+      "fas fa-plug-circle-xmark",
+      "discord-status-text",
+      "Unavailable",
+    );
   }
 
   // Show panel after data is loaded
@@ -1169,44 +1180,32 @@ async function refreshRobloxStatus() {
   const fallback = { error: true, status: "?", game: null };
   const data = await fetchApiJson(API_ENDPOINTS.roblox, fallback, "Roblox API");
 
-  // Check for Privacy Mode
+  // Check for Privacy Mode - hide live data, show a lock state
   if (data.privacyMode) {
-    const statusText = document.getElementById("roblox-status-text");
     const gameInfo = document.getElementById("roblox-game-info");
-    const avatarWrapper = document.querySelector(".roblox-avatar-wrapper");
     const usernameEl = document.querySelector(".roblox-username");
-    const robloxPfp = document.getElementById("roblox-pfp");
-
-    if (statusText) statusText.textContent = "Privacy Mode";
     if (usernameEl) usernameEl.textContent = "Hidden";
     if (gameInfo) gameInfo.style.display = "none";
-    if (robloxPfp) {
-      robloxPfp.style.display = "none";
-    }
-    if (avatarWrapper) {
-      avatarWrapper.className = "roblox-avatar-wrapper offline";
-      const lockIcon = document.createElement("i");
-      lockIcon.className = "fas fa-lock";
-      lockIcon.style.fontSize = "2rem";
-      lockIcon.style.color = "var(--primary)";
-      lockIcon.style.position = "absolute";
-      lockIcon.style.top = "50%";
-      lockIcon.style.left = "50%";
-      lockIcon.style.transform = "translate(-50%, -50%)";
-      avatarWrapper.style.position = "relative";
-      avatarWrapper.innerHTML = "";
-      avatarWrapper.appendChild(lockIcon);
-    }
+    renderStatusFallback(
+      ".roblox-avatar-wrapper",
+      "fas fa-lock",
+      "roblox-status-text",
+      "Privacy Mode Active",
+    );
     robloxPanel.style.display = "flex";
     return;
   }
 
+  // Check for API Error - cannot reach the service
   if (data.error) {
-    const statusText = document.getElementById("roblox-status-text");
-    if (statusText) statusText.textContent = "Offline";
-    const avatarWrapper = document.querySelector(".roblox-avatar-wrapper");
-    if (avatarWrapper)
-      avatarWrapper.className = "roblox-avatar-wrapper offline";
+    const robloxUsernameEl = document.querySelector(".roblox-username");
+    if (robloxUsernameEl) robloxUsernameEl.textContent = "Offline";
+    renderStatusFallback(
+      ".roblox-avatar-wrapper",
+      "fas fa-plug-circle-xmark",
+      "roblox-status-text",
+      "Unavailable",
+    );
     return;
   }
 
@@ -1741,6 +1740,17 @@ async function updateSpotifyStatus() {
     const data = await response.json();
     console.log("Spotify API response:", data);
 
+    // Cannot reach the service - show the unified unavailable state
+    if (!response.ok || data.error) {
+      renderSpotifyUnavailable(container);
+      lastSpotifyData = null;
+      if (spotifyPredictorInterval) {
+        clearInterval(spotifyPredictorInterval);
+        spotifyPredictorInterval = null;
+      }
+      return;
+    }
+
     // Check for Privacy Mode
     if (data.privacyMode) {
       renderSpotifyPrivacyMode(container);
@@ -1793,6 +1803,12 @@ async function updateSpotifyStatus() {
     }
   } catch (err) {
     console.error("Spotify status error:", err);
+    renderSpotifyUnavailable(container);
+    lastSpotifyData = null;
+    if (spotifyPredictorInterval) {
+      clearInterval(spotifyPredictorInterval);
+      spotifyPredictorInterval = null;
+    }
   }
 }
 
@@ -1881,6 +1897,18 @@ function renderSpotifyPrivacyMode(container) {
   delete container.dataset.trackId;
 }
 
+function renderSpotifyUnavailable(container) {
+  if (container.classList.contains("unavailable")) return;
+  container.innerHTML = `
+        <div class="spotify-placeholder">
+            <i class="fas fa-plug-circle-xmark"></i>
+            <span>Connection issues</span>
+        </div>
+    `;
+  container.className = "spotify-content unavailable";
+  delete container.dataset.trackId;
+}
+
 // --- TIME & TIMEZONE SECTION ---
 const MY_TIMEZONE = "Europe/Warsaw"; // Your timezone
 
@@ -1945,6 +1973,12 @@ async function fetchGitHubRepos() {
     // If Privacy Mode, return full data object to preserve privacyMode flag
     if (data.privacyMode) {
       return data;
+    }
+
+    // A network/API failure is NOT an empty project list; signal that the
+    // caller should render the connection-error state instead.
+    if (data.error) {
+      return null;
     }
 
     const repos = data.projects || data.repos || data.repositories || [];
@@ -2086,12 +2120,12 @@ async function loadProjects() {
   } catch (error) {
     console.error("Error loading projects:", error);
     container.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-secondary);">
-                <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
-                <p>Failed to load projects</p>
-                <small style="opacity: 0.6;">Check back later or visit <a href="https://github.com/${githubUsername}" target="_blank" rel="noreferrer" style="color: var(--primary); text-decoration: none;">GitHub</a></small>
-            </div>
-        `;
+                <div style="grid-column: 1/-1;" class="activity-empty-state">
+                    <i class="fas fa-plug-circle-xmark"></i>
+                    <p>Failed to load projects</p>
+                    <small style="opacity: 0.7;">Check back later or visit <a href="https://github.com/${githubUsername}" target="_blank" rel="noreferrer" style="color: var(--primary); text-decoration: none;">GitHub</a></small>
+                </div>
+            `;
   }
 }
 

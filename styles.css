@@ -746,6 +746,15 @@ a:where(
   margin-right: auto;
 }
 
+/* Full-tile live-feed message state: no scrolling, message centered on card */
+.scrollable-content.feed-state {
+  overflow: hidden;
+}
+
+.feed-state > .activity-empty-state {
+  flex: 1;
+}
+
 .online .status-dot {
   background: #43b581;
   box-shadow: 0 0 10px rgba(67, 181, 129, 0.6);
@@ -1578,13 +1587,18 @@ a:where(
   border-radius: 16px;
   padding: 1.5rem;
   animation: pulse 2s ease-in-out infinite;
+  /* Mirror the real project card layout so the ghost loader reserves the same
+     vertical space (no layout jump when the loaded cards replace it). */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .skeleton-header {
   height: 24px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  margin-bottom: 1rem;
   width: 70%;
 }
 
@@ -1592,11 +1606,9 @@ a:where(
   height: 16px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  margin-bottom: 0.75rem;
 }
 
 .skeleton-desc:last-of-type {
-  margin-bottom: 1rem;
   width: 90%;
 }
 
@@ -1605,6 +1617,7 @@ a:where(
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   width: 50%;
+  margin-top: auto;
 }
 
 @keyframes pulse {
