@@ -350,7 +350,12 @@ svg.svg-inline--fa:not(.social-link svg) {
     min-height: auto;
   }
 
+  /* Give every placeholder state (not listening / privacy / connection
+     issues) the same reserved height on tablet+mobile so swapping between
+     them never changes the card height (no layout shift). */
   .spotify-content.empty,
+  .spotify-content.privacy,
+  .spotify-content.unavailable,
   .spotify-placeholder {
     min-height: 180px;
     padding: 2rem 1rem;
@@ -2952,6 +2957,9 @@ a:where(
     text-align: center;
     padding: 2rem 1.5rem;
     align-items: stretch;
+    /* Match loaded mobile content height so the ghost loader reserves the same
+       vertical space (no layout shift when the status content replaces it). */
+    min-height: 152px;
   }
 
   .steam-user-info,
@@ -2959,6 +2967,50 @@ a:where(
   .roblox-user-info {
     flex-direction: column;
     width: 100%;
+  }
+
+  /* Mobile status skeleton mirrors the loaded centered-column layout:
+     avatar on top, a single text line below, vertically centered - instead of
+     the desktop horizontal row. Tight spacing keeps it inside the reserved
+     panel height so swapping skeleton -> content never shifts the page. */
+  #steam-skeleton,
+  #discord-skeleton,
+  #roblox-skeleton {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  #steam-skeleton > div:last-child,
+  #discord-skeleton > div:last-child,
+  #roblox-skeleton > div:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  #steam-skeleton .skeleton,
+  #discord-skeleton .skeleton,
+  #roblox-skeleton .skeleton {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* The loaded mobile column shows only the avatar + a single text line,
+     so drop the second ghost bar to match it (and keep the reserved height). */
+  #steam-skeleton .skeleton-text,
+  #discord-skeleton .skeleton-text,
+  #roblox-skeleton .skeleton-text {
+    display: none;
+  }
+
+  #steam-skeleton .skeleton-title,
+  #discord-skeleton .skeleton-title,
+  #roblox-skeleton .skeleton-title {
+    margin-bottom: 0;
   }
 
   .steam-name-row,
@@ -3011,6 +3063,10 @@ a:where(
     padding: 1.2rem;
   }
 
+  .project-card-skeleton {
+    padding: 1.2rem;
+  }
+
   .project-link {
     padding: 0.5rem 0.8rem;
     font-size: 0.85rem;
@@ -3047,13 +3103,12 @@ a:where(
     padding: 1rem;
   }
 
-  .project-title {
-    font-size: 1rem;
+  .project-card-skeleton {
+    padding: 1rem;
   }
 
-  .project-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .project-title {
+    font-size: 1rem;
   }
 
   .project-footer {
@@ -3528,4 +3583,54 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   z-index: 2;
+}
+
+/* Compact now-playing layout on tablet+mobile so the playing card matches the
+   placeholder card height (no layout shift when playback starts/stops).
+   Placed last to win over the base active-layout rules. */
+@media (max-width: 1200px) {
+  .spotify-content {
+    justify-content: center;
+    /* Reserve the same height the placeholder states occupy so the playing
+       card never changes the card height (no layout shift). */
+    min-height: 244px;
+  }
+
+  .spotify-active-layout {
+    gap: 0.5rem;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+
+  .spotify-art-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    margin: 0 auto;
+  }
+
+  .spotify-track-name {
+    font-size: 1rem;
+  }
+
+  .spotify-artist-name,
+  .spotify-album-name {
+    font-size: 0.85rem;
+  }
+
+  .music-controls {
+    margin-top: 0.25rem;
+  }
+
+  .music-btn {
+    min-height: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 10px;
+  }
+  .music-btn i,
+  .music-btn svg.svg-inline--fa {
+    font-size: 0.9rem;
+  }
 }
