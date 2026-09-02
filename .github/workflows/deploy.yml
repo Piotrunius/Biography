@@ -29,10 +29,30 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed worker
+        id: filter
+        run: |
+          changed=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            changed=true
+          elif [ -z "${{ github.event.before }}" ] || [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            changed=true
+          else
+            files=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+            if echo "$files" | grep -Eq "api/${{ matrix.worker }}\.(js|toml)$" ||
+               echo "$files" | grep -Eq "\.github/workflows/deploy\.yml$"; then
+              changed=true
+            fi
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
       - name: Deploy ${{ matrix.worker }} worker
-        uses: cloudflare/wrangler-action@v3
+        if: steps.filter.outputs.changed == 'true'
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: "api"

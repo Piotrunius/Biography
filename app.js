@@ -87,7 +87,7 @@ async function getGitHubData(force = false) {
   }
   const fallback = {
     error: true,
-    summary: { projects: 0, starredCount: 0, gistsCount: 0, commits: 0 },
+    summary: { projects: 0, followers: 0, commits: 0 },
     recentCommits: [],
     starred: [],
     projects: [],
@@ -106,18 +106,78 @@ async function getGitHubData(force = false) {
 }
 
 const deviceCapabilities = {
-  isLowEnd: false,
+  perfTier: 2, // operative tier (0-3), may be lowered by the FPS watchdog
+  baseTier: 2, // tier derived purely from hardware/connection hints
+  isLowEnd: false, // legacy alias: perfTier <= 1
   isMobile: false,
-  supportsWebGL: false,
-  memoryLimit: Infinity,
+  memoryLimit: 4,
   connectionSpeed: "fast",
+  cores: 2,
 };
 
-const PARTICLE_COUNTS = {
-  LOW_END: 40,
-  MOBILE: 60,
-  DESKTOP: 120,
+// Per-tier tuning. Values are chosen so lower tiers degrade gracefully
+// (fewer particles, softer layers, slower refresh, lighter visualizer)
+// instead of a blunt "weak device = everything off".
+const PERF = {
+  3: {
+    particles: 120,
+    bgLayer: "full",
+    blur: 16,
+    glassAnim: "full",
+    hover: true,
+    visStep: 1,
+    intervals: [300000, 60000, 30000],
+    typing: true,
+  },
+  2: {
+    particles: 100,
+    bgLayer: "full",
+    blur: 16,
+    glassAnim: "full",
+    hover: true,
+    visStep: 1,
+    intervals: [300000, 60000, 30000],
+    typing: true,
+  },
+  1: {
+    particles: 60,
+    bgLayer: "soft",
+    blur: 10,
+    glassAnim: "reduced",
+    hover: true,
+    visStep: 2,
+    intervals: [600000, 120000, 60000],
+    typing: true,
+  },
+  0: {
+    particles: 0,
+    bgLayer: "none",
+    blur: 0,
+    glassAnim: "off",
+    hover: false,
+    visStep: 0,
+    intervals: [900000, 180000, 90000],
+    typing: false,
+  },
 };
+
+function gradeByCores(cores) {
+  if (cores >= 5) return 3; // >=9 folded in; "many cores" is already max grade
+  if (cores >= 3) return 2;
+  return 1;
+}
+
+function gradeByMemory(mem) {
+  if (mem >= 5) return 3;
+  if (mem >= 3) return 2;
+  return 1;
+}
+
+function gradeByConnection(effectiveType) {
+  if (effectiveType === "4g" || effectiveType === undefined) return 2;
+  if (effectiveType === "3g") return 1;
+  return 0; // slow-2g / 2g
+}
 
 function initPerformanceMonitoring() {
   if (!window.performance || !window.PerformanceObserver) return;
@@ -161,84 +221,226 @@ function detectDeviceCapabilities() {
     ) || window.innerWidth <= 768;
 
   const cores = navigator.hardwareConcurrency || 2;
+  deviceCapabilities.cores = cores;
 
-  const memory = navigator.deviceMemory || 4; // fallback
+  const memory = navigator.deviceMemory || 4; // only exposed over HTTPS in Chromium
   deviceCapabilities.memoryLimit = memory;
+
+  const hardwareKnown =
+    typeof navigator.hardwareConcurrency !== "undefined" &&
+    typeof navigator.deviceMemory !== "undefined";
 
   const connection =
     navigator.connection ||
     navigator.mozConnection ||
     navigator.webkitConnection;
   if (connection) {
-    const effectiveType = connection.effectiveType || "4g";
-    deviceCapabilities.connectionSpeed = effectiveType;
+    deviceCapabilities.connectionSpeed = connection.effectiveType || "4g";
   }
 
-  try {
-    const canvas = document.createElement("canvas");
-    deviceCapabilities.supportsWebGL = !!(
-      window.WebGLRenderingContext &&
-      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
-    );
-  } catch (e) {
-    deviceCapabilities.supportsWebGL = false;
-  }
+  // Anchor on the weakest link, then penalise slow connectivity, unknown
+  // hardware and small phones so the experience scales instead of flipping.
+  let tier = Math.min(
+    gradeByCores(cores),
+    gradeByMemory(memory),
+    gradeByConnection(deviceCapabilities.connectionSpeed) + 1,
+  );
 
-  // TODO: tune thresholds if needed
-  deviceCapabilities.isLowEnd =
-    cores <= 2 ||
-    memory <= 2 ||
-    (connection &&
-      ["slow-2g", "2g", "3g"].includes(connection.effectiveType)) ||
-    (deviceCapabilities.isMobile && memory <= 4);
+  if (!hardwareKnown) {
+    // Safari/Firefox hide deviceMemory/hardwareConcurrency, so punishing their
+    // absence would dump every Apple-tier device into tier 0 for no real
+    // reason. Hold a conservative floor instead and let the FPS watchdog score
+    // the actual rendering (it can climb or drop from here freely).
+    tier = Math.max(tier, 1);
+  }
+  if (
+    deviceCapabilities.connectionSpeed === "2g" ||
+    deviceCapabilities.connectionSpeed === "slow-2g"
+  ) {
+    tier -= 1;
+  }
+  // Phones thermal-throttle and share a power budget: never skip to max tier.
+  if (deviceCapabilities.isMobile) tier = Math.min(tier, 2);
+
+  deviceCapabilities.baseTier = Math.max(0, Math.min(3, tier));
+  deviceCapabilities.perfTier = deviceCapabilities.baseTier;
 
   logPerf("caps", deviceCapabilities);
   return deviceCapabilities;
 }
 
-function applyPerformanceOptimizations() {
-  const caps = deviceCapabilities;
+// Build the per-tier stylesheet and swap one <style> block when the tier
+// changes. Tier 0 keeps the aggressive "low-performance" rules; tier 1 gets a
+// milder "reduced" set so a modest device still sees motion, just less of it.
+function buildPerfStyle(tier) {
+  if (tier >= 3) return "";
+  const cfg = PERF[tier];
+  const blur =
+    cfg.blur > 0
+      ? `.perf-b .glass-card { backdrop-filter: blur(${cfg.blur}px) saturate(160%); -webkit-backdrop-filter: blur(${cfg.blur}px) saturate(160%); will-change: auto; }`
+      : `.perf-o .glass-card { backdrop-filter: none; -webkit-backdrop-filter: none; }`;
+  const layer =
+    cfg.bgLayer === "full"
+      ? ""
+      : cfg.bgLayer === "soft"
+        ? `
+    .perf-r .bg-layer::before,
+    .perf-r .bg-layer::after {
+        filter: blur(40px) saturate(130%);
+        opacity: 0.22;
+    }`
+        : `
+    .perf-o .bg-layer::before,
+    .perf-o .bg-layer::after {
+        animation: none;
+        opacity: 0.18;
+    }`;
+  const glassAnim =
+    cfg.glassAnim === "off"
+      ? `
+    .perf-o .avatar,
+    .perf-o .avatar-ring,
+    .perf-o .stat-card i,
+    .perf-o .social-link i {
+        animation: none;
+    }`
+      : cfg.glassAnim === "reduced"
+        ? `
+    .perf-r .avatar,
+    .perf-r .avatar-ring,
+    .perf-r .stat-card i,
+    .perf-r .social-link i {
+        animation-duration: 1.4s;
+    }`
+        : "";
+  const hover = cfg.hover
+    ? ""
+    : `.perf-o .glass-card:hover { transform: none; }`;
+  // Tier 0 drops the canvas visualizer; give the player card a slow CSS pulse
+  // so the user can still tell the music is playing while in power-saving mode.
+  const visPulse =
+    cfg.visStep === 0
+      ? `
+    @keyframes perf-vis-pulse {
+        0%, 100% { opacity: 0.35; }
+        50% { opacity: 0.9; }
+    }
+    .perf-o .music-player-card {
+        animation: perf-vis-pulse 2.4s ease-in-out infinite;
+    }`
+      : "";
+  return `
+    ${blur}
+    ${layer}
+    ${glassAnim}
+    ${hover}
+    ${visPulse}
+    .perf-t .stat-card,
+    .perf-t .social-link {
+        transition-duration: 0.15s;
+    }
+  `;
+}
 
-  if (caps.isLowEnd) {
-    logPerf("low-end, applying optimizations");
+function applyPerfTier(tier, announce) {
+  deviceCapabilities.perfTier = tier;
+  deviceCapabilities.isLowEnd = tier <= 1;
 
-    document.body.classList.add("low-performance");
+  const body = document.body;
+  body.classList.remove(
+    "perf-o",
+    "perf-r",
+    "perf-b",
+    "perf-t",
+    "low-performance",
+  );
+  if (tier === 0) body.classList.add("perf-o", "low-performance");
+  else if (tier === 1) body.classList.add("perf-r");
+  if (tier <= 2) body.classList.add("perf-b");
+  body.classList.add("perf-t");
 
-    const style = document.createElement("style");
+  let style = document.getElementById("perf-optimizations");
+  if (!style) {
+    style = document.createElement("style");
     style.id = "perf-optimizations";
-    style.textContent = `
-            .low-performance .bg-layer::before,
-            .low-performance .bg-layer::after {
-                animation: none;
-                opacity: 0.2;
-            }
-            .low-performance .glass-card {
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                will-change: auto;
-            }
-            .low-performance .avatar {
-                animation: none;
-            }
-            .low-performance .avatar-ring {
-                animation: none;
-            }
-            .low-performance .stat-card i {
-                animation: none;
-            }
-            .low-performance .social-link i {
-                animation: none;
-            }
-            .low-performance * {
-                transition-duration: 0.15s;
-            }
-        `;
     document.head.appendChild(style);
   }
+  style.textContent = buildPerfStyle(tier);
 
-  if (caps.connectionSpeed === "slow-2g" || caps.connectionSpeed === "2g") {
-    logPerf("slow connection, deferring heavy resources");
+  if (announce) {
+    logPerf("applied perf tier " + tier, PERF[tier]);
   }
+}
+
+// Dynamic re-tiering from measured FPS while a heavy loop actually runs.
+// A capable machine that is genuinely struggling drops a tier; a light one
+// that has headroom steps back up. This makes the page evaluate real device
+// ability instead of trusting static hardware hints alone.
+function initPerfWatchdog() {
+  const WINDOW_MS = 2000;
+  const DOWN_THRESHOLD = 30; // sustained FPS below this -> step down a tier
+  const DOWN_WINDOWS = 3; // require several bad windows to filter init noise
+  const UP_THRESHOLD = 55; // sustained FPS above this -> step back up
+  const UP_WINDOWS = 4; // consecutive high-FPS windows before stepping up
+
+  let frames = 0;
+  let lastTs = 0;
+  let lowWindows = 0;
+  let highWindows = 0;
+  let armed = false;
+
+  const heavyLoopRunning = () =>
+    !document.hidden &&
+    (!!particlesAnimationFrame || (audioPlaying && !!visualizerAnimationFrame));
+
+  function sample(t) {
+    frames++;
+    const elapsed = t - lastTs;
+    if (elapsed >= WINDOW_MS) {
+      const fps = Math.round((frames * 1000) / elapsed);
+      const busy = heavyLoopRunning();
+      if (busy && fps < DOWN_THRESHOLD) lowWindows++;
+      else lowWindows = 0;
+
+      // Deadlock guard: on tier 0 both heavy loops are off, so `busy` stays
+      // false and high-Windows would never accumulate. Any page renders light
+      // here, so a clean high FPS still counts toward stepping back up.
+      if (fps > UP_THRESHOLD) highWindows++;
+      else highWindows = 0;
+
+      if (lowWindows >= DOWN_WINDOWS) {
+        if (deviceCapabilities.perfTier > 0) {
+          applyPerfTier(deviceCapabilities.perfTier - 1, true);
+          reconfigurePerfForTier();
+          logPerf(
+            "watchdog: stepped down to tier " + deviceCapabilities.perfTier,
+          );
+        }
+        lowWindows = 0;
+      } else if (highWindows >= UP_WINDOWS) {
+        if (deviceCapabilities.perfTier < deviceCapabilities.baseTier) {
+          applyPerfTier(deviceCapabilities.perfTier + 1, true);
+          reconfigurePerfForTier();
+          logPerf(
+            "watchdog: stepped up to tier " + deviceCapabilities.perfTier,
+          );
+        }
+        highWindows = 0;
+      }
+
+      frames = 0;
+      lastTs = t;
+    }
+    if (armed) requestAnimationFrame(sample);
+  }
+
+  // Wait for first paint AND for the initial load burst of network stats to
+  // settle, so a transient init-tab stutter does not wrongly downgrade a device.
+  setTimeout(() => {
+    armed = true;
+    lastTs = performance.now();
+    requestAnimationFrame(sample);
+  }, 2500);
 }
 
 // Setup & gear data
@@ -467,10 +669,21 @@ function initMusicMeta() {
 async function refreshGitHubStats() {
   const projectsEl = document.getElementById("stat-projects");
   const commitsEl = document.getElementById("stat-commits");
-  const gistsEl = document.getElementById("stat-gists");
+  const followersEl = document.getElementById("stat-followers");
   const lastUpdateEl = document.getElementById("stats-last-update");
   const activityStarsEl = document.getElementById("starred-list");
   const activityCommitsEl = document.getElementById("commits-list");
+
+  // No stat module roots = not the homepage (e.g. 404). Skip the fetch.
+  if (
+    !projectsEl &&
+    !commitsEl &&
+    !followersEl &&
+    !activityStarsEl &&
+    !activityCommitsEl
+  ) {
+    return;
+  }
 
   const stats = await getGitHubData();
 
@@ -480,9 +693,9 @@ async function refreshGitHubStats() {
       '<div class="activity-item activity-empty-state"><i class="fas fa-lock"></i><span>Privacy Mode Active</span></div>';
     if (activityStarsEl) activityStarsEl.innerHTML = privacyMessage;
     if (activityCommitsEl) activityCommitsEl.innerHTML = privacyMessage;
-    if (projectsEl) projectsEl.textContent = "?";
-    if (commitsEl) commitsEl.textContent = "?";
-    if (gistsEl) gistsEl.textContent = "?";
+    if (projectsEl) projectsEl.textContent = "\u2014";
+    if (commitsEl) commitsEl.textContent = "\u2014";
+    if (followersEl) followersEl.textContent = "\u2014";
     if (lastUpdateEl) lastUpdateEl.textContent = "Privacy Mode Active";
     return;
   }
@@ -490,13 +703,13 @@ async function refreshGitHubStats() {
   // Check for API Error
   if (stats.error) {
     const errorMessage =
-      '<div class="activity-item activity-empty-state"><i class="fas fa-exclamation-triangle"></i><span>Data unavailable</span></div>';
+      '<div class="activity-item activity-empty-state"><i class="fas fa-wifi"></i><span>Connection issues</span></div>';
     if (activityStarsEl) activityStarsEl.innerHTML = errorMessage;
     if (activityCommitsEl) activityCommitsEl.innerHTML = errorMessage;
-    if (projectsEl) projectsEl.textContent = "?";
-    if (commitsEl) commitsEl.textContent = "?";
-    if (gistsEl) gistsEl.textContent = "?";
-    if (lastUpdateEl) lastUpdateEl.textContent = "Data unavailable";
+    if (projectsEl) projectsEl.textContent = "\u2014";
+    if (commitsEl) commitsEl.textContent = "\u2014";
+    if (followersEl) followersEl.textContent = "\u2014";
+    if (lastUpdateEl) lastUpdateEl.textContent = "Connection issues";
     return;
   }
 
@@ -510,19 +723,19 @@ async function refreshGitHubStats() {
   const commitsCount = summary.commits ?? commits.length;
   const followersCount = summary.followers ?? 0;
 
-  // Reset to 0 and animate
-  if (projectsEl) {
-    projectsEl.textContent = "0";
-    animateCounter("stat-projects", projectsCount || 0, 1500);
-  }
-  if (gistsEl) {
-    // The "gists" stat card is repurposed to show followers count
-    gistsEl.textContent = "0";
-    animateCounter("stat-gists", followersCount || 0, 1500);
-  }
-  if (commitsEl) {
-    commitsEl.textContent = "0";
-    animateCounter("stat-commits", commitsCount || 0, 1500);
+  // Animate only on first load; on refresh, update values directly
+  // to avoid resetting the counter animation to 0 every time.
+  if (refreshGitHubStats.firstRender) {
+    if (projectsEl) animateCounter("stat-projects", projectsCount || 0, 1500);
+    if (followersEl) {
+      animateCounter("stat-followers", followersCount || 0, 1500);
+    }
+    if (commitsEl) animateCounter("stat-commits", commitsCount || 0, 1500);
+    refreshGitHubStats.firstRender = false;
+  } else {
+    if (projectsEl) projectsEl.textContent = projectsCount ?? 0;
+    if (followersEl) followersEl.textContent = followersCount ?? 0;
+    if (commitsEl) commitsEl.textContent = commitsCount ?? 0;
   }
   if (lastUpdateEl) {
     const lastUpdate = stats.lastUpdate || new Date().toISOString();
@@ -834,6 +1047,7 @@ async function refreshDiscordStatus() {
   );
   const discordUsernameEl = document.querySelector(".discord-username");
   const discordPanel = document.getElementById("discord-status-panel");
+  if (!discordPanel) return;
 
   try {
     const response = await fetch(API_ENDPOINTS.discord);
@@ -1205,9 +1419,16 @@ function initAudioVisualizer() {
   window.addEventListener("resize", resizeCanvas);
   resizeCanvas();
 
-  // Store the animate function to reuse it when resuming
+  // Store the animate function to reuse it when resuming. The visualizer is
+  // tier-aware: low tiers draw fewer bars or skip rendering entirely so a weak
+  // phone still gets audio without burning GPU on the bars it cannot afford.
   window.visualizerAnimate = function () {
-    if (!audioPlaying || document.hidden) {
+    const tier = deviceCapabilities.perfTier;
+    if (!ctx) return;
+    if (!audioPlaying || document.hidden || PERF[tier].visStep === 0) {
+      // Always clear the canvas first: stopping (or a tab switch mid-paint)
+      // must never leave the previous frame's bars frozen on screen.
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       cancelAnimationFrame(visualizerAnimationFrame);
       return;
     }
@@ -1215,10 +1436,12 @@ function initAudioVisualizer() {
     analyser.getByteFrequencyData(dataArray);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const barWidth = (canvas.width / bufferLength) * 1.5;
+    const step = PERF[tier].visStep;
+    const bars = Math.ceil(bufferLength / step);
+    const barWidth = (canvas.width / bars) * 0.9;
     let x = 0;
 
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = 0; i < bufferLength; i += step) {
       const barHeight = (dataArray[i] / 255) * canvas.height * 0.85;
       const gradient = ctx.createLinearGradient(
         0,
@@ -1230,7 +1453,7 @@ function initAudioVisualizer() {
       gradient.addColorStop(1, "rgba(0,255,136,0.1)");
       ctx.fillStyle = gradient;
       ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-      x += barWidth + 1;
+      x += barWidth + step * 0.25;
     }
   };
 
@@ -1238,74 +1461,165 @@ function initAudioVisualizer() {
   window.visualizerAnimate();
 }
 
+let particleCanvas = null;
+let particleCtx = null;
+let particleW = 0;
+let particleH = 0;
+let particleList = [];
+
 function initParticles() {
   const canvas = document.getElementById("bg-canvas");
   if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  let width, height;
-  let particles = [];
+  particleCanvas = canvas;
+  particleCtx = canvas.getContext("2d");
 
   const resize = () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+    particleW = particleCanvas.width = window.innerWidth;
+    particleH = particleCanvas.height = window.innerHeight;
   };
   window.addEventListener("resize", resize);
   resize();
 
-  class Particle {
-    constructor() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.4;
-      this.vy = (Math.random() - 0.5) * 0.4;
-      this.size = Math.random() * 3 + 2; // Increased size (2-5px)
-      this.color = `rgba(0, 255, 136, ${Math.random() * 0.3})`; // Slightly more opaque
-    }
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.x < 0) this.x = width;
-      if (this.x > width) this.x = 0;
-      if (this.y < 0) this.y = height;
-      if (this.y > height) this.y = 0;
-    }
-    draw() {
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  // Adaptive particle count based on device
-  const particleCount = deviceCapabilities.isLowEnd
-    ? PARTICLE_COUNTS.LOW_END
-    : deviceCapabilities.isMobile
-      ? PARTICLE_COUNTS.MOBILE
-      : PARTICLE_COUNTS.DESKTOP;
-
-  for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-
-  // Store animate function globally (or in a wider scope) to access it for visibility change
   window.particlesAnimate = function () {
+    if (!particleCtx) return;
     if (document.hidden) {
       cancelAnimationFrame(particlesAnimationFrame);
       return;
     }
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach((p) => {
-      p.update();
-      p.draw();
+    particleCtx.clearRect(0, 0, particleW, particleH);
+    particleList.forEach((p) => {
+      Particle.update(p, particleW, particleH);
+      Particle.draw(p, particleCtx);
     });
     particlesAnimationFrame = requestAnimationFrame(window.particlesAnimate);
   };
 
-  // Only start particles if not low-end device
-  if (!deviceCapabilities.isLowEnd) {
+  rebuildParticles();
+  // Start the loop unless the operative tier disables particles entirely.
+  if (deviceCapabilities.perfTier > 0 && !document.hidden) {
     window.particlesAnimate();
   } else {
-    console.log("Particles disabled for low-end device");
+    console.log("Particles disabled at tier " + deviceCapabilities.perfTier);
   }
+}
+
+const Particle = {
+  update(p, w, h) {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = w;
+    if (p.x > w) p.x = 0;
+    if (p.y < 0) p.y = h;
+    if (p.y > h) p.y = 0;
+  },
+  draw(p, ctx) {
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  },
+};
+
+function spawnParticle() {
+  return {
+    x: Math.random() * particleW,
+    y: Math.random() * particleH,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    size: Math.random() * 3 + 2,
+    color: `rgba(0, 255, 136, ${Math.random() * 0.3})`,
+  };
+}
+
+function rebuildParticles() {
+  particleList = [];
+  const count = PERF[deviceCapabilities.perfTier].particles;
+  for (let i = 0; i < count; i++) particleList.push(spawnParticle());
+}
+
+// Called by the watchdog / tier changes to bring runtime loops in line with
+// the current tier and re-register adaptive refresh intervals.
+function reconfigurePerfForTier() {
+  if (particleCanvas) {
+    rebuildParticles();
+    if (deviceCapabilities.perfTier === 0) {
+      if (particlesAnimationFrame)
+        cancelAnimationFrame(particlesAnimationFrame);
+    } else if (window.particlesAnimate && !document.hidden) {
+      window.particlesAnimate();
+    }
+  }
+  scheduleAdaptiveIntervals();
+}
+
+// Adaptive auto-refresh intervals. Clearing + re-registering lets the watchdog
+// lengthen (or shorten) the poll cadence when the tier changes at runtime.
+let periodicTimers = [];
+function scheduleAdaptiveIntervals() {
+  periodicTimers.forEach((t) => clearInterval(t));
+  periodicTimers = [];
+  const [statsInterval, steamInterval, spotifyInterval] =
+    PERF[deviceCapabilities.perfTier].intervals;
+  const timers = [];
+  if (
+    document.getElementById("stat-projects") ||
+    document.getElementById("starred-list")
+  )
+    timers.push(setInterval(refreshGitHubStats, statsInterval));
+  if (document.getElementById("steam-status-panel"))
+    timers.push(setInterval(refreshSteamStatus, steamInterval));
+  if (document.getElementById("discord-status-panel"))
+    timers.push(setInterval(refreshDiscordStatus, 15000));
+  if (document.getElementById("roblox-status-panel"))
+    timers.push(setInterval(refreshRobloxStatus, steamInterval));
+  if (document.getElementById("spotify-content"))
+    timers.push(setInterval(updateSpotifyStatus, spotifyInterval));
+  periodicTimers = periodicTimers.concat(timers);
+}
+
+function initAvatarErrorHandlers() {
+  // Graceful image degradation: on any avatar load failure, hide the
+  // broken <img> (no raw alt text) and show a centered user icon in the
+  // (relatively positioned) avatar wrapper so layout stays intact.
+  const fallbackClass = "fa-user avatar-fallback";
+  document
+    .querySelectorAll("#avatar, #steam-pfp, #discord-pfp, #roblox-pfp")
+    .forEach((img) => {
+      img.addEventListener("error", function onAvatarError() {
+        this.removeEventListener("error", onAvatarError);
+        this.style.display = "none";
+        const wrapper = this.closest(
+          ".avatar, .steam-avatar-wrapper, .discord-avatar-wrapper, .roblox-avatar-wrapper",
+        );
+        if (wrapper && !wrapper.querySelector(".avatar-fallback")) {
+          const icon = document.createElement("i");
+          icon.className = fallbackClass;
+          wrapper.appendChild(icon);
+        }
+      });
+    });
+}
+
+function initCopyButtons() {
+  // Single coherent copy-to-clipboard system (used by 404 contact links).
+  function wireCopy(selector, text) {
+    document.querySelectorAll(selector).forEach((link) => {
+      link.addEventListener("click", () => {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+        navigator.clipboard.writeText(text).catch(() => {});
+        const label = link.querySelector("span") || link;
+        const orig = label.textContent;
+        label.textContent = "Copied!";
+        link.style.borderColor = "var(--primary)";
+        setTimeout(() => {
+          label.textContent = orig;
+          link.style.borderColor = "";
+        }, 1500);
+      });
+    });
+  }
+  wireCopy('a[href*="discord.com"]', "alciaforlife");
+  wireCopy('a[href^="mailto:"]', "contact@piotrunius.dev");
 }
 
 function initScrollReveal() {
@@ -1332,6 +1646,11 @@ function initTypingEffect() {
   if (!bioEl) return;
   const text = config.profile?.bio;
   if (!text) return;
+  // On the lowest tier, show the full bio instantly instead of animating it.
+  if (!PERF[deviceCapabilities.perfTier].typing) {
+    bioEl.textContent = text;
+    return;
+  }
   // Prevent CLS by preserving the height before clearing text
   const currentHeight = bioEl.getBoundingClientRect().height;
   if (currentHeight > 0) {
@@ -1352,17 +1671,6 @@ function initTypingEffect() {
     }
   }
   type();
-}
-
-function initMouseEffects() {
-  const cards = document.querySelectorAll(".glass-card");
-  cards.forEach((card) => {
-    card.addEventListener(
-      "mouseenter",
-      () => (card.style.transform = "translateY(-8px) scale(1.01)"),
-    );
-    card.addEventListener("mouseleave", () => (card.style.transform = ""));
-  });
 }
 
 // --- VISIBILITY & PERFORMANCE OPTIMIZATION ---
@@ -1426,6 +1734,7 @@ let projectsConfig = null;
 
 async function updateSpotifyStatus() {
   const container = document.getElementById("spotify-content");
+  if (!container) return;
 
   try {
     const response = await fetch(API_ENDPOINTS.spotify);
@@ -1583,13 +1892,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize scroll reveal immediately for instant smooth entrance
   initScrollReveal();
 
-  // Detect device capabilities first
+  // Detect device capabilities first, apply the base tier, then arm the
+  // FPS watchdog so the tier can adapt to real device capability at runtime.
   detectDeviceCapabilities();
-  applyPerformanceOptimizations();
+  applyPerfTier(deviceCapabilities.baseTier, true);
+  initPerfWatchdog();
 
   await loadConfig();
   await loadProjectsConfig();
   initProfile();
+  initAvatarErrorHandlers();
+  initCopyButtons();
   initSocials();
   initMusicMeta();
   initSetup();
@@ -1602,20 +1915,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   initParticles();
 
   initTypingEffect();
-  initMouseEffects();
   initVisibilityOptimization();
   updateCopyrightYear();
 
-  // Auto-refresh stats with adaptive intervals
-  const statsInterval = deviceCapabilities.isLowEnd ? 600000 : 300000; // 10 or 5 minutes
-  const steamInterval = deviceCapabilities.isLowEnd ? 120000 : 60000; // 2 or 1 minute
-  const spotifyInterval = deviceCapabilities.isLowEnd ? 45000 : 30000; // 45 or 30 seconds
-
-  setInterval(refreshGitHubStats, statsInterval);
-  setInterval(refreshSteamStatus, steamInterval);
-  setInterval(refreshDiscordStatus, 15000); // Update Discord status every 15 seconds
-  setInterval(refreshRobloxStatus, steamInterval);
-  setInterval(updateSpotifyStatus, spotifyInterval);
+  // Auto-refresh stats with adaptive intervals (perf tier aware)
+  scheduleAdaptiveIntervals();
 
   // Load projects
   loadProjects();
@@ -1702,7 +2006,7 @@ async function loadProjects() {
       container.innerHTML = `
                 <div style="grid-column: 1/-1;" class="activity-empty-state">
                     <i class="fas fa-code"></i>
-                    <p>No projects to display</p>
+                    <p>No projects yet</p>
                 </div>
             `;
       return;

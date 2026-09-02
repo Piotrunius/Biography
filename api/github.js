@@ -63,7 +63,7 @@ export default {
       };
 
       // 2. Fetch resources
-      const [uR, reposR, starredR, searchCommitsR, gistsR] = await Promise.all([
+      const [uR, reposR, starredR] = await Promise.all([
         fetch(`https://api.github.com/user`, { headers: gHeaders }),
         fetch(
           `https://api.github.com/user/repos?per_page=50&sort=updated&visibility=all`,
@@ -74,32 +74,45 @@ export default {
         fetch(`https://api.github.com/user/starred?per_page=30`, {
           headers: { ...gHeaders, Accept: "application/vnd.github.star+json" },
         }),
-        fetch(`https://api.github.com/search/commits?q=author:${gUser}`, {
-          headers: {
-            ...gHeaders,
-            Accept: "application/vnd.github.cloak-preview",
-          },
-        }),
-        fetch(`https://api.github.com/gists?per_page=100`, {
-          headers: gHeaders,
-        }),
       ]);
 
       const uJ = await uR.json();
       const repos = await reposR.json();
       const starred = await starredR.json();
-      const searchCommits = await searchCommitsR.json();
-      const gists = await gistsR.json();
-      // 3. Calculations based on actual data
-      const publicReposCount = Array.isArray(repos)
-        ? repos.filter((r) => !r.private).length
-        : 0;
-      const totalGists = Array.isArray(gists) ? gists.length : 0;
-      const totalStarsReceived = Array.isArray(repos)
-        ? repos
-            .filter((r) => !r.private)
-            .reduce((acc, r) => acc + (r.stargazers_count || 0), 0)
-        : 0;
+
+      // 2b. Fetch accurate contribution count via GraphQL calendar.
+      // The REST /search/commits endpoint has a notoriously stale index that
+      // lags days-to-weeks behind, so we use the contribution calendar instead
+      // (GraphQL counts commits/PRs/issues across the last 12 months).
+      const gql = await fetch(`https://api.github.com/graphql`, {
+        method: "POST",
+        headers: { ...gHeaders, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `
+            query($login: String!) {
+              user(login: $login) {
+                contributionsCollection {
+                  totalCommitContributions
+                  totalPullRequestReviewContributions
+                  totalPullRequestContributions
+                  totalIssueContributions
+                  totalRepositoryContributions
+                }
+              }
+            }
+          `,
+          variables: { login: gUser },
+        }),
+      });
+      let totalCommits = 0;
+      if (gql.ok) {
+        const gqlJson = await gql.json();
+        const contribs = gqlJson?.data?.user?.contributionsCollection || {};
+        totalCommits =
+          (contribs.totalCommitContributions || 0) +
+          (contribs.totalPullRequestContributions || 0) +
+          (contribs.totalIssueContributions || 0);
+      }
       // 4. Fetch recent commits (only public repos)
       const publicRepos = Array.isArray(repos)
         ? repos.filter((r) => !r.private).slice(0, 5)
@@ -115,7 +128,6 @@ export default {
           return commits.map((c) => ({
             message: c.commit.message.split("\n")[0],
             repo: repo.name,
-            repoPrivate: repo.private || false,
             author: gUser,
             date: c.commit.author.date,
             url: c.html_url,
@@ -134,30 +146,18 @@ export default {
       // 5. Build final payload
       const payload = {
         privacyMode: false,
-        user: {
-          login: uJ.login,
-          name: uJ.name,
-          avatar: uJ.avatar_url,
-          bio: uJ.bio,
-          publicRepos: publicReposCount,
-        },
         summary: {
           projects: Array.isArray(repos) ? repos.length : 0,
-          starredCount: Array.isArray(starred) ? starred.length : 0,
           followers: uJ.followers || 0,
-          commits: searchCommits.total_count || 0,
-          gists: totalGists,
-          starsReceived: totalStarsReceived,
+          commits: totalCommits,
         },
         projects: Array.isArray(repos)
           ? repos.map((r) => ({
               name: r.name,
               description: r.description || "No description provided.",
-              stars: r.stargazers_count,
               lang: r.language || "Mixed",
               url: r.html_url,
               fork: r.fork || false,
-              private: r.private || false,
             }))
           : [],
         starred: Array.isArray(starred)
@@ -171,14 +171,6 @@ export default {
             }))
           : [],
         recentCommits: recentCommitsList,
-        languages: Object.entries(
-          (Array.isArray(repos) ? repos : [])
-            .filter((r) => !r.private)
-            .reduce((acc, r) => {
-              if (r.language) acc[r.language] = (acc[r.language] || 0) + 1;
-              return acc;
-            }, {}),
-        ).map(([name, count]) => ({ name, repos: count })),
         lastUpdate: new Date().toISOString(),
       };
 
