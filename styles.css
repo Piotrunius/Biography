@@ -410,7 +410,6 @@ svg.svg-inline--fa:not(.social-link svg) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
   font-weight: 700;
   cursor: pointer;
   width: 100%;
@@ -420,32 +419,9 @@ svg.svg-inline--fa:not(.social-link svg) {
   box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
 }
 
-.music-btn i,
-.music-btn svg.svg-inline--fa {
-  color: #000 !important;
-  background: none !important;
-  -webkit-text-fill-color: initial !important;
-  animation: none !important;
-  filter: none !important;
-  font-size: 1.1rem;
-}
-
-.music-btn svg.svg-inline--fa path {
-  fill: #000 !important;
-}
-
-.spotify-btn {
-  background: linear-gradient(135deg, #1db954, #19a34a) !important;
-  box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2) !important;
-}
-
 .music-btn:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 12px 36px rgba(0, 255, 136, 0.4);
-}
-
-.spotify-btn:hover {
-  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.3) !important;
 }
 
 .spotify-art-wrapper {
@@ -1211,6 +1187,16 @@ a:where(
   transform: scaleX(1);
 }
 
+.activity-link:hover {
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+.activity-link--repo {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .activity-desc {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.7);
@@ -1257,32 +1243,6 @@ a:where(
   /* Push date to the right */
   font-family: monospace;
   opacity: 0.7;
-}
-
-/* Commit badge variants */
-.meta-badge--verified {
-  border-color: rgba(0, 255, 136, 0.25);
-}
-.meta-badge--verified i {
-  color: #00ff88;
-}
-.meta-badge--unverified {
-  border-color: rgba(255, 200, 50, 0.25);
-}
-.meta-badge--unverified i {
-  color: #ffc832;
-}
-.meta-badge--additions {
-  border-color: rgba(0, 200, 100, 0.25);
-}
-.meta-badge--additions i {
-  color: #00c864;
-}
-.meta-badge--deletions {
-  border-color: rgba(255, 80, 80, 0.25);
-}
-.meta-badge--deletions i {
-  color: #ff5050;
 }
 
 .feed-item {
@@ -1571,7 +1531,6 @@ a:where(
   display: inline-flex;
   margin-left: auto;
   align-items: center;
-  gap: 0.5rem;
   padding: 0.6rem 1rem;
   background: linear-gradient(135deg, var(--primary), #00c68a);
   color: #000;
@@ -1582,13 +1541,6 @@ a:where(
   transition: all 0.3s ease;
   overflow: hidden;
   position: relative;
-}
-
-.project-link i,
-.project-link svg.svg-inline--fa,
-.project-link .fa-external-link-alt {
-  color: #000 !important;
-  filter: brightness(0) !important;
 }
 
 .project-link:hover {
@@ -1681,7 +1633,6 @@ a:where(
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
   padding: 1rem 1.3rem;
   background: linear-gradient(135deg, var(--primary), #00c68a);
   color: #000;
@@ -1693,23 +1644,6 @@ a:where(
   box-shadow: 0 4px 16px rgba(0, 255, 136, 0.2);
   position: relative;
   overflow: hidden;
-}
-
-.contact-btn i,
-.contact-btn svg.svg-inline--fa {
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  -webkit-text-fill-color: #000 !important;
-  background-clip: unset !important;
-  color: #000 !important;
-  filter: none !important;
-  font-size: 1.1rem;
-  position: relative;
-  z-index: 1;
-}
-
-.contact-btn svg.svg-inline--fa path {
-  fill: #000 !important;
 }
 
 .contact-btn .btn-label {
@@ -2043,13 +1977,36 @@ a:where(
 }
 
 .system-link {
+  position: relative;
   color: var(--primary);
   text-decoration: none;
   font-weight: 600;
 }
 
+.system-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    color-mix(in srgb, var(--primary) 40%, transparent)
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+}
+
+.system-link:hover::after {
+  transform: scaleX(1);
+}
+
 .system-link:hover {
-  text-decoration: underline;
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
 }
 
 .system-desc {
@@ -3672,9 +3629,5 @@ input:focus-visible {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
     border-radius: 10px;
-  }
-  .music-btn i,
-  .music-btn svg.svg-inline--fa {
-    font-size: 0.9rem;
   }
 }

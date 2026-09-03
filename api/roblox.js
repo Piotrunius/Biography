@@ -80,7 +80,8 @@ export default {
         },
       );
     } catch (err) {
-      return new Response(JSON.stringify({ error: err.message }), {
+      console.error("Roblox worker error:", err);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
         status: 500,
         headers: corsHeaders,
       });

@@ -783,30 +783,12 @@ async function refreshGitHubStats() {
         const repoName = commit.repo || "Unknown";
         const repoUrl = `https://github.com/${githubUsername}/${repoName}`;
         const commitUrl = commit.url || "#";
-        const verified = commit.verified;
-        const additions = commit.additions || 0;
-        const deletions = commit.deletions || 0;
-
-        const verifiedBadge = verified
-          ? '<div class="meta-badge meta-badge--verified" title="GPG Verified"><i class="fas fa-shield-halved"></i> Verified</div>'
-          : '<div class="meta-badge meta-badge--unverified" title="Not verified"><i class="fas fa-circle-exclamation"></i> Unverified</div>';
-
-        const additionsBadge = additions > 0
-          ? `<div class="meta-badge meta-badge--additions"><i class="fas fa-plus"></i> ${additions}</div>`
-          : "";
-        const deletionsBadge = deletions > 0
-          ? `<div class="meta-badge meta-badge--deletions"><i class="fas fa-minus"></i> ${deletions}</div>`
-          : "";
-
         item.innerHTML = `
                     <div class="activity-header">
                         <a href="${commitUrl}" class="activity-link" target="_blank" rel="noreferrer">${message}</a>
                     </div>
-                    <div class="activity-desc"><a href="${repoUrl}" target="_blank" rel="noreferrer" style="color: var(--primary); text-decoration: none;">${repoName}</a></div>
+                    <div class="activity-desc"><a href="${repoUrl}" class="activity-link activity-link--repo" target="_blank" rel="noreferrer">${repoName}</a></div>
                     <div class="activity-meta-row">
-                        ${verifiedBadge}
-                        ${additionsBadge}
-                        ${deletionsBadge}
                         <div class="meta-badge"><i class="fas fa-user-circle"></i> ${author}</div>
                         <span class="meta-date">${formatPLDateTime(date, true)}</span>
                     </div>
@@ -1403,9 +1385,7 @@ function toggleAudio() {
 function updateAudioButton() {
   const btn = document.getElementById("audio-toggle");
   if (!btn) return;
-  const icon = btn.querySelector("i");
   const label = btn.querySelector("span");
-  if (icon) icon.className = audioPlaying ? "fas fa-pause" : "fas fa-play";
   if (label) label.textContent = audioPlaying ? "Pause" : "Play";
 }
 
@@ -1880,9 +1860,8 @@ function renderSpotifyActive(container, spotify) {
                 </div>
             </div>
             <div class="music-controls">
-                <a href="https://open.spotify.com/track/${spotify.track_id}" target="_blank" rel="noreferrer" class="music-btn spotify-btn">
-                    <i class="fa-brands fa-spotify"></i>
-                    <span>Open in Spotify</span>
+                <a href="https://open.spotify.com/track/${spotify.track_id}" target="_blank" rel="noreferrer" class="music-btn">
+                    <span>Open</span>
                 </a>
             </div>
         </div>
@@ -2107,7 +2086,6 @@ async function loadProjects() {
                     </div>
                     <a href="${projectLink}" target="_blank" rel="noreferrer" class="project-link">
                         <span>View</span>
-                        <i class="fas fa-external-link-alt"></i>
                     </a>
                 </div>
             `;

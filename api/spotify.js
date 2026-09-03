@@ -213,12 +213,16 @@ export default {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } catch (err) {
-      // Keep the error message concise
-      const errMsg = err && err.message ? err.message : String(err);
-      return new Response(JSON.stringify({ error: errMsg }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      // Log the real error server-side but never expose it to the client
+      // (avoids leaking internal stack traces / implementation details).
+      console.error("Spotify worker error:", err);
+      return new Response(
+        JSON.stringify({ error: "Internal server error" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
   },
 };

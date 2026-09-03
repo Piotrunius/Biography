@@ -184,6 +184,7 @@ export default {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } catch (err) {
+      console.error("GitHub worker error:", err);
       return new Response(JSON.stringify({ error: "GitHub Worker Error" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

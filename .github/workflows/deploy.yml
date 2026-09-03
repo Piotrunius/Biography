@@ -13,6 +13,9 @@ concurrency:
   group: deploy-workers-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Deploy ${{ matrix.worker }}-api
