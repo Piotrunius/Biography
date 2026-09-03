@@ -445,7 +445,6 @@ svg.svg-inline--fa:not(.social-link svg) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.5rem 0;
 }
 
 .spotify-content.empty {

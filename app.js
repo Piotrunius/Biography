@@ -787,7 +787,7 @@ async function refreshGitHubStats() {
                     <div class="activity-header">
                         <a href="${commitUrl}" class="activity-link" target="_blank" rel="noreferrer">${message}</a>
                     </div>
-                    <div class="activity-desc"><a href="${repoUrl}" class="activity-link activity-link--repo" target="_blank" rel="noreferrer">${repoName}</a></div>
+                    <div class="activity-desc"><span class="activity-link--repo">${repoName}</span></div>
                     <div class="activity-meta-row">
                         <div class="meta-badge"><i class="fas fa-user-circle"></i> ${author}</div>
                         <span class="meta-date">${formatPLDateTime(date, true)}</span>

@@ -1,5 +1,5 @@
 // Service Worker — Stale-While-Revalidate Cache Strategy
-const CACHE_NAME = "piotrunius-bio-v9";
+const CACHE_NAME = "piotrunius-bio-v10";
 const urlsToCache = [
   "/",
   "/index.html",
