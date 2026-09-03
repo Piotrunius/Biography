@@ -783,6 +783,20 @@ async function refreshGitHubStats() {
         const repoName = commit.repo || "Unknown";
         const repoUrl = `https://github.com/${githubUsername}/${repoName}`;
         const commitUrl = commit.url || "#";
+        const verified = commit.verified;
+        const additions = commit.additions || 0;
+        const deletions = commit.deletions || 0;
+
+        const verifiedBadge = verified
+          ? '<div class="meta-badge meta-badge--verified" title="GPG Verified"><i class="fas fa-shield-halved"></i> Verified</div>'
+          : '<div class="meta-badge meta-badge--unverified" title="Not verified"><i class="fas fa-circle-exclamation"></i> Unverified</div>';
+
+        const additionsBadge = additions > 0
+          ? `<div class="meta-badge meta-badge--additions"><i class="fas fa-plus"></i> ${additions}</div>`
+          : "";
+        const deletionsBadge = deletions > 0
+          ? `<div class="meta-badge meta-badge--deletions"><i class="fas fa-minus"></i> ${deletions}</div>`
+          : "";
 
         item.innerHTML = `
                     <div class="activity-header">
@@ -790,6 +804,9 @@ async function refreshGitHubStats() {
                     </div>
                     <div class="activity-desc"><a href="${repoUrl}" target="_blank" rel="noreferrer" style="color: var(--primary); text-decoration: none;">${repoName}</a></div>
                     <div class="activity-meta-row">
+                        ${verifiedBadge}
+                        ${additionsBadge}
+                        ${deletionsBadge}
                         <div class="meta-badge"><i class="fas fa-user-circle"></i> ${author}</div>
                         <span class="meta-date">${formatPLDateTime(date, true)}</span>
                     </div>

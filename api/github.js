@@ -66,7 +66,7 @@ export default {
       const [uR, reposR, starredR] = await Promise.all([
         fetch(`https://api.github.com/user`, { headers: gHeaders }),
         fetch(
-          `https://api.github.com/user/repos?per_page=50&sort=updated&visibility=all`,
+          `https://api.github.com/user/repos?per_page=50&sort=pushed&visibility=all`,
           {
             headers: gHeaders,
           },
@@ -113,35 +113,41 @@ export default {
           (contribs.totalPullRequestContributions || 0) +
           (contribs.totalIssueContributions || 0);
       }
-      // 4. Fetch recent commits (only public repos)
+      // 4. Fetch recent commits -- iterate repos sorted by last push
+      //    and collect until we have 15 (so all 15 come from whichever
+      //    repos actually have the newest commits).
       const publicRepos = Array.isArray(repos)
-        ? repos.filter((r) => !r.private).slice(0, 5)
+        ? repos.filter((r) => !r.private)
         : [];
-      const commitPromises = publicRepos.map(async (repo) => {
+      const TARGET = 15;
+      const recentCommitsList = [];
+      for (const repo of publicRepos) {
+        if (recentCommitsList.length >= TARGET) break;
         try {
           const res = await fetch(
-            `https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits?author=${gUser}&per_page=5`,
+            `https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits?author=${gUser}&per_page=${TARGET}`,
             { headers: gHeaders },
           );
-          if (!res.ok) return [];
+          if (!res.ok) continue;
           const commits = await res.json();
-          return commits.map((c) => ({
-            message: c.commit.message.split("\n")[0],
-            repo: repo.name,
-            author: gUser,
-            date: c.commit.author.date,
-            url: c.html_url,
-          }));
+          for (const c of commits) {
+            recentCommitsList.push({
+              message: c.commit.message.split("\n")[0],
+              repo: repo.name,
+              author: gUser,
+              date: c.commit.author.date,
+              url: c.html_url,
+              verified: c.commit?.verification?.verified ?? false,
+              additions: c.stats?.additions ?? 0,
+              deletions: c.stats?.deletions ?? 0,
+            });
+            if (recentCommitsList.length >= TARGET) break;
+          }
         } catch (e) {
-          return [];
+          continue;
         }
-      });
-
-      const allCommitsArrays = await Promise.all(commitPromises);
-      const recentCommitsList = allCommitsArrays
-        .flat()
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 15);
+      }
+      recentCommitsList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       // 5. Build final payload
       const payload = {

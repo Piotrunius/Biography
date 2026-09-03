@@ -1180,6 +1180,7 @@ a:where(
 }
 
 .activity-link {
+  position: relative;
   color: var(--primary);
   font-weight: 700;
   font-size: 0.95rem;
@@ -1188,9 +1189,26 @@ a:where(
   word-break: break-word;
 }
 
-.activity-link:hover {
-  text-decoration: underline;
-  text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+.activity-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    color-mix(in srgb, var(--primary) 40%, transparent)
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+}
+
+.activity-link:hover::after {
+  transform: scaleX(1);
 }
 
 .activity-desc {
@@ -1239,6 +1257,32 @@ a:where(
   /* Push date to the right */
   font-family: monospace;
   opacity: 0.7;
+}
+
+/* Commit badge variants */
+.meta-badge--verified {
+  border-color: rgba(0, 255, 136, 0.25);
+}
+.meta-badge--verified i {
+  color: #00ff88;
+}
+.meta-badge--unverified {
+  border-color: rgba(255, 200, 50, 0.25);
+}
+.meta-badge--unverified i {
+  color: #ffc832;
+}
+.meta-badge--additions {
+  border-color: rgba(0, 200, 100, 0.25);
+}
+.meta-badge--additions i {
+  color: #00c864;
+}
+.meta-badge--deletions {
+  border-color: rgba(255, 80, 80, 0.25);
+}
+.meta-badge--deletions i {
+  color: #ff5050;
 }
 
 .feed-item {
