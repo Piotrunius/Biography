@@ -113,41 +113,45 @@ export default {
           (contribs.totalPullRequestContributions || 0) +
           (contribs.totalIssueContributions || 0);
       }
-      // 4. Fetch recent commits -- iterate repos sorted by last push
-      //    and collect until we have 15 (so all 15 come from whichever
-      //    repos actually have the newest commits).
+      // 4. Fetch recent commits -- get commits from the top recently pushed repos,
+      //    combine them, sort them by date, and take the top 15.
       const publicRepos = Array.isArray(repos)
         ? repos.filter((r) => !r.private)
         : [];
       const TARGET = 15;
-      const recentCommitsList = [];
-      for (const repo of publicRepos) {
-        if (recentCommitsList.length >= TARGET) break;
+      let recentCommitsList = [];
+
+      // We check up to 15 most recently pushed repos to guarantee finding the latest global commits
+      // (even if each of the last 15 commits was in a completely different repository).
+      const reposToCheck = publicRepos.slice(0, 15);
+
+      const commitPromises = reposToCheck.map(async (repo) => {
         try {
           const res = await fetch(
             `https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits?author=${gUser}&per_page=${TARGET}`,
             { headers: gHeaders },
           );
-          if (!res.ok) continue;
+          if (!res.ok) return [];
           const commits = await res.json();
-          for (const c of commits) {
-            recentCommitsList.push({
-              message: c.commit.message.split("\n")[0],
-              repo: repo.name,
-              author: gUser,
-              date: c.commit.author.date,
-              url: c.html_url,
-              verified: c.commit?.verification?.verified ?? false,
-              additions: c.stats?.additions ?? 0,
-              deletions: c.stats?.deletions ?? 0,
-            });
-            if (recentCommitsList.length >= TARGET) break;
-          }
+          return commits.map((c) => ({
+            message: c.commit.message.split("\n")[0],
+            repo: repo.name,
+            author: gUser,
+            date: c.commit.author.date,
+            url: c.html_url,
+            verified: c.commit?.verification?.verified ?? false,
+            additions: c.stats?.additions ?? 0,
+            deletions: c.stats?.deletions ?? 0,
+          }));
         } catch (e) {
-          continue;
+          return [];
         }
-      }
+      });
+
+      const results = await Promise.all(commitPromises);
+      recentCommitsList = results.flat();
       recentCommitsList.sort((a, b) => new Date(b.date) - new Date(a.date));
+      recentCommitsList = recentCommitsList.slice(0, TARGET);
 
       // 5. Build final payload
       const payload = {

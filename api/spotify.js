@@ -216,13 +216,10 @@ export default {
       // Log the real error server-side but never expose it to the client
       // (avoids leaking internal stack traces / implementation details).
       console.error("Spotify worker error:", err);
-      return new Response(
-        JSON.stringify({ error: "Internal server error" }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
   },
 };
