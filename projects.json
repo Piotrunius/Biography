@@ -2,7 +2,7 @@
   "projects": [
     { "repo": "NexVid", "type": "archive", "order": 1 },
     { "repo": "Biography", "type": "current", "order": 2 },
-    { "repo": "Exam-Scraper", "type": "active", "order": 3 },
+    { "repo": "SystemUpdater", "type": "active", "order": 3 },
     { "repo": "Broadcast-generator", "type": "collab", "order": 4 }
   ]
 }
