@@ -902,19 +902,6 @@ a:where(
   opacity: 0.7;
 }
 
-.music-link {
-  color: var(--text);
-  text-decoration: none;
-  transition:
-    color 0.2s ease,
-    text-shadow 0.2s ease;
-}
-
-.music-link:hover {
-  color: var(--primary);
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
-}
-
 .social-section {
   grid-column: 1 / 7;
   padding: 2rem;
@@ -2022,6 +2009,7 @@ a:where(
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.2rem;
+  align-items: stretch;
 }
 
 .about-card {
@@ -2040,9 +2028,10 @@ a:where(
 }
 
 .about-title {
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--primary);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.6rem;
 }
 
 .about-value a {
@@ -2052,6 +2041,35 @@ a:where(
 
 .about-value {
   color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.about-card--bio {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-card--bio .about-value {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.9rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.about-card--bio .about-value p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.about-card--bio .about-value strong {
+  color: #fff;
+  font-weight: 600;
 }
 
 .about-os {

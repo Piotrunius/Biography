@@ -581,9 +581,10 @@ function getDefaultConfig() {
       },
     ],
     music: {
-      title: "Smoking Alone",
-      artist: "BackDrop",
-      url: "https://pixabay.com/music/ambient-dark-ambient-background-music-smoking-alone-328352/",
+      title: "Xtal",
+      artist: "Aphex Twin",
+      artistUrl: "https://open.spotify.com/artist/6kBDZFXuLrZgHnvmPu9NsG",
+      url: "https://open.spotify.com/track/7o2AeQZzfCERsRmOM86EcB?si=e11e2ac678234f42",
     },
     audio: {
       src: "assets/audio.mp3",
@@ -646,9 +647,20 @@ function initMusicMeta() {
   const artistEl = document.getElementById("music-artist");
   if (titleEl) {
     titleEl.textContent = config.music?.title || "Unknown";
-    titleEl.href = config.music?.url || "#";
+    const musicUrl = config.music?.url;
+    titleEl.href = musicUrl || "#";
+    titleEl.hidden = !musicUrl;
+    titleEl.setAttribute(
+      "aria-label",
+      `Open ${config.music?.title || "track"}`,
+    );
   }
-  if (artistEl) artistEl.textContent = config.music?.artist || "";
+  if (artistEl) {
+    artistEl.textContent = config.music?.artist || "";
+    const artistUrl = config.music?.artistUrl;
+    artistEl.href = artistUrl || "#";
+    artistEl.hidden = !artistUrl;
+  }
 }
 
 // --- CORE FUNCTION: Render GitHub Activity ---
@@ -1434,7 +1446,7 @@ function initAudioVisualizer() {
 
     const step = PERF[tier].visStep;
     const bars = Math.ceil(bufferLength / step);
-    const barWidth = (canvas.width / bars) * 0.9;
+    const barWidth = (canvas.width / bars) * 2.0;
     let x = 0;
 
     for (let i = 0; i < bufferLength; i += step) {
