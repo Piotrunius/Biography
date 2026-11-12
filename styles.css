@@ -661,12 +661,6 @@ a:where(
   background: rgba(255, 255, 255, 0.05);
 }
 
-.steam-game-info {
-  font-size: 0.95rem;
-  color: var(--primary);
-  font-weight: 500;
-  opacity: 0.9;
-}
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
@@ -1492,6 +1486,7 @@ a:where(
 
 .project-stats {
   display: flex;
+  align-items: center;
   gap: 1.2rem;
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -1510,7 +1505,22 @@ a:where(
 
 .project-stat i,
 .project-stat svg.svg-inline--fa {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.project-stat:hover i,
+.project-stat:hover svg.svg-inline--fa {
+  transform: scale(1.15);
+}
+
+.project-stat-stars i,
+.project-stat-stars svg.svg-inline--fa {
+  color: #ffc107;
+}
+
+.project-stat-stars:hover {
+  color: #fff;
 }
 
 .project-link {
@@ -2593,19 +2603,6 @@ a:where(
   color: var(--text);
 }
 
-.steam-game-info {
-  font-size: 0.95rem;
-  color: var(--primary);
-  font-weight: 500;
-  opacity: 0.9;
-}
-
-.discord-activity-info {
-  font-size: 0.95rem;
-  color: #5865f2;
-  font-weight: 500;
-  opacity: 0.9;
-}
 
 .discord-last-seen {
   display: flex;
@@ -2913,21 +2910,6 @@ a:where(
   background: rgba(255, 255, 255, 0.05);
 }
 
-.discord-activity-info {
-  font-size: 0.9rem;
-  color: var(--primary);
-  font-weight: 500;
-  opacity: 0.9;
-  margin-top: 0.25rem;
-}
-
-.roblox-game-info {
-  font-size: 0.9rem;
-  color: #ef3340;
-  font-weight: 500;
-  opacity: 0.9;
-  margin-top: 0.25rem;
-}
 
 .status-link-container {
   display: flex;

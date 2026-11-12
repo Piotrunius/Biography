@@ -941,10 +941,8 @@ async function refreshSteamStatus() {
 
   // Check for Privacy Mode - hide live data, show a lock state
   if (stats.privacyMode) {
-    const gameInfo = document.getElementById("steam-game-info");
     const extraInfo = document.querySelector(".steam-extra-info");
     const steamUsernameEl = document.querySelector(".steam-username");
-    if (gameInfo) gameInfo.style.display = "none";
     if (extraInfo) extraInfo.style.display = "none";
     if (steamUsernameEl) steamUsernameEl.textContent = "Hidden";
     renderStatusFallback(
@@ -971,7 +969,6 @@ async function refreshSteamStatus() {
   }
   const s = stats.steam || stats || {};
   const statusText = document.getElementById("steam-status-text");
-  const gameInfo = document.getElementById("steam-game-info");
   const dotContainer = document.getElementById("steam-dot")?.parentElement;
   const steamPfp = document.getElementById("steam-pfp");
 
@@ -1040,9 +1037,7 @@ async function refreshSteamStatus() {
   if (gameName) {
     dotContainer.classList.add("in-game");
     if (statusText) statusText.textContent = "In-game";
-    if (gameInfo) gameInfo.style.display = "none";
   } else {
-    if (gameInfo) gameInfo.style.display = "none";
     // Map personastate values properly:
     // 0 = Offline, 1 = Online, 2 = Busy, 3 = Away, 4 = Snooze, 5 = Looking to trade, 6 = Looking to play
     switch (personaState) {
@@ -1078,7 +1073,6 @@ async function refreshSteamStatus() {
 async function refreshDiscordStatus() {
   const discordDot = document.getElementById("discord-dot");
   const discordStatus = document.getElementById("discord-status-text");
-  const discordActivityInfo = document.getElementById("discord-activity-info");
   const discordAvatarWrapper = document.querySelector(
     ".discord-avatar-wrapper",
   );
@@ -1095,7 +1089,6 @@ async function refreshDiscordStatus() {
       // Check for Privacy Mode - hide live data, show a lock state
       if (data.privacyMode) {
         if (discordUsernameEl) discordUsernameEl.textContent = "Hidden";
-        if (discordActivityInfo) discordActivityInfo.style.display = "none";
         renderStatusFallback(
           ".discord-avatar-wrapper",
           "fas fa-lock",
@@ -1108,7 +1101,6 @@ async function refreshDiscordStatus() {
 
       const user = data.user;
       const presence = data.presence;
-      const activities = data.activities || [];
 
       // Update status
       const statusMap = {
@@ -1141,30 +1133,6 @@ async function refreshDiscordStatus() {
       if (discordDot) {
         discordDot.className = `status-dot ${statusClass}`;
       }
-
-      // Update activity info
-      if (discordActivityInfo) {
-        if (activities && activities.length > 0) {
-          const activity = activities.find((a) => a.type !== 4); // Exclude custom status
-          if (activity) {
-            const activityTypeMap = {
-              0: "Playing",
-              1: "Streaming",
-              2: "Listening",
-              3: "Watching",
-              5: "Competing",
-            };
-
-            const activityType = activityTypeMap[activity.type] || "Activity";
-            discordActivityInfo.textContent = `${activityType}: ${activity.name}`;
-            discordActivityInfo.style.display = "block";
-          } else {
-            discordActivityInfo.style.display = "none";
-          }
-        } else {
-          discordActivityInfo.style.display = "none";
-        }
-      }
     }
   } catch (e) {
     console.warn("Error fetching Discord status from Lanyard:", e.message);
@@ -1193,10 +1161,8 @@ async function refreshRobloxStatus() {
 
   // Check for Privacy Mode - hide live data, show a lock state
   if (data.privacyMode) {
-    const gameInfo = document.getElementById("roblox-game-info");
     const usernameEl = document.querySelector(".roblox-username");
     if (usernameEl) usernameEl.textContent = "Hidden";
-    if (gameInfo) gameInfo.style.display = "none";
     renderStatusFallback(
       ".roblox-avatar-wrapper",
       "fas fa-lock",
@@ -1247,7 +1213,6 @@ async function refreshRobloxStatus() {
   const avatar = data.avatarUrl || data.avatar || data.thumbnail || null;
 
   const statusText = document.getElementById("roblox-status-text");
-  const gameInfo = document.getElementById("roblox-game-info");
   const avatarWrapper = document.querySelector(".roblox-avatar-wrapper");
   const usernameEl = document.querySelector(".roblox-username");
   const robloxPfp = document.getElementById("roblox-pfp");
@@ -1279,17 +1244,6 @@ async function refreshRobloxStatus() {
     }
   }
 
-  if (gameInfo) {
-    if (statusLower.includes("in game") && game) {
-      gameInfo.textContent = `Playing: ${game}`;
-      gameInfo.style.display = "block";
-    } else if (statusLower.includes("in studio")) {
-      gameInfo.textContent = "Creating games in Studio";
-      gameInfo.style.display = "block";
-    } else {
-      gameInfo.style.display = "none";
-    }
-  }
   // Show panel after data is loaded
   robloxPanel.style.display = "flex";
 }
@@ -1992,6 +1946,30 @@ async function fetchGitHubRepos() {
     const repos = data.projects || data.repos || data.repositories || [];
     if (!Array.isArray(repos)) return null;
 
+    // Check if any repo is missing stars (e.g. before the worker update is deployed)
+    const missingStars = repos.some((r) => typeof r.stars !== "number");
+    if (missingStars) {
+      try {
+        const fallbackRes = await fetch(
+          "https://api.github.com/users/Piotrunius/repos?per_page=100",
+          { headers: { Accept: "application/vnd.github.v3+json" } },
+        );
+        if (fallbackRes.ok) {
+          const publicRepos = await fallbackRes.json();
+          const starsMap = new Map(
+            publicRepos.map((pr) => [pr.name, pr.stargazers_count ?? 0]),
+          );
+          repos.forEach((r) => {
+            if (typeof r.stars !== "number") {
+              r.stars = starsMap.get(r.name) ?? 0;
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("Could not fetch fallback repo stars:", err);
+      }
+    }
+
     // If config exists, use it as source of truth for visibility and order
     if (projectsConfig && Array.isArray(projectsConfig.projects)) {
       const configMap = new Map(
@@ -2078,6 +2056,7 @@ async function loadProjects() {
       const description = repo.description || "No description available";
       const language = repo.lang || repo.language || "Unknown";
       const projectLink = repo.url;
+      const starsCount = typeof repo.stars === "number" ? repo.stars : 0;
 
       // Badge from config-driven displayType
       const badge = repo.displayType || "active";
@@ -2091,9 +2070,13 @@ async function loadProjects() {
                 <div class="project-description">${escapeHtml(description)}</div>
                 <div class="project-footer">
                     <div class="project-stats">
-                        <div class="project-stat" title="Language">
+                        <div class="project-stat" title="Language: ${escapeHtml(language)}">
                             <i class="fas fa-code"></i>
                             <span>${escapeHtml(language)}</span>
+                        </div>
+                        <div class="project-stat project-stat-stars" title="${starsCount} ${starsCount === 1 ? "star" : "stars"} on GitHub">
+                            <i class="fas fa-star"></i>
+                            <span>${starsCount}</span>
                         </div>
                     </div>
                     <a href="${projectLink}" target="_blank" rel="noreferrer" class="project-link">

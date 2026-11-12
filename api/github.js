@@ -168,6 +168,7 @@ export default {
               lang: r.language || "Mixed",
               url: r.html_url,
               fork: r.fork || false,
+              stars: r.stargazers_count ?? 0,
             }))
           : [],
         starred: Array.isArray(starred)
