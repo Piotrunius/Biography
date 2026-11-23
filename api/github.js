@@ -161,16 +161,14 @@ export default {
           followers: uJ.followers || 0,
           commits: totalCommits,
         },
-        projects: Array.isArray(repos)
-          ? repos.map((r) => ({
-              name: r.name,
-              description: r.description || "No description provided.",
-              lang: r.language || "Mixed",
-              url: r.html_url,
-              fork: r.fork || false,
-              stars: r.stargazers_count ?? 0,
-            }))
-          : [],
+        projects: publicRepos.map((r) => ({
+          name: r.name,
+          description: r.description || "No description provided.",
+          lang: r.language || "Mixed",
+          url: r.html_url,
+          fork: r.fork || false,
+          stars: r.stargazers_count ?? 0,
+        })),
         starred: Array.isArray(starred)
           ? starred.map((i) => ({
               name: i.repo?.name,
