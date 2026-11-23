@@ -157,7 +157,7 @@ export default {
       const payload = {
         privacyMode: false,
         summary: {
-          projects: Array.isArray(repos) ? repos.length : 0,
+          projects: publicRepos.length,
           followers: uJ.followers || 0,
           commits: totalCommits,
         },

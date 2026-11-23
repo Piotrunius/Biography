@@ -76,11 +76,24 @@ export default {
         );
       }
 
-      // 2. Brute-force delay (1-3 seconds)
-      const delay = Math.floor(Math.random() * 2000) + 1000;
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      // 2. Parse and validate body
+      let body;
+      try {
+        body = await request.json();
+      } catch (_) {
+        return new Response(
+          JSON.stringify({ success: false, message: "Invalid JSON payload" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
-      const { password, action } = await request.json();
+      const { password, action } = body || {};
+      if (typeof password !== "string" || typeof action !== "string" || password.length > 128) {
+        return new Response(
+          JSON.stringify({ success: false, message: "Invalid input" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
       // 3. Password verification
       if (
